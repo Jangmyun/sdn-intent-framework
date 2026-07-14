@@ -12,5 +12,8 @@ wheels/
 # Temporary files
 tmp/
 
+# Generated environment reports
+logs/setup/
+
 # PLAN
 PLAN*
