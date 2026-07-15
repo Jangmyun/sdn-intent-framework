@@ -139,7 +139,12 @@ def test_run_ids_are_unique(tmp_path: Path, api_key: str) -> None:
 
 def test_schema_generation(tmp_path: Path) -> None:
     generated = generate_schemas(tmp_path)
-    assert {path.name for path in generated} == {"run_manifest.schema.json", "event_record.schema.json"}
+    assert {path.name for path in generated} == {
+        "run_manifest.schema.json",
+        "event_record.schema.json",
+        "intent_prediction.schema.json",
+        "onos_flow_set.schema.json",
+    }
     for path in generated:
         assert json.loads(path.read_text(encoding="utf-8"))["type"] == "object"
 

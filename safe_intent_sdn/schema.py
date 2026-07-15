@@ -6,6 +6,8 @@ import json
 from pathlib import Path
 
 from .config import PROJECT_ROOT
+from .intent_ir import IntentPrediction
+from .onos import OnosFlowSet
 from .run_context import EventRecord, RunManifest
 
 
@@ -13,7 +15,12 @@ def generate_schemas(output_dir: Path | None = None) -> list[Path]:
     target = output_dir or PROJECT_ROOT / "schemas"
     target.mkdir(parents=True, exist_ok=True)
     generated: list[Path] = []
-    for name, model in (("run_manifest", RunManifest), ("event_record", EventRecord)):
+    for name, model in (
+        ("run_manifest", RunManifest),
+        ("event_record", EventRecord),
+        ("intent_prediction", IntentPrediction),
+        ("onos_flow_set", OnosFlowSet),
+    ):
         path = target / f"{name}.schema.json"
         path.write_text(json.dumps(model.model_json_schema(), indent=2, sort_keys=True) + "\n", encoding="utf-8")
         generated.append(path)

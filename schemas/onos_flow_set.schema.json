@@ -1,0 +1,365 @@
+{
+  "$defs": {
+    "EthTypeCriterion": {
+      "additionalProperties": false,
+      "properties": {
+        "ethType": {
+          "title": "Ethtype",
+          "type": "string"
+        },
+        "type": {
+          "const": "ETH_TYPE",
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "ethType"
+      ],
+      "title": "EthTypeCriterion",
+      "type": "object"
+    },
+    "InPortCriterion": {
+      "additionalProperties": false,
+      "properties": {
+        "port": {
+          "title": "Port",
+          "type": "integer"
+        },
+        "type": {
+          "const": "IN_PORT",
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "port"
+      ],
+      "title": "InPortCriterion",
+      "type": "object"
+    },
+    "IpCriterion": {
+      "additionalProperties": false,
+      "properties": {
+        "ip": {
+          "title": "Ip",
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "IPV4_SRC",
+            "IPV4_DST",
+            "IPV6_SRC",
+            "IPV6_DST"
+          ],
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "ip"
+      ],
+      "title": "IpCriterion",
+      "type": "object"
+    },
+    "OnosFlow": {
+      "additionalProperties": false,
+      "properties": {
+        "deviceId": {
+          "title": "Deviceid",
+          "type": "string"
+        },
+        "isPermanent": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Ispermanent"
+        },
+        "priority": {
+          "title": "Priority",
+          "type": "integer"
+        },
+        "selector": {
+          "$ref": "#/$defs/OnosSelector"
+        },
+        "timeout": {
+          "title": "Timeout",
+          "type": "integer"
+        },
+        "treatment": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OnosTreatment"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "priority",
+        "timeout",
+        "isPermanent",
+        "deviceId",
+        "selector"
+      ],
+      "title": "OnosFlow",
+      "type": "object"
+    },
+    "OnosSelector": {
+      "additionalProperties": false,
+      "properties": {
+        "criteria": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "ETH_TYPE": "#/$defs/EthTypeCriterion",
+                "IN_PORT": "#/$defs/InPortCriterion",
+                "IPV4_DST": "#/$defs/IpCriterion",
+                "IPV4_SRC": "#/$defs/IpCriterion",
+                "IPV6_DST": "#/$defs/IpCriterion",
+                "IPV6_SRC": "#/$defs/IpCriterion",
+                "IP_PROTO": "#/$defs/ProtocolCriterion",
+                "TCP_DST": "#/$defs/TransportCriterion",
+                "TCP_SRC": "#/$defs/TransportCriterion",
+                "UDP_DST": "#/$defs/TransportCriterion",
+                "UDP_SRC": "#/$defs/TransportCriterion"
+              },
+              "propertyName": "type"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/EthTypeCriterion"
+              },
+              {
+                "$ref": "#/$defs/IpCriterion"
+              },
+              {
+                "$ref": "#/$defs/ProtocolCriterion"
+              },
+              {
+                "$ref": "#/$defs/TransportCriterion"
+              },
+              {
+                "$ref": "#/$defs/InPortCriterion"
+              }
+            ]
+          },
+          "title": "Criteria",
+          "type": "array"
+        }
+      },
+      "required": [
+        "criteria"
+      ],
+      "title": "OnosSelector",
+      "type": "object"
+    },
+    "OnosTreatment": {
+      "additionalProperties": false,
+      "properties": {
+        "instructions": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "L2MODIFICATION": "#/$defs/VlanInstruction",
+                "OUTPUT": "#/$defs/OutputInstruction",
+                "QUEUE": "#/$defs/QueueInstruction"
+              },
+              "propertyName": "type"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/OutputInstruction"
+              },
+              {
+                "$ref": "#/$defs/QueueInstruction"
+              },
+              {
+                "$ref": "#/$defs/VlanInstruction"
+              }
+            ]
+          },
+          "minItems": 1,
+          "title": "Instructions",
+          "type": "array"
+        }
+      },
+      "required": [
+        "instructions"
+      ],
+      "title": "OnosTreatment",
+      "type": "object"
+    },
+    "OutputInstruction": {
+      "additionalProperties": false,
+      "properties": {
+        "port": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "Port"
+        },
+        "type": {
+          "const": "OUTPUT",
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "port"
+      ],
+      "title": "OutputInstruction",
+      "type": "object"
+    },
+    "ProtocolCriterion": {
+      "additionalProperties": false,
+      "properties": {
+        "protocol": {
+          "title": "Protocol",
+          "type": "integer"
+        },
+        "type": {
+          "const": "IP_PROTO",
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "protocol"
+      ],
+      "title": "ProtocolCriterion",
+      "type": "object"
+    },
+    "QueueInstruction": {
+      "additionalProperties": false,
+      "properties": {
+        "queueId": {
+          "minimum": 0,
+          "title": "Queueid",
+          "type": "integer"
+        },
+        "type": {
+          "const": "QUEUE",
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "queueId"
+      ],
+      "title": "QueueInstruction",
+      "type": "object"
+    },
+    "TransportCriterion": {
+      "additionalProperties": false,
+      "properties": {
+        "tcpPort": {
+          "anyOf": [
+            {
+              "maximum": 65535,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tcpport"
+        },
+        "type": {
+          "enum": [
+            "TCP_SRC",
+            "TCP_DST",
+            "UDP_SRC",
+            "UDP_DST"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "udpPort": {
+          "anyOf": [
+            {
+              "maximum": 65535,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Udpport"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "title": "TransportCriterion",
+      "type": "object"
+    },
+    "VlanInstruction": {
+      "additionalProperties": false,
+      "properties": {
+        "subtype": {
+          "const": "VLAN_ID",
+          "title": "Subtype",
+          "type": "string"
+        },
+        "type": {
+          "const": "L2MODIFICATION",
+          "title": "Type",
+          "type": "string"
+        },
+        "vlanId": {
+          "maximum": 4095,
+          "minimum": 0,
+          "title": "Vlanid",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "type",
+        "subtype",
+        "vlanId"
+      ],
+      "title": "VlanInstruction",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "flows": {
+      "items": {
+        "$ref": "#/$defs/OnosFlow"
+      },
+      "minItems": 1,
+      "title": "Flows",
+      "type": "array"
+    }
+  },
+  "required": [
+    "flows"
+  ],
+  "title": "OnosFlowSet",
+  "type": "object"
+}

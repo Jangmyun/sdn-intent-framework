@@ -1,0 +1,365 @@
+{
+  "$defs": {
+    "Endpoint": {
+      "additionalProperties": false,
+      "properties": {
+        "host": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Host"
+        },
+        "ip": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ip"
+        }
+      },
+      "title": "Endpoint",
+      "type": "object"
+    },
+    "EnforcementConstraint": {
+      "additionalProperties": false,
+      "properties": {
+        "device": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Device"
+        },
+        "egress_port": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Egress Port"
+        },
+        "set_vlan_id": {
+          "anyOf": [
+            {
+              "maximum": 4095,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Set Vlan Id"
+        }
+      },
+      "title": "EnforcementConstraint",
+      "type": "object"
+    },
+    "IntentProgram": {
+      "additionalProperties": false,
+      "description": "Rules in evaluation order, highest policy priority first.",
+      "properties": {
+        "rules": {
+          "items": {
+            "$ref": "#/$defs/IntentRule"
+          },
+          "minItems": 1,
+          "title": "Rules",
+          "type": "array"
+        }
+      },
+      "required": [
+        "rules"
+      ],
+      "title": "IntentProgram",
+      "type": "object"
+    },
+    "IntentRule": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "enum": [
+            "forward",
+            "allow",
+            "deny",
+            "prioritize"
+          ],
+          "title": "Action",
+          "type": "string"
+        },
+        "enforcement": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EnforcementConstraint"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "intent_type": {
+          "enum": [
+            "forwarding",
+            "security",
+            "qos"
+          ],
+          "title": "Intent Type",
+          "type": "string"
+        },
+        "qos": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/QosConstraint"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "selector": {
+          "$ref": "#/$defs/TrafficSelector"
+        }
+      },
+      "required": [
+        "intent_type",
+        "action"
+      ],
+      "title": "IntentRule",
+      "type": "object"
+    },
+    "QosConstraint": {
+      "additionalProperties": false,
+      "properties": {
+        "max_latency_ms": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Latency Ms"
+        },
+        "min_bandwidth_mbps": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Min Bandwidth Mbps"
+        },
+        "queue": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Queue"
+        }
+      },
+      "title": "QosConstraint",
+      "type": "object"
+    },
+    "RejectedIntent": {
+      "additionalProperties": false,
+      "properties": {
+        "reason": {
+          "enum": [
+            "ambiguous",
+            "contradictory",
+            "unknown_entity",
+            "unsupported"
+          ],
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "reason"
+      ],
+      "title": "RejectedIntent",
+      "type": "object"
+    },
+    "TrafficSelector": {
+      "additionalProperties": false,
+      "properties": {
+        "destination": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Endpoint"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "destination_port": {
+          "anyOf": [
+            {
+              "maximum": 65535,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Destination Port"
+        },
+        "eth_type": {
+          "anyOf": [
+            {
+              "enum": [
+                "ipv4",
+                "ipv6",
+                "arp"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Eth Type"
+        },
+        "ingress_port": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ingress Port"
+        },
+        "protocol": {
+          "anyOf": [
+            {
+              "enum": [
+                "icmp",
+                "tcp",
+                "udp"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Protocol"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Endpoint"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "source_port": {
+          "anyOf": [
+            {
+              "maximum": 65535,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Port"
+        }
+      },
+      "title": "TrafficSelector",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "program": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/IntentProgram"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "rejection": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RejectedIntent"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "status": {
+      "enum": [
+        "accepted",
+        "rejected"
+      ],
+      "title": "Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "status"
+  ],
+  "title": "IntentPrediction",
+  "type": "object"
+}
