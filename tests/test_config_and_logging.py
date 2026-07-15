@@ -21,6 +21,7 @@ from safe_intent_sdn.schema import generate_schemas
 def api_key(monkeypatch: pytest.MonkeyPatch) -> str:
     secret = "test-api-secret"
     monkeypatch.setenv("SAFE_SDN_LLM_API_KEY", secret)
+    monkeypatch.setenv("SAFE_SDN_LLM_BASE_URL", "http://127.0.0.1:11434/v1")
     monkeypatch.setenv("SAFE_SDN_ONOS_PASSWORD", "test-onos-secret")
     return secret
 
@@ -70,10 +71,21 @@ def test_invalid_config_is_rejected(tmp_path: Path, api_key: str) -> None:
         load_settings(override)
 
 
-def test_missing_api_key_is_rejected(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_api_key_is_optional_for_ollama(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     monkeypatch.delenv("SAFE_SDN_LLM_API_KEY", raising=False)
     monkeypatch.setattr(config_module, "PROJECT_ROOT", tmp_path)
-    with pytest.raises(ValidationError):
+    settings = load_settings()
+    assert settings.secrets.llm_api_key.get_secret_value() == ""
+
+
+def test_llm_base_url_is_loaded_and_must_end_in_v1(
+    monkeypatch: pytest.MonkeyPatch, api_key: str,
+) -> None:
+    settings = load_settings()
+    assert str(settings.secrets.llm_base_url) == "http://127.0.0.1:11434/v1"
+    assert settings.public_snapshot()["secrets"]["llm_base_url"] == "http://127.0.0.1:11434/v1"
+    monkeypatch.setenv("SAFE_SDN_LLM_BASE_URL", "http://127.0.0.1:11434/api")
+    with pytest.raises(ValidationError, match="must end with /v1"):
         load_settings()
 
 

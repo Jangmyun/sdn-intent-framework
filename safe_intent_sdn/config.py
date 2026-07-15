@@ -7,7 +7,7 @@ import tomllib
 from pathlib import Path
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, SecretStr, model_validator
+from pydantic import AnyHttpUrl, BaseModel, ConfigDict, Field, SecretStr, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -56,6 +56,14 @@ class PipelineSettings(StrictModel):
     xai: bool = True
 
 
+class TranslationExperimentSettings(StrictModel):
+    output_format: Literal["direct_flow", "intent_ir"] = "intent_ir"
+    few_shot: bool = False
+    state_grounding: bool = False
+    dataset_path: Path = Path("experiments/e1/data/intents.jsonl")
+    topology_path: Path = Path("experiments/e1/data/topology.json")
+
+
 class RepairSettings(StrictModel):
     max_iterations: int = Field(default=3, ge=0, le=3)
 
@@ -75,9 +83,16 @@ class SecretSettings(BaseSettings):
         frozen=True,
     )
 
-    llm_api_key: SecretStr
+    llm_api_key: SecretStr = SecretStr("")
+    llm_base_url: AnyHttpUrl | None = None
     onos_user: str = "onos"
     onos_password: SecretStr = SecretStr("rocks")
+
+    @model_validator(mode="after")
+    def validate_llm_base_url(self) -> "SecretSettings":
+        if self.llm_base_url is not None and self.llm_base_url.path.rstrip("/") != "/v1":
+            raise ValueError("llm_base_url must end with /v1")
+        return self
 
 
 class AppSettings(StrictModel):
@@ -86,6 +101,7 @@ class AppSettings(StrictModel):
     controller: ControllerSettings
     topology: TopologySettings
     pipeline: PipelineSettings
+    translation_experiment: TranslationExperimentSettings = TranslationExperimentSettings()
     repair: RepairSettings
     logging: LoggingSettings
     secrets: SecretSettings
@@ -103,6 +119,7 @@ class AppSettings(StrictModel):
         snapshot = self.model_dump(mode="json", exclude={"secrets"})
         snapshot["secrets"] = {
             "llm_api_key": "**********",
+            "llm_base_url": str(self.secrets.llm_base_url) if self.secrets.llm_base_url else None,
             "onos_user": self.secrets.onos_user,
             "onos_password": "**********",
         }
