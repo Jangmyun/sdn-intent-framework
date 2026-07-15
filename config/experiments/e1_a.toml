@@ -1,0 +1,8 @@
+[project]
+experiment_id = "e1-a-direct-flow"
+[llm]
+prompt_version = "e1-direct-flow-v1"
+[translation_experiment]
+output_format = "direct_flow"
+few_shot = false
+state_grounding = false

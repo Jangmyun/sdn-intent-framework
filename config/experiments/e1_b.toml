@@ -1,0 +1,8 @@
+[project]
+experiment_id = "e1-b-intent-ir"
+[llm]
+prompt_version = "e1-ir-zero-shot-v1"
+[translation_experiment]
+output_format = "intent_ir"
+few_shot = false
+state_grounding = false
