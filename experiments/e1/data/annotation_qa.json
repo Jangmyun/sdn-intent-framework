@@ -1,0 +1,19 @@
+{
+  "annotators": 2,
+  "authoritative_source": "instruction",
+  "blinding": "independent labels hidden until adjudication",
+  "pre_adjudication": {
+    "category_agreement": 1.0,
+    "rule_count_agreement": 1.0,
+    "cohens_kappa": {
+      "intent_type": 1.0,
+      "action": 1.0,
+      "protocol": 1.0
+    },
+    "whole_slot_exact_agreement": 1.0
+  },
+  "adjudication": {
+    "disagreements": [],
+    "procedure": "An adjudicator reviews every disagreement and records a rationale before final gold generation."
+  }
+}

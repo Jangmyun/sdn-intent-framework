@@ -1,0 +1,20 @@
+{
+  "topology_id": "netintent-onos-benchmark-inventory",
+  "source": {"repository": "https://github.com/Muhammadkamrul/NetIntent", "commit": "5d5a2377673893dc8a6585346e64272da43a54fc"},
+  "entities": [
+    {"id":"host:h1","aliases":["h1","10.0.0.1"]}, {"id":"host:h2","aliases":["h2","10.0.0.2"]},
+    {"id":"host:h3","aliases":["h3","10.0.0.3"]}, {"id":"host:h4","aliases":["h4","10.0.0.4"]},
+    {"id":"endpoint:10.0.0.5","aliases":["10.0.0.5"]}, {"id":"endpoint:10.0.0.6","aliases":["10.0.0.6"]},
+    {"id":"endpoint:10.0.0.9","aliases":["10.0.0.9"]}, {"id":"endpoint:10.0.0.10","aliases":["10.0.0.10"]},
+    {"id":"endpoint:10.0.0.11","aliases":["10.0.0.11"]}, {"id":"endpoint:10.0.0.12","aliases":["10.0.0.12"]},
+    {"id":"endpoint:10.0.0.13","aliases":["10.0.0.13"]}, {"id":"endpoint:10.0.0.20","aliases":["10.0.0.20"]},
+    {"id":"endpoint:10.0.0.100","aliases":["10.0.0.100"]}, {"id":"endpoint:192.168.1.2","aliases":["192.168.1.2"]},
+    {"id":"endpoint:192.168.1.50","aliases":["192.168.1.50"]}, {"id":"endpoint:192.168.2.2","aliases":["192.168.2.2"]},
+    {"id":"endpoint:192.168.3.10","aliases":["192.168.3.10"]}, {"id":"endpoint:fe80::1","aliases":["fe80::1"]},
+    {"id":"endpoint:multicast","aliases":["224.0.0.1"]}, {"id":"endpoint:broadcast","aliases":["255.255.255.255"]},
+    {"id":"device:s1","aliases":["s1","of:0000000000000001"]}, {"id":"device:s2","aliases":["s2","of:0000000000000002"]},
+    {"id":"device:s3","aliases":["s3","of:0000000000000003"]}, {"id":"device:s4","aliases":["s4","of:0000000000000004"]}
+  ],
+  "ports": {"of:0000000000000001":[1,2,3,4,9],"of:0000000000000002":[1,2,4,5,6,7,8,10],"of:0000000000000003":[1,2,3],"of:0000000000000004":[1,2,5]},
+  "capabilities":["forwarding","acl","queue","bandwidth","latency","vlan"]
+}
