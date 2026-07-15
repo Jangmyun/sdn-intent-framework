@@ -1,0 +1,40 @@
+[project]
+environment = "development"
+experiment_id = "proposed"
+random_seed = 42
+
+[llm]
+provider = "openai"
+model = "gpt-5-mini"
+temperature = 0.0
+max_tokens = 4096
+timeout_seconds = 60.0
+retries = 2
+prompt_version = "v1"
+
+[controller]
+kind = "onos"
+host = "127.0.0.1"
+openflow_port = 6653
+rest_port = 8181
+
+[topology]
+topology_id = "topology_a"
+role = "single"
+
+[pipeline]
+retrieval = true
+static_validation = true
+digital_twin = true
+repair = true
+regression_validation = true
+fault_validation = true
+xai = true
+
+[repair]
+max_iterations = 3
+
+[logging]
+level = "INFO"
+console = true
+directory = "logs/runs"

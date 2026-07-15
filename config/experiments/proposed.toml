@@ -1,0 +1,14 @@
+[project]
+experiment_id = "proposed"
+
+[pipeline]
+retrieval = true
+static_validation = true
+digital_twin = true
+repair = true
+regression_validation = true
+fault_validation = true
+xai = true
+
+[repair]
+max_iterations = 3

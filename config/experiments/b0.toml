@@ -1,0 +1,14 @@
+[project]
+experiment_id = "b0"
+
+[pipeline]
+retrieval = false
+static_validation = false
+digital_twin = false
+repair = false
+regression_validation = false
+fault_validation = false
+xai = false
+
+[repair]
+max_iterations = 0
