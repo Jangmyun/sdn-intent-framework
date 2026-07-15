@@ -9,11 +9,18 @@ wheels/
 # Virtual environments
 .venv
 
+# Local secrets
+.env
+.env.*
+!.env.example
+
 # Temporary files
 tmp/
 
 # Generated environment reports
 logs/setup/
+logs/runs/
+logs/*.log
 
 # PLAN
 PLAN*

@@ -1,0 +1,223 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "properties": {
+        "media_type": {
+          "title": "Media Type",
+          "type": "string"
+        },
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "sha256": {
+          "title": "Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "media_type"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "artifacts": {
+      "additionalProperties": {
+        "$ref": "#/$defs/ArtifactRef"
+      },
+      "title": "Artifacts",
+      "type": "object"
+    },
+    "compiled_policy": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "config_snapshot": {
+      "additionalProperties": true,
+      "title": "Config Snapshot",
+      "type": "object"
+    },
+    "date": {
+      "title": "Date",
+      "type": "string"
+    },
+    "error": {
+      "anyOf": [
+        {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Error"
+    },
+    "execution_time": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "title": "Execution Time",
+      "type": "object"
+    },
+    "feature_flags": {
+      "additionalProperties": {
+        "type": "boolean"
+      },
+      "title": "Feature Flags",
+      "type": "object"
+    },
+    "final_decision": {
+      "anyOf": [
+        {
+          "enum": [
+            "APPROVE",
+            "REJECT",
+            "HOLD"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Final Decision"
+    },
+    "generated_ir": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "git_commit": {
+      "title": "Git Commit",
+      "type": "string"
+    },
+    "git_dirty": {
+      "title": "Git Dirty",
+      "type": "boolean"
+    },
+    "input_intent": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "intent_id": {
+      "title": "Intent Id",
+      "type": "string"
+    },
+    "model_name": {
+      "title": "Model Name",
+      "type": "string"
+    },
+    "prompt_version": {
+      "title": "Prompt Version",
+      "type": "string"
+    },
+    "random_seed": {
+      "title": "Random Seed",
+      "type": "integer"
+    },
+    "repair_history": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "static_validation": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "status": {
+      "default": "running",
+      "enum": [
+        "running",
+        "succeeded",
+        "failed"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "token_usage": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Token Usage",
+      "type": "object"
+    },
+    "topology_id": {
+      "title": "Topology Id",
+      "type": "string"
+    },
+    "twin_test_results": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "run_id",
+    "date",
+    "git_commit",
+    "git_dirty",
+    "model_name",
+    "prompt_version",
+    "topology_id",
+    "intent_id",
+    "feature_flags",
+    "random_seed",
+    "config_snapshot"
+  ],
+  "title": "RunManifest",
+  "type": "object"
+}
