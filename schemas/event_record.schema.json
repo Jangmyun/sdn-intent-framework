@@ -30,6 +30,13 @@
       "type": "object"
     },
     "level": {
+      "enum": [
+        "DEBUG",
+        "INFO",
+        "WARNING",
+        "ERROR",
+        "CRITICAL"
+      ],
       "title": "Level",
       "type": "string"
     },
