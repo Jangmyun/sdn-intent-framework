@@ -7,6 +7,7 @@ from pydantic import ValidationError
 from safe_intent_sdn.e1_evaluation import EvaluationCase, PredictionRecord, aggregate_runs, evaluate_run, validate_records
 from safe_intent_sdn.intent_ir import Endpoint, IntentPrediction
 from safe_intent_sdn.onos import OnosFlowSet, parse_onos_response
+from experiments.e1.run_experiment import SYSTEM_ONOS, few_shot
 
 DATASET=Path('experiments/e1/data/intents.jsonl')
 def cases(): return [EvaluationCase.model_validate_json(x) for x in DATASET.read_text().splitlines()]
@@ -20,6 +21,19 @@ def test_dataset_distribution_provenance_and_compound_rows():
  for row in (39,45):
   c=x[row-1]; assert c.id==f'N{row:03}' and len(c.expected.program.rules)==2
  assert all(c.provenance.repository and c.provenance.commit_sha for c in x)
+
+def test_demonstrations_do_not_overlap_benchmark_and_direct_prompt_has_no_answer():
+ fixture=json.loads(Path("experiments/e1/data/demonstrations.json").read_text())
+ benchmark=cases()
+ assert len(fixture)==5
+ assert {row["category"] for row in fixture}=={"forwarding","security","qos","compound","rejection"}
+ assert not ({row["id"] for row in fixture} & {case.id for case in benchmark})
+ assert not ({row["instruction"] for row in fixture} & {case.instruction for case in benchmark})
+ demo_pairs={(row["instruction"],json.dumps(row["output"],sort_keys=True)) for row in fixture}
+ benchmark_pairs={(case.instruction,json.dumps(case.expected.model_dump(mode="json"),sort_keys=True)) for case in benchmark}
+ assert not (demo_pairs & benchmark_pairs)
+ assert "Examples:" in few_shot(Path("experiments/e1/data/demonstrations.json"))
+ assert "\"priority\":100" not in SYSTEM_ONOS
 
 def test_onos_deny_ipv6_arp_vlan_queue_udp_source_and_multiflow():
  x=cases()
