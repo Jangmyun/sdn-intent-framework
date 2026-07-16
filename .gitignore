@@ -25,5 +25,8 @@ logs/*.log
 # E1 experiment artifacts
 logs/e1/
 
+# E2 experiment artifacts
+logs/e2/
+
 # PLAN
 PLAN*
