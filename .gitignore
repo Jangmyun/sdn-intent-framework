@@ -22,5 +22,8 @@ logs/setup/
 logs/runs/
 logs/*.log
 
+# E1 raw model artifacts (reports and manifests may be force-added)
+logs/e1/*.jsonl
+
 # PLAN
 PLAN*
