@@ -90,8 +90,8 @@ class SecretSettings(BaseSettings):
 
     @model_validator(mode="after")
     def validate_llm_base_url(self) -> "SecretSettings":
-        if self.llm_base_url is not None and self.llm_base_url.path.rstrip("/") != "/v1":
-            raise ValueError("llm_base_url must end with /v1")
+        if self.llm_base_url is not None and self.llm_base_url.path.rstrip("/") not in {"", "/v1"}:
+            raise ValueError("llm_base_url must be an origin URL or end with /v1")
         return self
 
 

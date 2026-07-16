@@ -78,14 +78,17 @@ def test_api_key_is_optional_for_ollama(monkeypatch: pytest.MonkeyPatch, tmp_pat
     assert settings.secrets.llm_api_key.get_secret_value() == ""
 
 
-def test_llm_base_url_is_loaded_and_must_end_in_v1(
+def test_llm_base_url_accepts_origin_or_v1_and_rejects_other_paths(
     monkeypatch: pytest.MonkeyPatch, api_key: str,
 ) -> None:
     settings = load_settings()
     assert str(settings.secrets.llm_base_url) == "http://127.0.0.1:11434/v1"
     assert settings.public_snapshot()["secrets"]["llm_base_url"] == "http://127.0.0.1:11434/v1"
+    monkeypatch.setenv("SAFE_SDN_LLM_BASE_URL", "https://ollama.example.test")
+    settings = load_settings()
+    assert str(settings.secrets.llm_base_url) == "https://ollama.example.test/"
     monkeypatch.setenv("SAFE_SDN_LLM_BASE_URL", "http://127.0.0.1:11434/api")
-    with pytest.raises(ValidationError, match="must end with /v1"):
+    with pytest.raises(ValidationError, match="origin URL or end with /v1"):
         load_settings()
 
 
