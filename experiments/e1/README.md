@@ -34,12 +34,10 @@ controller output은 evidence입니다. Row 39와 45는 compound
 two-rule program입니다. Row 39는 raw output에 forwarding clause가 누락되어
 있어 불완전한 upstream label로 명시적으로 표시되어 있습니다.
 
-두 명의 annotator가 서로의 label을 보지 않고 독립적으로 50개의 upstream
-instruction을 검토했습니다. Pre-adjudication agreement와 Cohen's kappa 필드는
-`data/annotation_qa.json`에 있으며, annotator export와 final annotation은
-별도로 보관됩니다. Adjudicator는 final gold를 생성하기 전에 모든 disagreement에
-대해 rationale을 기록해야 합니다. 현재 adjudicated release에는 남아 있는
-disagreement가 없습니다.
+현재 annotation 파일은 파이프라인 검증을 위해 자동 생성된 provisional gold입니다.
+실제 두 명의 독립 annotator agreement로 인용해서는 안 됩니다. 두 annotator의
+독립 annotation, agreement 계산, disagreement rationale과 adjudication이 완료될
+때까지 모든 표와 보고서는 `provisional_gold`로 표시합니다.
 
 ## Scoring and reporting
 
