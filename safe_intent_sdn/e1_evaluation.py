@@ -116,6 +116,9 @@ def evaluate_run(cases: Iterable[EvaluationCase], records: Iterable[PredictionRe
         if rec.error_kind == "transport":
             diagnostics["transport_failure_cases"].append(case.id)
             continue
+        if rec.error is not None and rec.output == {}:
+            diagnostics["schema_invalid_cases"].append(case.id)
+            continue
         lat.append(rec.latency_ms); tokens.update(input=rec.input_tokens, output=rec.output_tokens)
         try: actual=parse_onos_response(rec.output) if rec.treatment == "E1-A" else IntentPrediction.model_validate(rec.output)
         except Exception: diagnostics["schema_invalid_cases"].append(case.id); continue

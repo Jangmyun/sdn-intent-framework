@@ -73,6 +73,14 @@ def test_rejection_denominators_are_separate():
  assert sum(bool(c.expected.rejection and c.expected.rejection.reason=='unsupported') for c in x)==2
  assert sum(c.expected.status=='rejected' for c in x)==10
 
+def test_e1a_call_failure_leftover_default_is_not_scored_as_successful_rejection():
+ x=[c for c in cases() if c.expected.status=='rejected' and c.expected.rejection.reason!='unsupported'][:1]
+ rec=PredictionRecord(case_id=x[0].id,treatment='E1-A',run_id='run-1',repetition=1,output={},latency_ms=0,input_tokens=0,output_tokens=0,error_kind='schema_invalid',error='JSONDecodeError: bad json')
+ report=evaluate_run(x,[rec])
+ assert report['schema_invalid_cases']==[x[0].id]
+ assert report['response_schema_validity']==0
+ assert report['required_rejection_rate']==0
+
 def test_duplicate_incomplete_and_unpaired_runs_fail():
  x=cases(); one=[record(c) for c in x]
  with pytest.raises(ValueError,match='duplicate'): validate_records(x,one+[one[0]],min_repetitions=1)
