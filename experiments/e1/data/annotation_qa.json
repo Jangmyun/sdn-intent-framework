@@ -1,5 +1,8 @@
 {
   "annotators": 2,
+  "gold_status": "provisional_gold",
+  "human_agreement_ready": false,
+  "warning": "Generated QA fixture; do not cite as human annotator agreement",
   "authoritative_source": "instruction",
   "blinding": "independent labels hidden until adjudication",
   "pre_adjudication": {

@@ -45,6 +45,10 @@ class PredictionRecord(BaseModel):
     latency_ms: float = Field(ge=0)
     input_tokens: int = Field(ge=0)
     output_tokens: int = Field(ge=0)
+    seed: int | None = Field(default=None, ge=0)
+    raw_content: str = ""
+    error_kind: str | None = None
+    error: str | None = None
 
 def _endpoint(value: Any, aliases: dict[str, str]) -> Any:
     if value is None: return None
@@ -57,7 +61,18 @@ def _rule_slots(rule: IntentRule, aliases: dict[str, str]) -> dict[str, Any]:
     return {"intent_type":rule.intent_type, "action":rule.action, "source":_endpoint(s.source, aliases), "destination":_endpoint(s.destination, aliases),
             "eth_type":s.eth_type, "protocol":s.protocol, "source_port":s.source_port, "destination_port":s.destination_port,
             "ingress_port":s.ingress_port, "qos":rule.qos.model_dump(exclude_none=True) if rule.qos else None,
-            "device":e.device if e else None, "egress_port":e.egress_port if e else None, "set_vlan_id":e.set_vlan_id if e else None}
+            "device":aliases.get(e.device, e.device) if e and e.device else None, "egress_port":str(e.egress_port) if e and e.egress_port is not None else None, "set_vlan_id":e.set_vlan_id if e else None}
+
+def _normalized_equal(expected: IntentPrediction, actual: IntentPrediction, aliases: dict[str, str]) -> bool:
+    if expected.status != actual.status:
+        return False
+    if expected.status == "rejected":
+        return expected.rejection.reason == actual.rejection.reason
+    expected_rules, actual_rules = expected.program.rules, actual.program.rules
+    return len(expected_rules) == len(actual_rules) and all(
+        _rule_slots(left, aliases) == _rule_slots(right, aliases)
+        for left, right in zip(expected_rules, actual_rules, strict=True)
+    )
 
 def _entity_spellings(prediction: IntentPrediction) -> set[str]:
     result: set[str] = set()
@@ -93,15 +108,18 @@ def validate_records(cases: Iterable[EvaluationCase], records: Iterable[Predicti
 
 def evaluate_run(cases: Iterable[EvaluationCase], records: Iterable[PredictionRecord], *, aliases: dict[str,str] | None = None, inventory_entities: set[str] | None = None) -> dict[str, Any]:
     cases, records = list(cases), list(records); aliases = aliases or {}; inventory_entities = inventory_entities or set(aliases)
-    by_id = {r.case_id:r for r in records}; counts = Counter(total=len(cases)); slots = Counter(); diagnostics = {k:[] for k in ("schema_invalid_cases","hallucinated_cases","incorrectly_accepted_cases","rule_count_mismatch_cases")}; reason_total=Counter(); reason_hit=Counter(); lat=[]; tokens=Counter()
+    by_id = {r.case_id:r for r in records}; counts = Counter(total=len(cases)); slots = Counter(); diagnostics = {k:[] for k in ("transport_failure_cases","schema_invalid_cases","hallucinated_cases","incorrectly_accepted_cases","rule_count_mismatch_cases")}; reason_total=Counter(); reason_hit=Counter(); lat=[]; tokens=Counter()
     for case in cases:
         expected=case.expected; rec=by_id.get(case.id)
         if expected.status == "rejected": reason_total[expected.rejection.reason] += 1
         if rec is None: continue
+        if rec.error_kind == "transport":
+            diagnostics["transport_failure_cases"].append(case.id)
+            continue
         lat.append(rec.latency_ms); tokens.update(input=rec.input_tokens, output=rec.output_tokens)
         try: actual=parse_onos_response(rec.output) if rec.treatment == "E1-A" else IntentPrediction.model_validate(rec.output)
         except Exception: diagnostics["schema_invalid_cases"].append(case.id); continue
-        counts["schema_valid"] += 1; counts["exact"] += actual == expected
+        counts["schema_valid"] += 1; counts["exact"] += _normalized_equal(expected, actual, aliases)
         if rec.treatment == "E1-A" and case.cohort == "upstream": counts["raw_onos_total"] += 1; counts["raw_onos_exact"] += rec.output == case.upstream_output
         if expected.status == "rejected":
             if actual.status == "rejected": reason_hit[expected.rejection.reason] += 1
@@ -149,4 +167,4 @@ def aggregate_runs(cases: Iterable[EvaluationCase], records: Iterable[Prediction
         for right in names[left_index + 1:]:
             repetitions = sorted(rep for treatment, rep in by_treatment_rep if treatment == left)
             paired[f"{right}_minus_{left}"] = {metric: [by_treatment_rep[(right, rep)][metric] - by_treatment_rep[(left, rep)][metric] for rep in repetitions] for metric in metrics}
-    return {"runs":runs,"treatments":treatments,"paired_comparisons":paired,"caveat":"exploratory_ci_95 is based on n=5 runs; interpret uncertainty cautiously."}
+    return {"gold_status":"provisional_gold","runs":runs,"treatments":treatments,"paired_comparisons":paired,"caveat":"provisional gold; exploratory_ci_95 is based on n=5 runs. Prioritize paired-seed and case-level analysis until independent annotation and adjudication are complete."}
