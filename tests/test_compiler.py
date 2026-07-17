@@ -107,3 +107,78 @@ def test_rejected_intent_cannot_be_compiled():
     )
     with pytest.raises(CompilationError, match="rejected"):
         compile_prediction(rejected)
+
+
+def test_compile_sfc_program_matches_equivalent_forwarding_shape():
+    """sfc rules use action="forward" like plain forwarding rules; the compiler
+    has no sfc-specific branch, so an sfc program and an equivalent forwarding
+    program (same selector/enforcement, sfc_role/sfc_chain stripped) must produce
+    the same OnosFlow shape."""
+    sfc = IntentPrediction.model_validate(
+        {
+            "status": "accepted",
+            "program": {
+                "rules": [
+                    {
+                        "intent_type": "sfc", "action": "forward", "sfc_role": "ingress",
+                        "selector": {"source": {"ip": "10.0.0.1"}, "destination": {"ip": "10.0.0.3"}},
+                        "enforcement": {"device": "of:0000000000000001", "egress_port": "9"},
+                    },
+                    {
+                        "intent_type": "sfc", "action": "forward", "sfc_role": "egress",
+                        "selector": {"destination": {"ip": "10.0.0.3"}, "ingress_port": 9},
+                        "enforcement": {"device": "of:0000000000000001", "egress_port": "1"},
+                    },
+                ],
+                "sfc_chain": ["of:0000000000000001:9"],
+            },
+            "rejection": None,
+        }
+    )
+    forwarding = IntentPrediction.model_validate(
+        {
+            "status": "accepted",
+            "program": {
+                "rules": [
+                    {
+                        "intent_type": "forwarding", "action": "forward",
+                        "selector": {"source": {"ip": "10.0.0.1"}, "destination": {"ip": "10.0.0.3"}},
+                        "enforcement": {"device": "of:0000000000000001", "egress_port": "9"},
+                    },
+                    {
+                        "intent_type": "forwarding", "action": "forward",
+                        "selector": {"destination": {"ip": "10.0.0.3"}, "ingress_port": 9},
+                        "enforcement": {"device": "of:0000000000000001", "egress_port": "1"},
+                    },
+                ],
+            },
+            "rejection": None,
+        }
+    )
+    assert compile_prediction(sfc).model_dump() == compile_prediction(forwarding).model_dump()
+
+
+def test_compile_reroute_program_matches_equivalent_forwarding_shape():
+    reroute = IntentPrediction.model_validate(
+        {
+            "status": "accepted",
+            "program": {
+                "rules": [
+                    {
+                        "intent_type": "reroute", "action": "forward",
+                        "selector": {"destination": {"ip": "10.0.0.4"}},
+                        "enforcement": {"device": "of:0000000000000001", "egress_port": 1, "avoid_device": "of:0000000000000003"},
+                    },
+                ],
+            },
+            "rejection": None,
+        }
+    )
+    forwarding = prediction(
+        {
+            "intent_type": "forwarding", "action": "forward",
+            "selector": {"destination": {"ip": "10.0.0.4"}},
+            "enforcement": {"device": "of:0000000000000001", "egress_port": 1},
+        }
+    )
+    assert compile_prediction(reroute).model_dump() == compile_prediction(forwarding).model_dump()
