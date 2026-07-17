@@ -12,7 +12,7 @@ conformance to that taxonomy, not generalization to independent/held-out defects
 from __future__ import annotations
 
 from statistics import mean, median
-from typing import Any, Callable, Iterable, Literal
+from typing import Any, Callable, Iterable, Literal, get_args
 
 from pydantic import Field
 
@@ -22,7 +22,7 @@ from .validator import FindingCategory, ValidationFinding
 
 class E2Case(StrictModel):
     id: str
-    category: Literal["clean", "reference", "conflict", "feasibility", "multi"]
+    category: Literal["clean", "reference", "conflict", "feasibility", "multi", "path"]
     expected_findings: list[FindingCategory] = Field(default_factory=list)
     expected_codes: list[str] = Field(default_factory=list)
     program: IntentProgram
@@ -188,7 +188,7 @@ def score_treatment(cases: Iterable[E2Case], results: Iterable[E2Result]) -> dic
                 lambda case, category=category: category in case.expected_findings,
                 lambda result, category=category: category in {f.category for f in result.findings},
             )
-            for category in ("reference", "conflict", "feasibility")
+            for category in get_args(FindingCategory)
         }
         report["code_mismatch_cases"] = [
             case.id

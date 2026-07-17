@@ -52,6 +52,33 @@ def test_semantic_validation_rejects_mismatched_action_empty_qos_and_port():
  with pytest.raises(ValidationError): IntentPrediction.model_validate({'status':'accepted','program':{'rules':[{'intent_type':'qos','action':'prioritize','selector':{},'qos':{}}]}})
  with pytest.raises(ValidationError): IntentPrediction.model_validate({'status':'accepted','program':{'rules':[{'intent_type':'forwarding','action':'forward','selector':{'protocol':'icmp','destination_port':80}}]}})
 
+def test_sfc_rule_requires_sfc_role_and_only_sfc_rules_may_set_it():
+ with pytest.raises(ValidationError): IntentPrediction.model_validate({'status':'accepted','program':{'rules':[{'intent_type':'sfc','action':'forward','selector':{},'enforcement':{'device':'s1','egress_port':1}}],'sfc_chain':[]}})
+ with pytest.raises(ValidationError): IntentPrediction.model_validate({'status':'accepted','program':{'rules':[{'intent_type':'forwarding','action':'forward','selector':{},'sfc_role':'ingress'}]}})
+
+def test_avoid_device_is_only_valid_on_reroute_rules():
+ IntentPrediction.model_validate({'status':'accepted','program':{'rules':[{'intent_type':'reroute','action':'forward','selector':{},'enforcement':{'device':'s1','egress_port':1,'avoid_device':'s2'}}]}})
+ with pytest.raises(ValidationError): IntentPrediction.model_validate({'status':'accepted','program':{'rules':[{'intent_type':'forwarding','action':'forward','selector':{},'enforcement':{'device':'s1','egress_port':1,'avoid_device':'s2'}}]}})
+
+def test_sfc_chain_required_iff_program_has_an_sfc_rule():
+ with pytest.raises(ValidationError): IntentPrediction.model_validate({'status':'accepted','program':{'rules':[{'intent_type':'sfc','action':'forward','sfc_role':'ingress','selector':{},'enforcement':{'device':'s1','egress_port':1}}]}})
+ with pytest.raises(ValidationError): IntentPrediction.model_validate({'status':'accepted','program':{'rules':[{'intent_type':'forwarding','action':'forward','selector':{},'enforcement':{'device':'s1','egress_port':1}}],'sfc_chain':['of:0000000000000002']}})
+
+def test_normalized_equal_and_slot_accuracy_cover_sfc_role_and_sfc_chain():
+ expected=IntentPrediction.model_validate({'status':'accepted','program':{'rules':[
+  {'intent_type':'sfc','action':'forward','sfc_role':'ingress','selector':{},'enforcement':{'device':'s1','egress_port':9}},
+  {'intent_type':'sfc','action':'forward','sfc_role':'egress','selector':{},'enforcement':{'device':'s1','egress_port':1}},
+ ],'sfc_chain':['of:0000000000000001:9']}})
+ c=EvaluationCase(id='x',cohort='project_authored',category='sfc',variation='v',instruction='i',expected=expected,provenance={'repository':'r','commit_sha':'c'})
+ same=expected.model_copy(deep=True)
+ assert evaluate_run([c],[record(c,output=same.model_dump(mode='json'))])['normalized_exact_match']==1
+ wrong_role=expected.model_copy(deep=True); wrong_role.program.rules[1].sfc_role='transit'
+ report=evaluate_run([c],[record(c,output=wrong_role.model_dump(mode='json'))])
+ assert report['normalized_exact_match']==0 and report['normalized_slot_accuracy']['sfc_role']==0.5
+ wrong_chain=expected.model_copy(deep=True); wrong_chain.program.sfc_chain=['of:0000000000000002']
+ report=evaluate_run([c],[record(c,output=wrong_chain.model_dump(mode='json'))])
+ assert report['normalized_exact_match']==0
+
 def test_aliases_and_unknown_hallucination():
  c=cases()[50]; actual=c.expected.model_copy(deep=True); actual.program.rules[0].selector.source=Endpoint(ip='10.0.0.1')
  report=evaluate_run([c],[record(c,output=actual.model_dump(mode='json'))],aliases={'h1':'host:h1','10.0.0.1':'host:h1'},inventory_entities={'host:h1','h3'})

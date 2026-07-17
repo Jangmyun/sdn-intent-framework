@@ -31,6 +31,14 @@ def load_results(path: Path) -> list[E2Result]:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset", type=Path, default=ROOT / "experiments/e2/data/cases.jsonl")
+    parser.add_argument(
+        "--scope-note",
+        default=(
+            "component-level controlled evaluation of the B1-B2 validation boundary "
+            "on 48 fixed IR fixtures (not an end-to-end LLM+IR system comparison)"
+        ),
+        help="scope description recorded in the report; override when scoring a different dataset (e.g. the sfc/reroute extension) so its report is never mistaken for the original 48-case one",
+    )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("files", nargs="+", type=Path, help="B1/B2 result JSONL files to score")
     args = parser.parse_args()
@@ -45,10 +53,7 @@ def main() -> None:
         by_treatment.setdefault(result.treatment, []).append(result)
 
     report: dict = {
-        "scope": (
-            "component-level controlled evaluation of the B1-B2 validation boundary "
-            "on 48 fixed IR fixtures (not an end-to-end LLM+IR system comparison)"
-        ),
+        "scope": args.scope_note,
         **{treatment: score_treatment(cases, treatment_results) for treatment, treatment_results in sorted(by_treatment.items())},
     }
     if "B1" in report and "B2" in report:

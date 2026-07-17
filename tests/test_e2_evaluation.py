@@ -163,3 +163,28 @@ def test_score_treatment_raises_on_incomplete_log_instead_of_understating_defect
     results = [accepted("clean-1")]  # defect-1's result is missing entirely
     with pytest.raises(ValueError, match="missing"):
         score_treatment(cases, results)
+
+
+def test_e2case_accepts_path_category():
+    value = E2Case(
+        id="path-1", category="path", expected_findings=["path"], expected_codes=["path_unknown_waypoint"],
+        program=_program(),
+    )
+    assert value.category == "path"
+
+
+def test_by_category_includes_path_without_a_second_hardcoded_edit():
+    cases = [case("clean-1"), E2Case(
+        id="path-1", category="path", expected_findings=["path"], expected_codes=["path_unknown_waypoint"],
+        program=_program(),
+    )]
+    results = [
+        accepted("clean-1", treatment="B2"),
+        E2Result(
+            case_id="path-1", treatment="B2", outcome="rejected", rejection_stage="validator",
+            findings=[ValidationFinding(category="path", code="path_unknown_waypoint", rule_indices=[0], message="x")],
+            duration_ms=0.1,
+        ),
+    ]
+    report = score_treatment(cases, results)
+    assert report["by_category"]["path"] == {"tp": 1, "fp": 0, "fn": 0, "tn": 1, "precision": 1.0, "recall": 1.0}

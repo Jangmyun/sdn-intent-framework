@@ -34,6 +34,18 @@
     "EnforcementConstraint": {
       "additionalProperties": false,
       "properties": {
+        "avoid_device": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Avoid Device"
+        },
         "device": {
           "anyOf": [
             {
@@ -90,6 +102,21 @@
           "minItems": 1,
           "title": "Rules",
           "type": "array"
+        },
+        "sfc_chain": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sfc Chain"
         }
       },
       "required": [
@@ -126,7 +153,9 @@
           "enum": [
             "forwarding",
             "security",
-            "qos"
+            "qos",
+            "sfc",
+            "reroute"
           ],
           "title": "Intent Type",
           "type": "string"
@@ -144,6 +173,23 @@
         },
         "selector": {
           "$ref": "#/$defs/TrafficSelector"
+        },
+        "sfc_role": {
+          "anyOf": [
+            {
+              "enum": [
+                "ingress",
+                "transit",
+                "egress"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sfc Role"
         }
       },
       "required": [

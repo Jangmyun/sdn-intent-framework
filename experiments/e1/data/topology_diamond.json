@@ -1,0 +1,13 @@
+{
+  "topology_id": "sfc-reroute-diamond-inventory",
+  "source": {"repository": "local:sdn-intent-framework", "commit": "WORKTREE"},
+  "entities": [
+    {"id":"host:h1","aliases":["h1","10.0.0.1"]}, {"id":"host:h2","aliases":["h2","10.0.0.2"]},
+    {"id":"host:h3","aliases":["h3","10.0.0.3"]}, {"id":"host:h4","aliases":["h4","10.0.0.4"]},
+    {"id":"device:s1","aliases":["s1","of:0000000000000001"]}, {"id":"device:s2","aliases":["s2","of:0000000000000002"]},
+    {"id":"device:s3","aliases":["s3","of:0000000000000003"]}, {"id":"device:s4","aliases":["s4","of:0000000000000004"]},
+    {"id":"device:s5","aliases":["s5","of:0000000000000005"]}
+  ],
+  "ports": {"of:0000000000000001":[1,2,3,4,9],"of:0000000000000002":[1,2],"of:0000000000000003":[1,2],"of:0000000000000004":[1,2,3,4]},
+  "capabilities":["forwarding","acl","queue","sfc","reroute"]
+}

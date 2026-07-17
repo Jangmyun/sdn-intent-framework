@@ -40,28 +40,40 @@ class EnforcementConstraint(StrictModel):
     device: str | None = None
     egress_port: int | str | None = None
     set_vlan_id: int | None = Field(default=None, ge=0, le=4095)
+    avoid_device: str | None = None
     @model_validator(mode="after")
     def require_value(self) -> "EnforcementConstraint":
-        if self.device is None and self.egress_port is None and self.set_vlan_id is None: raise ValueError("empty enforcement constraint")
+        if self.device is None and self.egress_port is None and self.set_vlan_id is None and self.avoid_device is None: raise ValueError("empty enforcement constraint")
         return self
 
 class IntentRule(StrictModel):
-    intent_type: Literal["forwarding", "security", "qos"]
+    intent_type: Literal["forwarding", "security", "qos", "sfc", "reroute"]
     action: Literal["forward", "allow", "deny", "prioritize"]
     selector: TrafficSelector = Field(default_factory=TrafficSelector)
     qos: QosConstraint | None = None
     enforcement: EnforcementConstraint | None = None
+    sfc_role: Literal["ingress", "transit", "egress"] | None = None
     @model_validator(mode="after")
     def validate_semantics(self) -> "IntentRule":
-        valid = {"forwarding": {"forward"}, "security": {"allow", "deny"}, "qos": {"prioritize"}}
+        valid = {"forwarding": {"forward"}, "security": {"allow", "deny"}, "qos": {"prioritize"}, "sfc": {"forward"}, "reroute": {"forward"}}
         if self.action not in valid[self.intent_type]: raise ValueError(f"{self.intent_type} cannot use action {self.action}")
         if self.intent_type == "qos" and self.qos is None: raise ValueError("qos rule requires a qos constraint")
         if self.intent_type != "qos" and self.qos is not None: raise ValueError("qos constraint is only valid for qos rules")
+        if (self.intent_type == "sfc") != (self.sfc_role is not None): raise ValueError("sfc_role is required for, and only for, sfc rules")
+        if self.enforcement is not None and self.enforcement.avoid_device is not None and self.intent_type != "reroute":
+            raise ValueError("avoid_device is only valid for reroute rules")
         return self
 
 class IntentProgram(StrictModel):
     """Rules in evaluation order, highest policy priority first."""
     rules: list[IntentRule] = Field(min_length=1)
+    sfc_chain: list[str] | None = None
+    @model_validator(mode="after")
+    def validate_sfc_chain(self) -> "IntentProgram":
+        has_sfc = any(r.intent_type == "sfc" for r in self.rules)
+        if has_sfc != (self.sfc_chain is not None):
+            raise ValueError("sfc_chain is required for, and only for, programs containing an sfc rule")
+        return self
 
 class RejectedIntent(StrictModel):
     reason: Literal["ambiguous", "contradictory", "unknown_entity", "unsupported"]
