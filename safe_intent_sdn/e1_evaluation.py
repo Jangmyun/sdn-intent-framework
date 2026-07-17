@@ -9,7 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 from .intent_ir import IntentPrediction, IntentRule
 from .onos import parse_onos_response
 
-RULE_SLOTS = ("intent_type", "action", "source", "destination", "eth_type", "protocol", "source_port", "destination_port", "ingress_port", "qos", "device", "egress_port", "set_vlan_id")
+RULE_SLOTS = ("intent_type", "action", "source", "destination", "eth_type", "protocol", "source_port", "destination_port", "ingress_port", "qos", "device", "egress_port", "set_vlan_id", "sfc_role")
 
 class Provenance(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -61,7 +61,8 @@ def _rule_slots(rule: IntentRule, aliases: dict[str, str]) -> dict[str, Any]:
     return {"intent_type":rule.intent_type, "action":rule.action, "source":_endpoint(s.source, aliases), "destination":_endpoint(s.destination, aliases),
             "eth_type":s.eth_type, "protocol":s.protocol, "source_port":s.source_port, "destination_port":s.destination_port,
             "ingress_port":s.ingress_port, "qos":rule.qos.model_dump(exclude_none=True) if rule.qos else None,
-            "device":aliases.get(e.device, e.device) if e and e.device else None, "egress_port":str(e.egress_port) if e and e.egress_port is not None else None, "set_vlan_id":e.set_vlan_id if e else None}
+            "device":aliases.get(e.device, e.device) if e and e.device else None, "egress_port":str(e.egress_port) if e and e.egress_port is not None else None, "set_vlan_id":e.set_vlan_id if e else None,
+            "sfc_role":rule.sfc_role}
 
 def _normalized_equal(expected: IntentPrediction, actual: IntentPrediction, aliases: dict[str, str]) -> bool:
     if expected.status != actual.status:
@@ -69,9 +70,13 @@ def _normalized_equal(expected: IntentPrediction, actual: IntentPrediction, alia
     if expected.status == "rejected":
         return expected.rejection.reason == actual.rejection.reason
     expected_rules, actual_rules = expected.program.rules, actual.program.rules
-    return len(expected_rules) == len(actual_rules) and all(
-        _rule_slots(left, aliases) == _rule_slots(right, aliases)
-        for left, right in zip(expected_rules, actual_rules, strict=True)
+    return (
+        expected.program.sfc_chain == actual.program.sfc_chain
+        and len(expected_rules) == len(actual_rules)
+        and all(
+            _rule_slots(left, aliases) == _rule_slots(right, aliases)
+            for left, right in zip(expected_rules, actual_rules, strict=True)
+        )
     )
 
 def _entity_spellings(prediction: IntentPrediction) -> set[str]:
