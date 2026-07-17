@@ -1,0 +1,10 @@
+[project]
+experiment_id = "e1-sfc-reroute-d-grounded-ir"
+[llm]
+prompt_version = "e1-sfc-reroute-ir-grounded-v1"
+[translation_experiment]
+output_format = "intent_ir"
+few_shot = true
+state_grounding = true
+dataset_path = "experiments/e1/data/intents_sfc_reroute.jsonl"
+topology_path = "experiments/e1/data/topology_diamond.json"

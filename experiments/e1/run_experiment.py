@@ -13,6 +13,7 @@ from safe_intent_sdn.onos import OnosFlowSet, parse_onos_response
 
 SYSTEM_IR='''/no_think
 You translate one SDN operator instruction into strict JSON. Return JSON only. Accepted output: {"status":"accepted","program":{"rules":[...]},"rejection":null}. Rejected output: {"status":"rejected","program":null,"rejection":{"reason":"ambiguous|contradictory|unknown_entity|unsupported"}}. Rules are ordered highest policy priority first. Each rule has exactly these keys: intent_type, action, selector, qos, enforcement. The action value must be forward for forwarding, allow or deny for security, and prioritize for qos. The JSON Schema supplied with this request defines all object structure. Selector fields are source/destination endpoint objects using exactly one of host or ip, eth_type (ipv4|ipv6|arp), protocol (icmp|tcp|udp), source_port, destination_port, ingress_port. Use null for absent optional fields. QoS requires min_bandwidth_mbps, max_latency_ms, or queue. Enforcement supports device, egress_port, set_vlan_id. Do not invent entities. Never output a key named matching_action; the key is action.'''
+SFC_REROUTE_ADDENDUM=''' This dataset also contains sfc and reroute intent_types, both using action forward. An sfc rule additionally requires sfc_role (ingress|transit|egress); an accepted program containing an sfc rule requires a top-level sfc_chain: a list of "device[:port]" tokens naming the waypoints between rules in order, one token per hop. Omit sfc_chain when no rule is sfc. A reroute rule reuses the forwarding selector/enforcement structure; enforcement may optionally set avoid_device to name a device the path must not traverse.'''
 SYSTEM_ONOS='''/no_think
 Translate one SDN operator instruction into ONOS flow JSON only. Return {"flows":[...]} for accepted requests or {} when the request must be rejected. Each flow needs priority, timeout, isPermanent, deviceId, selector.criteria, and optionally treatment.instructions. A deny flow omits treatment. Supported criteria: ETH_TYPE, IPV4_SRC/DST, IPV6_SRC/DST, IP_PROTO, TCP_SRC/DST, UDP_SRC/DST, IN_PORT. Supported instructions: OUTPUT, QUEUE, and L2MODIFICATION with subtype VLAN_ID. Preserve every clause as a flow and use higher priority first. selector.criteria and treatment.instructions are always JSON arrays. Do not imitate benchmark answers or invent fields.'''
 
@@ -64,10 +65,10 @@ def call(*args,retries:int=0,**kwargs):
     raise AssertionError("unreachable")
 
 def main()->None:
-    parser=argparse.ArgumentParser(); parser.add_argument('--treatment',choices=['E1-A','E1-B','E1-C','E1-D'],required=True); parser.add_argument('--model',default='qwen3:8b'); parser.add_argument('--repetition',type=int,default=1); parser.add_argument('--limit',type=int); parser.add_argument('--case-id',action='append'); parser.add_argument('--output',type=Path); parser.add_argument('--quiet',action='store_true'); parser.add_argument('--timeout',type=float); parser.add_argument('--max-tokens',type=int); args=parser.parse_args()
+    parser=argparse.ArgumentParser(); parser.add_argument('--treatment',choices=['E1-A','E1-B','E1-C','E1-D'],required=True); parser.add_argument('--config',type=Path); parser.add_argument('--model',default='qwen3:8b'); parser.add_argument('--repetition',type=int,default=1); parser.add_argument('--limit',type=int); parser.add_argument('--case-id',action='append'); parser.add_argument('--output',type=Path); parser.add_argument('--quiet',action='store_true'); parser.add_argument('--timeout',type=float); parser.add_argument('--max-tokens',type=int); args=parser.parse_args()
     if args.repetition not in range(1,6): raise SystemExit("repetition must be 1..5 (seeds 42..46)")
     seed=41+args.repetition
-    settings=load_settings(f'config/experiments/{args.treatment.lower().replace("-","_")}.toml'); base=settings.secrets.llm_base_url
+    settings=load_settings(args.config or f'config/experiments/{args.treatment.lower().replace("-","_")}.toml'); base=settings.secrets.llm_base_url
     if base is None: raise SystemExit('SAFE_SDN_LLM_BASE_URL is required')
     cases=load_cases(ROOT/settings.translation_experiment.dataset_path)
     if args.case_id: cases=[c for c in cases if c.id in set(args.case_id)]
@@ -77,6 +78,7 @@ def main()->None:
     schema={'$defs':flow_defs,'anyOf':[flow_schema,{'type':'object','maxProperties':0}]} if direct else IntentPrediction.model_json_schema()
     if settings.translation_experiment.few_shot: system+=few_shot(ROOT/"experiments"/"e1"/"data"/"demonstrations.json")
     if settings.translation_experiment.state_grounding: system+=topology_text(ROOT/settings.translation_experiment.topology_path)
+    if not direct and "sfc_reroute" in settings.translation_experiment.dataset_path.name: system+=SFC_REROUTE_ADDENDUM
     run_id=f'{args.treatment.lower()}-{args.model.replace(":","-")}-{uuid.uuid4().hex[:8]}'; target=args.output or ROOT/'logs'/'e1'/f'{run_id}-r{args.repetition}.jsonl'; target.parent.mkdir(parents=True,exist_ok=True)
     completed=set()
     if target.exists():
