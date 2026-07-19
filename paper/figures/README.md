@@ -4,6 +4,11 @@
 제출물이므로 커밋하지만, 원본 실행 로그(`logs/e1/`, `logs/e2/`)는 재현 가능한 대용량
 artifact이므로 계속 Git에서 무시합니다.
 
+각 스크립트는 영문 그림과 함께 `_ko` 접미사가 붙은 한글 라벨 버전도 같은 실행에서 함께
+생성합니다(예: `e1_table4_metrics.png` + `e1_table4_metrics_ko.png`). 한글 렌더링은
+`paper/scripts/fonts/NanumGothic-Regular.ttf`(SIL OFL-1.1, 같은 폴더의 `OFL.txt` 참고)를
+번들로 포함해 사용하므로, 로컬에 한글 폰트가 없어도 동일하게 재현됩니다.
+
 ## 재생성
 
 ```bash
@@ -23,6 +28,8 @@ uv run --group plots python paper/scripts/plot_e2_precision_recall.py
 바꿔야 합니다.
 
 ## Files
+
+(`_ko` 접미사 버전은 아래 각 항목과 동일한 데이터의 한글 라벨 버전이라 표에서 생략)
 
 | 파일 | 내용 | 근거 |
 | --- | --- | --- |
