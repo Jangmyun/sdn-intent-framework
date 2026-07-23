@@ -1,0 +1,350 @@
+{"blind_id": "B001", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "ambiguous", "rationale": "§4.4: no concrete flow or action can be identified."}
+{"blind_id": "B002", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: 'must not reach' is a blocking phrase for one flow h1→h3."}
+{"blind_id": "B003", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain delivery of one flow h4→h1."}
+{"blind_id": "B004", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: two unidirectional flows (h1→h4 and h4→h1) = two clauses."}
+{"blind_id": "B005", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: block verb for one flow to 10.0.0.1, pinned to s3."}
+{"blind_id": "B006", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain delivery h2→h4."}
+{"blind_id": "B007", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.9 note: plain connectivity verb for SSH with no rule/ACL framing → forwarding."}
+{"blind_id": "B008", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: block verb for traffic to 10.0.0.4 on s4."}
+{"blind_id": "B009", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: bypass s2 / use s3 is a pure path change with no service role."}
+{"blind_id": "B010", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: two different flows (ICMP h1→h2 and UDP h3→h1)."}
+{"blind_id": "B011", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: 'kill the flow' is a blocking verb for one flow h2→h4."}
+{"blind_id": "B012", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: exception + default (everything except ping) = two clauses."}
+{"blind_id": "B013", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: queue assignment for one flow."}
+{"blind_id": "B014", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: three clauses (queue, forward, block) across different flows."}
+{"blind_id": "B015", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: vetting at s1 port 9 (the firewall port) before forwarding is a middlebox waypoint."}
+{"blind_id": "B016", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain delivery h1→h3."}
+{"blind_id": "B017", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: exception + default (all except FTP) = two clauses."}
+{"blind_id": "B018", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: minimum-bandwidth guarantee for one flow."}
+{"blind_id": "B019", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "contradictory", "rationale": "§4.2: two different queues at the same time cannot both hold."}
+{"blind_id": "B020", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: latency bound for one flow."}
+{"blind_id": "B021", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: block one service (SSH) for one flow."}
+{"blind_id": "B022", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: port-pinned delivery on s2 (valid port 2) with no change implied."}
+{"blind_id": "B023", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: bandwidth guarantee for one flow."}
+{"blind_id": "B024", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: flow must traverse the inspection appliance at s2 first."}
+{"blind_id": "B025", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain delivery h2→h1."}
+{"blind_id": "B026", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: 'do not let reach' is a blocking phrase."}
+{"blind_id": "B027", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: redirect to a specific egress port is a path/egress change."}
+{"blind_id": "B028", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: waypoint at s1 port 9 (the firewall port); service noun dominates."}
+{"blind_id": "B029", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "unknown_entity", "rationale": "§4.1: 'printer-01' is not in the §1 inventory."}
+{"blind_id": "B030", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: bandwidth floor for one DNS flow."}
+{"blind_id": "B031", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: shifting onto the s3 route changes the flow's path."}
+{"blind_id": "B032", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: port-pinned delivery on s3 (valid port 2) with no change implied."}
+{"blind_id": "B033", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: two different flows (h1→h4 and h2→h4)."}
+{"blind_id": "B034", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.9 note: plain connectivity verb with no rule/ACL framing → forwarding."}
+{"blind_id": "B035", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: drop verb for one flow h2→h1."}
+{"blind_id": "B036", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: two sources plus exception+default = multiple clauses."}
+{"blind_id": "B037", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: via s3 instead of s2, pure path change (hard-case table)."}
+{"blind_id": "B038", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: flow must transit the IDS on s2."}
+{"blind_id": "B039", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: deny verb for one flow."}
+{"blind_id": "B040", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: queue assignment for one flow."}
+{"blind_id": "B041", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "contradictory", "rationale": "§4.2: two different egress ports at once cannot both hold."}
+{"blind_id": "B042", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "unknown_entity", "rationale": "§4.1: h5 is not in the §1 inventory."}
+{"blind_id": "B043", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "unsupported", "rationale": "§4.3: time-conditioned rules are outside §2 capabilities."}
+{"blind_id": "B044", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: moving the flow to egress port 2 is an egress change."}
+{"blind_id": "B045", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: bandwidth floor for one flow."}
+{"blind_id": "B046", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: failover onto the s3 path is a path change."}
+{"blind_id": "B047", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: flow runs through the firewall waypoint before delivery."}
+{"blind_id": "B048", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: block + keep forwarding the rest = exception + default."}
+{"blind_id": "B049", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: inspection at s3 (monitoring service) invoked, then delivery."}
+{"blind_id": "B050", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: queue assignment for one flow."}
+{"blind_id": "B051", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: failover to the s2 path is a path change."}
+{"blind_id": "B052", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: explicit allow-entry framing → security."}
+{"blind_id": "B053", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: force through the firewall at s1 port 9."}
+{"blind_id": "B054", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: whitelist is explicit allow-rule framing."}
+{"blind_id": "B055", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: exception + default (everything except HTTPS)."}
+{"blind_id": "B056", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: port-pinned delivery on s4 (valid port 1), no change implied."}
+{"blind_id": "B057", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "ambiguous", "rationale": "§4.4: 'appropriately' identifies no concrete action."}
+{"blind_id": "B058", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: 'for monitoring' invokes s3's service role, so service noun dominates the path verb."}
+{"blind_id": "B059", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: port-pinned delivery on s1 (valid port 3), no change implied."}
+{"blind_id": "B060", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: inspection by the middlebox at s1 port 9."}
+{"blind_id": "B061", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "ambiguous", "rationale": "§4.4: no concrete flow or action."}
+{"blind_id": "B062", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: flow steered through the IDS at s2."}
+{"blind_id": "B063", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain delivery h2→h3."}
+{"blind_id": "B064", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: prevent-contact is a blocking verb."}
+{"blind_id": "B065", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: whitelist framing → security."}
+{"blind_id": "B066", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: minimum-bandwidth guarantee."}
+{"blind_id": "B067", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: block verb for one flow."}
+{"blind_id": "B068", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: a qos clause (ICMP queue 1) plus a forwarding clause (UDP) = two clauses."}
+{"blind_id": "B069", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "unknown_entity", "rationale": "§4.1: 'the database server' is not in the §1 inventory."}
+{"blind_id": "B070", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "unsupported", "rationale": "§4.3: 'at most X Mbps' rate limiting is explicitly unsupported in §2."}
+{"blind_id": "B071", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "contradictory", "rationale": "§4.2: latency under 5 ms and above 50 ms is numerically impossible."}
+{"blind_id": "B072", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain delivery of mail (tcp/25) h4→h2."}
+{"blind_id": "B073", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: explicit permit-rule framing → security."}
+{"blind_id": "B074", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: queue/priority assignment for one flow."}
+{"blind_id": "B075", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: two flows with two egress rules = two clauses."}
+{"blind_id": "B076", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "unknown_entity", "rationale": "§4.1: 10.0.0.99 is not in the §1 inventory."}
+{"blind_id": "B077", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: two different flows (TCP h4→h3 and ICMP h4→h2)."}
+{"blind_id": "B078", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: polite phrasing of plain delivery h1→h2."}
+{"blind_id": "B079", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: a qos clause plus a security block = two clauses (hard-case table)."}
+{"blind_id": "B080", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "unsupported", "rationale": "§4.3: encryption is outside §2 capabilities."}
+{"blind_id": "B081", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.5/§4.6: firewall screening with 'pass what's clean' is an outcome attached to the chain."}
+{"blind_id": "B082", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: queue plus bandwidth floor is one qos clause with several constraints."}
+{"blind_id": "B083", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: a qos guarantee plus an FTP block = two clauses."}
+{"blind_id": "B084", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "unsupported", "rationale": "§4.3: application-layer/content filtering is outside §2."}
+{"blind_id": "B085", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: deny verb for one flow."}
+{"blind_id": "B086", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "ambiguous", "rationale": "§4.4: no concrete flow or action."}
+{"blind_id": "B087", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: default forward plus UDP drop exception = two clauses."}
+{"blind_id": "B088", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "unsupported", "rationale": "§4.3: dynamic load balancing across paths is explicitly unsupported (§2, hard-case table)."}
+{"blind_id": "B089", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: deny everything for one flow h3→h2."}
+{"blind_id": "B090", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: steering through the load balancer on s2 is a supported fixed waypoint (§2)."}
+{"blind_id": "B091", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain delivery of HTTPS (tcp/443) h4→h3."}
+{"blind_id": "B092", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: divert away from s3 through s2 with no service role invoked."}
+{"blind_id": "B093", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: drop action on a concrete match (ingress port 3 of s1, a valid port)."}
+{"blind_id": "B094", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: port-pinned delivery on s1 (valid port 4), no change implied."}
+{"blind_id": "B095", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: changing the output port is an egress change."}
+{"blind_id": "B096", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: exception + default (everything except ICMP)."}
+{"blind_id": "B097", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: latency bound for one flow."}
+{"blind_id": "B098", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: deny one service (HTTP) for one flow."}
+{"blind_id": "B099", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: flow must clear the security appliance on s1 first."}
+{"blind_id": "B100", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: choosing the s3 (alternate) route is a path preference change with no service role."}
+{"blind_id": "B101", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain delivery of HTTPS h3→h1."}
+{"blind_id": "B102", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: latency bound for one SSH flow."}
+{"blind_id": "B103", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: 'avoid switch 3' is a pure path change."}
+{"blind_id": "B104", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: latency bound for one flow."}
+{"blind_id": "B105", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: block verb for one flow."}
+{"blind_id": "B106", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "unknown_entity", "rationale": "§4.1: h9 is not in the §1 inventory."}
+{"blind_id": "B107", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: packet scrubber at s1 port 9 is a service waypoint; service noun dominates 'divert'."}
+{"blind_id": "B108", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: a qos clause (h4→h1) plus a forwarding clause (h4→h2)."}
+{"blind_id": "B109", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: two unidirectional flows blocked = two clauses."}
+{"blind_id": "B110", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: block DNS exception plus a default allow = two clauses."}
+{"blind_id": "B111", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: flow sent through the firewall for screening; named TCP port is valid."}
+{"blind_id": "B112", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: via s2 instead of the s3 path, pure path change."}
+{"blind_id": "B113", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain connectivity h2→h3."}
+{"blind_id": "B114", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: redirecting ingress port 1 traffic out port 2 is an egress change."}
+{"blind_id": "B115", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: latency bound for one UDP flow."}
+{"blind_id": "B116", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: a qos clause plus a separate forwarding clause = two clauses."}
+{"blind_id": "B117", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: block ping (ICMP) for one flow."}
+{"blind_id": "B118", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: queue assignment for one flow."}
+{"blind_id": "B119", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: explicit egress-port change on s1."}
+{"blind_id": "B120", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: rerouting ingress traffic to a new exit port is an egress change."}
+{"blind_id": "B121", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.5/§4.7: failure condition attached to a path change belongs to the reroute."}
+{"blind_id": "B122", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: a qos clause plus a drop clause = two clauses."}
+{"blind_id": "B123", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: security-exception (explicit allow-rule) framing → security."}
+{"blind_id": "B124", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: 'shouldn't be able to ping' blocks one ICMP flow."}
+{"blind_id": "B125", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: queue assignment for one flow."}
+{"blind_id": "B126", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: through s2, not s3 — pure path change, no service role."}
+{"blind_id": "B127", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain delivery of udp/123 h3→h1."}
+{"blind_id": "B128", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "ambiguous", "rationale": "§4.4: no concrete flow or action."}
+{"blind_id": "B129", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: two different flows (web h2→h4 and mail h4→h2)."}
+{"blind_id": "B130", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain delivery with a named UDP port match (named ports always valid)."}
+{"blind_id": "B131", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: moving traffic from port 1 to port 2 is an egress change."}
+{"blind_id": "B132", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain connectivity h2→h4."}
+{"blind_id": "B133", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.9 note: plain 'allow' with no rule/ACL framing; named TCP port is valid."}
+{"blind_id": "B134", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: SMTP must be checked by the IDS on s2."}
+{"blind_id": "B135", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain delivery h3→h1."}
+{"blind_id": "B136", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: queue assignment for one DNS flow."}
+{"blind_id": "B137", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: FTP routed through the DPI engine at s2."}
+{"blind_id": "B138", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: queue assignment; named TCP port is valid."}
+{"blind_id": "B139", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: a qos latency clause plus a telnet block = two clauses."}
+{"blind_id": "B140", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: queue + delay + bandwidth are several constraints in ONE qos clause."}
+{"blind_id": "B141", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: steer through the inspection device at s1 port 9."}
+{"blind_id": "B142", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "ambiguous", "rationale": "§4.4: no concrete flow or action."}
+{"blind_id": "B143", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: drop verb for one flow, pinned to s1."}
+{"blind_id": "B144", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: a qos clause plus a security block = two clauses."}
+{"blind_id": "B145", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: redirecting the flow to leave via port 2 is an egress change."}
+{"blind_id": "B146", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain delivery h3→h2."}
+{"blind_id": "B147", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: bandwidth floor for one flow."}
+{"blind_id": "B148", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: forced through the scrubbing service on s2."}
+{"blind_id": "B149", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain connectivity h4→h2."}
+{"blind_id": "B150", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: 'let it through' is plain delivery with no ACL framing."}
+{"blind_id": "B151", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: s2 path instead of s3, pure path change."}
+{"blind_id": "B152", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: latency bound for one flow."}
+{"blind_id": "B153", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: DNS routed through the middlebox at s1 port 9."}
+{"blind_id": "B154", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: port-pinned delivery on s4 (valid port 3), no change implied."}
+{"blind_id": "B155", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "ambiguous", "rationale": "§4.4: no concrete flow or action."}
+{"blind_id": "B156", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: 'never reaches' is a blocking phrase."}
+{"blind_id": "B157", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "unsupported", "rationale": "§4.3: VPN/tunnels are outside §2 capabilities."}
+{"blind_id": "B158", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: bandwidth floor for one ICMP flow."}
+{"blind_id": "B159", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: SSH must clear the firewall at s1 port 9 before delivery."}
+{"blind_id": "B160", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "contradictory", "rationale": "§4.2: routing through s2 and never touching s2 cannot both hold."}
+{"blind_id": "B161", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.9 note: 'permit' used as a plain connectivity verb with no rule/ACL framing → forwarding."}
+{"blind_id": "B162", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: block one TCP port from one source, pinned to s1."}
+{"blind_id": "B163", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: two services (DNS and HTTP) = two rules."}
+{"blind_id": "B164", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: through port 9 on s1 (the firewall port) for filtering."}
+{"blind_id": "B165", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: through s2 instead of s3 with no service role invoked."}
+{"blind_id": "B166", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: drop-all-from-h2 plus a forward-everything-else default = two clauses."}
+{"blind_id": "B167", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: permit-only exception plus a drop default = two clauses."}
+{"blind_id": "B168", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: drop verb for one flow, pinned to s4."}
+{"blind_id": "B169", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.5/§4.7: maintenance condition attached to an egress-port change belongs to the reroute."}
+{"blind_id": "B170", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "contradictory", "rationale": "§4.2: whitelisting and blacklisting the same flow cannot both hold."}
+{"blind_id": "B171", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: bandwidth + latency are several constraints in ONE qos clause."}
+{"blind_id": "B172", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: 'cut off' is a blocking verb."}
+{"blind_id": "B173", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: a qos clause (h3→h2) plus a forwarding clause (h3→h4)."}
+{"blind_id": "B174", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: latency bound for one flow."}
+{"blind_id": "B175", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: 'now via port 2 rather than port 1' is an explicit egress change."}
+{"blind_id": "B176", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: switching the path from s2 over to s3."}
+{"blind_id": "B177", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: shifting traffic from port 2 to port 1 is an egress change."}
+{"blind_id": "B178", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: web traffic inspected at the firewall on s1."}
+{"blind_id": "B179", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: bandwidth floor for one flow."}
+{"blind_id": "B180", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.9 note: plain connectivity 'allow' with no rule/ACL framing → forwarding."}
+{"blind_id": "B181", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: reroute to exit port 2 is an egress change."}
+{"blind_id": "B182", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: 'from now on, skipping switch 3' is a path change by preference."}
+{"blind_id": "B183", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: redirect from port 1 to port 2 is an egress change."}
+{"blind_id": "B184", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: explicit allow-rule framing → security."}
+{"blind_id": "B185", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "contradictory", "rationale": "§4.2: a guarantee for h1→h3 traffic that is also dropped (drop everything from h1)."}
+{"blind_id": "B186", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: drop ICMP for one flow."}
+{"blind_id": "B187", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: exception + default (all except SSH), per hard-case table."}
+{"blind_id": "B188", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "unknown_entity", "rationale": "§4.1: 10.0.1.7 is not in the §1 inventory."}
+{"blind_id": "B189", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "unknown_entity", "rationale": "§4.1: 'camera-2' is not in the §1 inventory."}
+{"blind_id": "B190", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: two services (SSH and telnet) = two rules, per hard-case table."}
+{"blind_id": "B191", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: explicit reroute through s3 with no service role."}
+{"blind_id": "B192", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "ambiguous", "rationale": "§4.4: no identifiable flow, per hard-case table."}
+{"blind_id": "B193", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: steered through the monitor on s3."}
+{"blind_id": "B194", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "ambiguous", "rationale": "§4.4: no concrete flow or action."}
+{"blind_id": "B195", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: latency bound for one flow."}
+{"blind_id": "B196", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: bandwidth floor for one flow."}
+{"blind_id": "B197", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: minimum-bandwidth guarantee."}
+{"blind_id": "B198", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: port-pinned delivery on s4 (valid port 4), no change implied."}
+{"blind_id": "B199", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: two different flows (SSH h2→h3 and FTP h3→h2)."}
+{"blind_id": "B200", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "ambiguous", "rationale": "§4.4: 'suspicious traffic' identifies no concrete flow."}
+{"blind_id": "B201", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: two blocks plus a default forward = multiple clauses."}
+{"blind_id": "B202", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: deny one service (HTTPS) for one flow."}
+{"blind_id": "B203", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: queue assignment for one flow."}
+{"blind_id": "B204", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: prevent is a blocking verb."}
+{"blind_id": "B205", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: 'don't allow' is a blocking phrase."}
+{"blind_id": "B206", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.5/§4.7: failure condition ('until switch 2 recovers') attached to a path change."}
+{"blind_id": "B207", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "ambiguous", "rationale": "§4.4: no concrete flow or action."}
+{"blind_id": "B208", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: queue assignment even though phrased with a forwarding verb."}
+{"blind_id": "B209", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: bandwidth guarantee for one flow."}
+{"blind_id": "B210", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: maintenance-motivated path change via s3."}
+{"blind_id": "B211", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: deny verb for one flow, pinned to s2."}
+{"blind_id": "B212", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: failure-motivated path change to s3."}
+{"blind_id": "B213", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.5/§4.7: maintenance condition attached to a path change."}
+{"blind_id": "B214", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: queue + latency are several constraints in ONE qos clause."}
+{"blind_id": "B215", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: congestion-motivated backup path via s3."}
+{"blind_id": "B216", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "unknown_entity", "rationale": "§4.1: 'the guest subnet' is not in the §1 inventory."}
+{"blind_id": "B217", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: bandwidth floor for one flow."}
+{"blind_id": "B218", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: failure-motivated path change to s3."}
+{"blind_id": "B219", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: routed via the proxy on s2; named TCP port is valid."}
+{"blind_id": "B220", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: drop verb for one flow, pinned to s4."}
+{"blind_id": "B221", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: latency bound for one flow."}
+{"blind_id": "B222", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: DNS passed through the logging node on s3."}
+{"blind_id": "B223", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: latency bound for one flow."}
+{"blind_id": "B224", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.9 note: plain connectivity 'let ping' with no rule framing → forwarding."}
+{"blind_id": "B225", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: 'for deep packet inspection' invokes s2's DPI service role."}
+{"blind_id": "B226", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain delivery h1→h4."}
+{"blind_id": "B227", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: drop clause plus a forward-other-flows default = two clauses."}
+{"blind_id": "B228", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: queue assignment for one flow."}
+{"blind_id": "B229", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "unknown_entity", "rationale": "§4.1: switch 5 is not in the §1 inventory."}
+{"blind_id": "B230", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.5/§4.6: firewall waypoint with 'drop on failure' as an outcome attached to the chain."}
+{"blind_id": "B231", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: through the firewall port on s1 (port 9) for filtering."}
+{"blind_id": "B232", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain delivery of one flow h2→h4."}
+{"blind_id": "B233", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: forward-DNS exception plus a block-other-UDP default = two clauses."}
+{"blind_id": "B234", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.9 note: plain connectivity 'allow' for DNS with no rule framing → forwarding."}
+{"blind_id": "B235", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.5/§4.6: IDS waypoint with quarantine as a post-inspection outcome attached to the chain."}
+{"blind_id": "B236", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: routed through the IDS on s2; named TCP port is valid."}
+{"blind_id": "B237", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: 'for flow logging' invokes s3's logging service role."}
+{"blind_id": "B238", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: deny verb for one flow, pinned to s2."}
+{"blind_id": "B239", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "contradictory", "rationale": "§4.2: forward and drop the same ICMP flow cannot both hold."}
+{"blind_id": "B240", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: latency bound for one flow."}
+{"blind_id": "B241", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "unknown_entity", "rationale": "§4.1: h8 is not in the §1 inventory."}
+{"blind_id": "B242", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: two services (HTTP and HTTPS) = two rules."}
+{"blind_id": "B243", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: moving traffic off s3 onto s2 is a pure path change."}
+{"blind_id": "B244", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: queue + bandwidth guarantee are several constraints in ONE qos clause."}
+{"blind_id": "B245", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: directed through the inspection port 9 on s1."}
+{"blind_id": "B246", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: two protocols (ICMP and UDP) = two rules."}
+{"blind_id": "B247", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "unsupported", "rationale": "§4.3: traffic mirroring/copying is outside §2 capabilities."}
+{"blind_id": "B248", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: blackhole is a blocking verb."}
+{"blind_id": "B249", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.5/§4.7: failure condition attached to a path change belongs to the reroute."}
+{"blind_id": "B250", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: drop verb for one flow."}
+{"blind_id": "B251", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: ICMP block plus a forward-the-rest default = two clauses."}
+{"blind_id": "B252", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: port-pinned delivery on s1 (valid port 4), no change implied."}
+{"blind_id": "B253", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: exception + default (everything apart from telnet)."}
+{"blind_id": "B254", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: SSH deny plus a forward-other-traffic default = two clauses."}
+{"blind_id": "B255", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: latency bound for one flow."}
+{"blind_id": "B256", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: rerouting arriving traffic to a different exit port is an egress change."}
+{"blind_id": "B257", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "unknown_entity", "rationale": "§4.1: port 7 does not exist on s3 (valid s3 ports are 1 and 2)."}
+{"blind_id": "B258", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain connectivity h4→h1."}
+{"blind_id": "B259", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: congestion-motivated switch to the s3 path."}
+{"blind_id": "B260", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "ambiguous", "rationale": "§4.4: no concrete flow or action."}
+{"blind_id": "B261", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: port-pinned delivery on s3 (valid port 2), no change implied."}
+{"blind_id": "B262", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain delivery of UDP h3→h4."}
+{"blind_id": "B263", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "contradictory", "rationale": "§4.2: blocking ping and ensuring ping for the same flow cannot both hold."}
+{"blind_id": "B264", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: deny a named UDP port for one flow."}
+{"blind_id": "B265", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: 'exits port 2 from now on' implies a change of egress port."}
+{"blind_id": "B266", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: 'firewall off' is a blocking verb with no waypoint traversal (hard-case table)."}
+{"blind_id": "B267", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: two different flows (h1→h3 and h2→h3)."}
+{"blind_id": "B268", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "unsupported", "rationale": "§4.3: NAT is outside §2 capabilities."}
+{"blind_id": "B269", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain delivery of ICMP h1→h4."}
+{"blind_id": "B270", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: 'shut down traffic' is a blocking verb."}
+{"blind_id": "B271", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: drop clause plus a forward-all-other default = two clauses."}
+{"blind_id": "B272", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: FTP pushed through the scrubber at s1 port 9."}
+{"blind_id": "B273", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: 'keep away' prevents contact, a blocking intent for one flow."}
+{"blind_id": "B274", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: latency bound for one DNS flow."}
+{"blind_id": "B275", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: NTP sent through the monitor on s3."}
+{"blind_id": "B276", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: two forwarding flows plus an ICMP block = three clauses."}
+{"blind_id": "B277", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "unknown_entity", "rationale": "§4.1: 172.16.0.4 is not in the §1 inventory."}
+{"blind_id": "B278", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: whitelist exception plus a drop-all-other default = two clauses."}
+{"blind_id": "B279", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: explicit accept-rule framing → security."}
+{"blind_id": "B280", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain delivery of TCP h4→h2."}
+{"blind_id": "B281", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: bandwidth floor ('no less than 25 Mbps') for one flow."}
+{"blind_id": "B282", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "ambiguous", "rationale": "§4.4: 'like last time' identifies no concrete flow or action."}
+{"blind_id": "B283", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: DNS passed through the security appliance at s1 port 9."}
+{"blind_id": "B284", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "unknown_entity", "rationale": "§4.1: switch 6 is not in the §1 inventory."}
+{"blind_id": "B285", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.5/§4.7: failure condition attached to a path change belongs to the reroute."}
+{"blind_id": "B286", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: routing around s2 is a pure path change."}
+{"blind_id": "B287", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: inspect-then-forward via the security function at s1 port 9 is one chain."}
+{"blind_id": "B288", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.5/§4.6: 'drop anything malicious' is an outcome attached to the firewall chain (hard-case table)."}
+{"blind_id": "B289", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: 'stop' blocks one mail flow."}
+{"blind_id": "B290", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: SSH chained through the firewall at s1 port 9."}
+{"blind_id": "B291", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "ambiguous", "rationale": "§4.4: no concrete flow or action."}
+{"blind_id": "B292", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain connectivity h3→h4."}
+{"blind_id": "B293", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: block DNS for one flow."}
+{"blind_id": "B294", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: delay bound for one flow."}
+{"blind_id": "B295", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.5/§4.6: firewall waypoint with block-on-failed-inspection as an outcome attached to the chain."}
+{"blind_id": "B296", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: steering around s2 via s3 is a pure path change."}
+{"blind_id": "B297", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.9 note/§4.10: plain connectivity with a named TCP port, no rule framing."}
+{"blind_id": "B298", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "ambiguous", "rationale": "§4.4: no concrete flow or action."}
+{"blind_id": "B299", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: outage-motivated path change through s3."}
+{"blind_id": "B300", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: failure-motivated (flapping link) move to s2."}
+{"blind_id": "B301", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain delivery of one flow h1→h4."}
+{"blind_id": "B302", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain delivery h3→h2."}
+{"blind_id": "B303", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: activating the backup path is a failover path change."}
+{"blind_id": "B304", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: two different flows (HTTPS h3→h1 and HTTP h3→h2)."}
+{"blind_id": "B305", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: HTTP routed through the firewall at s1 port 9."}
+{"blind_id": "B306", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: failure-motivated (s3 unreachable) path change to s2."}
+{"blind_id": "B307", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: whitelist framing → security."}
+{"blind_id": "B308", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "unsupported", "rationale": "§4.3: protocol translation is outside §2 capabilities."}
+{"blind_id": "B309", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: queue assignment for one flow."}
+{"blind_id": "B310", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: bandwidth reservation (floor) for one flow."}
+{"blind_id": "B311", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: queue + bandwidth floor are several constraints in ONE qos clause."}
+{"blind_id": "B312", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: deny ICMP for one destination, pinned to s1."}
+{"blind_id": "B313", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.5/§4.6: a chain of two waypoints (firewall then DPI) is ONE sfc clause."}
+{"blind_id": "B314", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: port-pinned delivery on s2 (valid port 2), no change implied."}
+{"blind_id": "B315", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: HTTPS must traverse the firewall on s1."}
+{"blind_id": "B316", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: HTTP routed via the IDS on s2."}
+{"blind_id": "B317", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: 'No SSH into h3' blocks one flow."}
+{"blind_id": "B318", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: every packet passes the inspection function at s1 port 9."}
+{"blind_id": "B319", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.9 note: plain 'allow' connectivity with no rule/ACL framing → forwarding."}
+{"blind_id": "B320", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: path-pinned delivery along the default s2 route with no service role and no change implied."}
+{"blind_id": "B321", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: two different flows (h1→h2 and h3→h4)."}
+{"blind_id": "B322", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: block TCP port 23 for one flow."}
+{"blind_id": "B323", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: a qos guarantee plus an HTTP block = two clauses."}
+{"blind_id": "B324", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: two different flows (HTTP h1→h3 and DNS h2→h4)."}
+{"blind_id": "B325", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: queue/priority assignment for one flow."}
+{"blind_id": "B326", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: bandwidth floor for one h3→h2 flow."}
+{"blind_id": "B327", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.8: queue assignment for one flow."}
+{"blind_id": "B328", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: explicit ACL-entry framing → security; named TCP port is valid."}
+{"blind_id": "B329", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: path-pinned delivery along the default s2 route with no service role and no change implied."}
+{"blind_id": "B330", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "unsupported", "rationale": "§4.3: content caching is outside §2 capabilities."}
+{"blind_id": "B331", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: drop-all default plus a DNS exception = two clauses."}
+{"blind_id": "B332", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "unknown_entity", "rationale": "§4.1: 'the backup NAS' is not in the §1 inventory."}
+{"blind_id": "B333", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: changing egress port 2 to port 1 on s4."}
+{"blind_id": "B334", "category": "qos", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: delay bound + queue are several constraints in ONE qos clause."}
+{"blind_id": "B335", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: pulling traffic off the s2 link onto s3 is a path change."}
+{"blind_id": "B336", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.9 note: plain 'allow ping' connectivity with no rule framing → forwarding."}
+{"blind_id": "B337", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain delivery h4→h3."}
+{"blind_id": "B338", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: HTTP deny plus a forward-remaining default = two clauses."}
+{"blind_id": "B339", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "contradictory", "rationale": "§4.2: allow and block the same flow cannot both hold."}
+{"blind_id": "B340", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.5/§4.6: IDS waypoint with 'forward only clean flows' as an outcome attached to the chain."}
+{"blind_id": "B341", "category": "security", "status": "accepted", "rejection_reason": null, "rationale": "§4.9: whitelist framing → security (hard-case table)."}
+{"blind_id": "B342", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain connectivity h4→h3."}
+{"blind_id": "B343", "category": "reroute", "status": "accepted", "rejection_reason": null, "rationale": "§4.7: 're-path via switch 2' is a path change with no service role."}
+{"blind_id": "B344", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.9 note: plain 'allow' connectivity with a port match and no rule/ACL framing → forwarding."}
+{"blind_id": "B345", "category": "compound", "status": "accepted", "rejection_reason": null, "rationale": "§4.5: two services (FTP and SMTP) = two rules."}
+{"blind_id": "B346", "category": "forwarding", "status": "accepted", "rejection_reason": null, "rationale": "§4.10: plain delivery of DNS h2→h4."}
+{"blind_id": "B347", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "unknown_entity", "rationale": "§4.1: switch 7 is not in the §1 inventory."}
+{"blind_id": "B348", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.5/§4.6: a chain through firewall then IDS is ONE sfc clause."}
+{"blind_id": "B349", "category": "sfc", "status": "accepted", "rejection_reason": null, "rationale": "§4.6: all traffic via the firewall attached to s1."}
+{"blind_id": "B350", "category": "ambiguous_unsupported", "status": "rejected", "rejection_reason": "contradictory", "rationale": "§4.2: deny all and forward all for the same flow cannot both hold."}

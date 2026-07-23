@@ -1,0 +1,75 @@
+"""GOLD-350 forwarding cases (50)."""
+from __future__ import annotations
+
+from .helpers import fwd, number
+
+ENTRIES = [
+    # explicit host pair (10)
+    ("explicit", "Allow h1 to reach h2.", fwd("h1", "h2")),
+    ("explicit", "Let h3 send traffic to h1.", fwd("h3", "h1")),
+    ("explicit", "Forward traffic from h2 to h4.", fwd("h2", "h4")),
+    ("explicit", "Route packets from h4 to h1.", fwd("h4", "h1")),
+    ("explicit", "Enable traffic from h1 to h4.", fwd("h1", "h4")),
+    ("explicit", "Set up forwarding from h3 to h2.", fwd("h3", "h2")),
+    ("explicit", "h2 should be able to reach h3.", fwd("h2", "h3")),
+    ("explicit", "Please forward everything from h4 to h3.", fwd("h4", "h3")),
+    ("explicit", "Create a path from h1 to h3.", fwd("h1", "h3")),
+    ("explicit", "Traffic from h2 must reach h1.", fwd("h2", "h1")),
+    # ip + device/port (10)
+    ("ip_device", "On switch 1, forward traffic destined for 10.0.0.2 out port 4.",
+     fwd(dst="10.0.0.2", eth="ipv4", device=1, port="4")),
+    ("ip_device", "In switch 4, send packets for 10.0.0.3 through port 3.",
+     fwd(dst="10.0.0.3", eth="ipv4", device=4, port="3")),
+    ("ip_device", "Switch 1: output traffic for 10.0.0.1 on port 3.",
+     fwd(dst="10.0.0.1", eth="ipv4", device=1, port="3")),
+    ("ip_device", "Forward TCP traffic destined for 10.0.0.4 via port 4 on switch 4.",
+     fwd(dst="10.0.0.4", eth="ipv4", proto="tcp", device=4, port="4")),
+    ("ip_device", "On switch 2, forward traffic toward 10.0.0.4 out port 2.",
+     fwd(dst="10.0.0.4", eth="ipv4", device=2, port="2")),
+    ("ip_device", "In switch 3, packets for 10.0.0.3 should exit on port 2.",
+     fwd(dst="10.0.0.3", eth="ipv4", device=3, port="2")),
+    ("ip_device", "On switch 1, forward UDP destined for 10.0.0.2 through port 4.",
+     fwd(dst="10.0.0.2", eth="ipv4", proto="udp", device=1, port="4")),
+    ("ip_device", "Send ICMP for 10.0.0.1 out port 1 of switch 4.",
+     fwd(dst="10.0.0.1", eth="ipv4", proto="icmp", device=4, port="1")),
+    ("ip_device", "Switch 2 should push traffic for 10.0.0.3 out port 2.",
+     fwd(dst="10.0.0.3", eth="ipv4", device=2, port="2")),
+    ("ip_device", "On switch 3, forward traffic from 10.0.0.1 to 10.0.0.4 out port 2.",
+     fwd("10.0.0.1", "10.0.0.4", eth="ipv4", device=3, port="2")),
+    # protocol / port specific (10)
+    ("protocol", "Forward ICMP from h1 to h4.", fwd("h1", "h4", proto="icmp")),
+    ("protocol", "Allow ping from h2 to h1.", fwd("h2", "h1", proto="icmp")),
+    ("protocol", "Route UDP from h3 to h4.", fwd("h3", "h4", proto="udp")),
+    ("protocol", "Forward TCP from h4 to h2.", fwd("h4", "h2", proto="tcp")),
+    ("protocol", "Allow TCP port 8080 from h1 to h2.", fwd("h1", "h2", proto="tcp", dport=8080)),
+    ("protocol", "Forward UDP port 123 from h3 to h1.", fwd("h3", "h1", proto="udp", dport=123)),
+    ("protocol", "Let h2 send TCP traffic on port 3306 to h3.", fwd("h2", "h3", proto="tcp", dport=3306)),
+    ("protocol", "Forward packets with UDP destination port 161 from h1 to h3.",
+     fwd("h1", "h3", proto="udp", dport=161)),
+    ("protocol", "Allow TCP source port 443 from h4 to h1.", fwd("h4", "h1", proto="tcp", sport=443)),
+    ("protocol", "Route IPv4 traffic from h2 to h4.", fwd("h2", "h4", eth="ipv4")),
+    # colloquial / elliptical (10)
+    ("colloquial", "h1 to h3 traffic - let it through.", fwd("h1", "h3")),
+    ("colloquial", "Make sure h4 can talk to h2.", fwd("h4", "h2")),
+    ("colloquial", "Open up the path from h2 to h3.", fwd("h2", "h3")),
+    ("colloquial", "I want h3 to reach h4.", fwd("h3", "h4")),
+    ("colloquial", "Can you forward h1's traffic to h2?", fwd("h1", "h2")),
+    ("colloquial", "Hook up h4 to h3 so packets get through.", fwd("h4", "h3")),
+    ("colloquial", "Get traffic flowing from h3 to h2.", fwd("h3", "h2")),
+    ("colloquial", "We need h2 reaching h4.", fwd("h2", "h4")),
+    ("colloquial", "Push everything from h1 over to h4.", fwd("h1", "h4")),
+    ("colloquial", "Just let h4 get to h1.", fwd("h4", "h1")),
+    # implicit service (10)
+    ("implicit_service", "Allow web traffic from h1 to h3.", fwd("h1", "h3", proto="tcp", dport=80)),
+    ("implicit_service", "Forward DNS lookups from h2 to h4.", fwd("h2", "h4", proto="udp", dport=53)),
+    ("implicit_service", "Let h1 SSH into h4.", fwd("h1", "h4", proto="tcp", dport=22)),
+    ("implicit_service", "Route HTTPS from h3 to h1.", fwd("h3", "h1", proto="tcp", dport=443)),
+    ("implicit_service", "Allow h2 to browse the web server on h3.", fwd("h2", "h3", proto="tcp", dport=80)),
+    ("implicit_service", "Forward mail traffic from h4 to h2.", fwd("h4", "h2", proto="tcp", dport=25)),
+    ("implicit_service", "Permit FTP transfers from h1 to h2.", fwd("h1", "h2", proto="tcp", dport=21)),
+    ("implicit_service", "Allow name resolution queries from h3 to h2.", fwd("h3", "h2", proto="udp", dport=53)),
+    ("implicit_service", "Let h2 ping h4.", fwd("h2", "h4", proto="icmp")),
+    ("implicit_service", "Forward secure web traffic from h4 to h3.", fwd("h4", "h3", proto="tcp", dport=443)),
+]
+
+CASES = number("G-FWD", "forwarding", ENTRIES)

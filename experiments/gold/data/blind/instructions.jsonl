@@ -1,0 +1,350 @@
+{"blind_id": "B001", "instruction": "Make the network faster."}
+{"blind_id": "B002", "instruction": "h1 must not reach h3."}
+{"blind_id": "B003", "instruction": "Route packets from h4 to h1."}
+{"blind_id": "B004", "instruction": "Set up paths from h1 to h4 and from h4 to h1."}
+{"blind_id": "B005", "instruction": "On switch 3, block everything going to 10.0.0.1."}
+{"blind_id": "B006", "instruction": "Forward traffic from h2 to h4."}
+{"blind_id": "B007", "instruction": "Let h1 SSH into h4."}
+{"blind_id": "B008", "instruction": "Block traffic destined for 10.0.0.4 on switch 4."}
+{"blind_id": "B009", "instruction": "Bypass switch 2 for h4 to h2 traffic; use switch 3."}
+{"blind_id": "B010", "instruction": "Route ICMP from h1 to h2 and UDP from h3 to h1."}
+{"blind_id": "B011", "instruction": "Kill the h2 to h4 flow."}
+{"blind_id": "B012", "instruction": "Let h2 reach h1 fully except for ping."}
+{"blind_id": "B013", "instruction": "Expedite ICMP from h4 to h1 via queue 2."}
+{"blind_id": "B014", "instruction": "Give h1 to h3 queue 1, forward h2 to h3, and block h4 to h3."}
+{"blind_id": "B015", "instruction": "Traffic from 10.0.0.2 to 10.0.0.3 must be vetted at port 9 of switch 1 before forwarding."}
+{"blind_id": "B016", "instruction": "Create a path from h1 to h3."}
+{"blind_id": "B017", "instruction": "Forward all traffic from h4 to h2 except FTP."}
+{"blind_id": "B018", "instruction": "h2 to h3 needs 15 Mbps minimum."}
+{"blind_id": "B019", "instruction": "Put h2 to h3 traffic in queue 1 and in queue 5 at the same time."}
+{"blind_id": "B020", "instruction": "Traffic from h3 to h1 requires sub-25 ms latency."}
+{"blind_id": "B021", "instruction": "Block SSH from h2 to h4."}
+{"blind_id": "B022", "instruction": "On switch 2, forward traffic toward 10.0.0.4 out port 2."}
+{"blind_id": "B023", "instruction": "Guarantee 20 Mbps for traffic from h2 to h4."}
+{"blind_id": "B024", "instruction": "HTTPS from h3 to h1 must go through the inspection appliance at switch 2 first."}
+{"blind_id": "B025", "instruction": "Traffic from h2 must reach h1."}
+{"blind_id": "B026", "instruction": "Do not let h4 reach h3."}
+{"blind_id": "B027", "instruction": "On switch 3, redirect flows bound for 10.0.0.1 to egress port 1."}
+{"blind_id": "B028", "instruction": "Route SMTP from h2 to h3 via the mail filter on port 9 of switch 1."}
+{"blind_id": "B029", "instruction": "Drop packets from printer-01 to h4."}
+{"blind_id": "B030", "instruction": "Allocate at least 8 Mbps to DNS traffic from h4 to h1."}
+{"blind_id": "B031", "instruction": "Shift h4 to h1 packets onto the switch 3 route."}
+{"blind_id": "B032", "instruction": "In switch 3, packets for 10.0.0.3 should exit on port 2."}
+{"blind_id": "B033", "instruction": "Allow DNS from h1 to h4 and DNS from h2 to h4."}
+{"blind_id": "B034", "instruction": "Allow h2 to browse the web server on h3."}
+{"blind_id": "B035", "instruction": "Drop packets from h2 to h1."}
+{"blind_id": "B036", "instruction": "Drop ICMP from h1 and h2 on switch 1 but forward their other traffic."}
+{"blind_id": "B037", "instruction": "Reroute h1 to h4 traffic via switch 3 instead of switch 2."}
+{"blind_id": "B038", "instruction": "Traffic from h3 to h1 must transit the IDS on switch 2."}
+{"blind_id": "B039", "instruction": "Deny all traffic from 10.0.0.3 to 10.0.0.2."}
+{"blind_id": "B040", "instruction": "On switch 1, put traffic from h1 to h2 in queue 1."}
+{"blind_id": "B041", "instruction": "Send h3 to h1 traffic out port 1 and port 2 of switch 4 simultaneously."}
+{"blind_id": "B042", "instruction": "Forward traffic from h5 to h1."}
+{"blind_id": "B043", "instruction": "Allow h1 to reach h3 only during business hours."}
+{"blind_id": "B044", "instruction": "Move ICMP from h3 to h2 on switch 4 to egress port 2."}
+{"blind_id": "B045", "instruction": "Prioritize video streaming from h3 to h4 with a 30 Mbps minimum."}
+{"blind_id": "B046", "instruction": "Fail over h2 to h4 HTTP onto the switch 3 path."}
+{"blind_id": "B047", "instruction": "Run UDP from h1 to h2 through the firewall before delivery."}
+{"blind_id": "B048", "instruction": "On switch 4, block traffic to h4 but keep forwarding all other traffic."}
+{"blind_id": "B049", "instruction": "Inspect ICMP from h1 to h4 at switch 3, then deliver."}
+{"blind_id": "B050", "instruction": "Put h2 to h4 traffic in queue 2."}
+{"blind_id": "B051", "instruction": "Restore connectivity for h4 to h2 by failing over to the switch 2 path."}
+{"blind_id": "B052", "instruction": "Add an allow entry for 10.0.0.1 to 10.0.0.4 on switch 1."}
+{"blind_id": "B053", "instruction": "Force everything from h4 to h2 through the firewall at switch 1 port 9."}
+{"blind_id": "B054", "instruction": "Whitelist HTTPS from h4 to h1."}
+{"blind_id": "B055", "instruction": "Everything from h1 should reach h3 except HTTPS."}
+{"blind_id": "B056", "instruction": "Send ICMP for 10.0.0.1 out port 1 of switch 4."}
+{"blind_id": "B057", "instruction": "Handle h2's traffic appropriately."}
+{"blind_id": "B058", "instruction": "Route ICMP from h2 to h3 via switch 3 for monitoring."}
+{"blind_id": "B059", "instruction": "Switch 1: output traffic for 10.0.0.1 on port 3."}
+{"blind_id": "B060", "instruction": "ICMP from h3 to h2 must be inspected by the middlebox on port 9 of switch 1."}
+{"blind_id": "B061", "instruction": "Route traffic more efficiently."}
+{"blind_id": "B062", "instruction": "h3 to h2 traffic should go through the IDS at switch 2."}
+{"blind_id": "B063", "instruction": "Open up the path from h2 to h3."}
+{"blind_id": "B064", "instruction": "Prevent h1 from contacting h4."}
+{"blind_id": "B065", "instruction": "Whitelist web traffic from h1 to h2."}
+{"blind_id": "B066", "instruction": "Ensure h4 to h2 gets a minimum of 50 Mbps."}
+{"blind_id": "B067", "instruction": "Block all traffic from h1 to h2."}
+{"blind_id": "B068", "instruction": "Prioritize ICMP from h1 to h2 in queue 1 and forward UDP from h1 to h2."}
+{"blind_id": "B069", "instruction": "Deny all traffic from the database server."}
+{"blind_id": "B070", "instruction": "Limit h2 to h4 to at most 1 Mbps."}
+{"blind_id": "B071", "instruction": "Keep h2 to h4 latency under 5 ms and above 50 ms."}
+{"blind_id": "B072", "instruction": "Forward mail traffic from h4 to h2."}
+{"blind_id": "B073", "instruction": "Add a permit rule for SSH from h1 to h4."}
+{"blind_id": "B074", "instruction": "Assign priority queue 0 to ICMP from h1 to h2."}
+{"blind_id": "B075", "instruction": "On switch 1, forward traffic for 10.0.0.1 out port 3 and traffic for 10.0.0.2 out port 4."}
+{"blind_id": "B076", "instruction": "Block 10.0.0.99 from reaching h3."}
+{"blind_id": "B077", "instruction": "Forward TCP from h4 to h3 and ICMP from h4 to h2."}
+{"blind_id": "B078", "instruction": "Can you forward h1's traffic to h2?"}
+{"blind_id": "B079", "instruction": "Reserve 30 Mbps under 25 ms for h2 to h3, and block h2 to h4."}
+{"blind_id": "B080", "instruction": "Encrypt all traffic between h1 and h3."}
+{"blind_id": "B081", "instruction": "Screen HTTP from h2 to h1 at the firewall on switch 1 and pass what's clean."}
+{"blind_id": "B082", "instruction": "Give HTTP from h2 to h4 queue 1 and at least 10 Mbps."}
+{"blind_id": "B083", "instruction": "Give web traffic from h3 to h1 at least 15 Mbps and deny its FTP."}
+{"blind_id": "B084", "instruction": "Block adult content for h2."}
+{"blind_id": "B085", "instruction": "Deny h3 access to h4."}
+{"blind_id": "B086", "instruction": "Improve security across the fabric."}
+{"blind_id": "B087", "instruction": "Forward h2 to h3 traffic but drop its UDP."}
+{"blind_id": "B088", "instruction": "Load-balance h1's flows across all available paths dynamically."}
+{"blind_id": "B089", "instruction": "Deny everything h3 sends to h2."}
+{"blind_id": "B090", "instruction": "Forward HTTPS from h1 to h3 through the load balancer on switch 2."}
+{"blind_id": "B091", "instruction": "Forward secure web traffic from h4 to h3."}
+{"blind_id": "B092", "instruction": "Divert h2 to h3 UDP away from switch 3, through switch 2."}
+{"blind_id": "B093", "instruction": "Drop packets arriving on port 3 of switch 1."}
+{"blind_id": "B094", "instruction": "On switch 1, forward traffic destined for 10.0.0.2 out port 4."}
+{"blind_id": "B095", "instruction": "Change the output port for UDP from h1 to h2 on switch 1 to port 4."}
+{"blind_id": "B096", "instruction": "Allow everything from h3 to h1 except ICMP."}
+{"blind_id": "B097", "instruction": "Delay-sensitive ICMP from h2 to h1: keep it under 6 ms."}
+{"blind_id": "B098", "instruction": "Deny HTTP from h1 to h4."}
+{"blind_id": "B099", "instruction": "HTTPS from h2 to h4 must clear the security appliance on switch 1 first."}
+{"blind_id": "B100", "instruction": "Take the switch 3 route for all h1 to h3 traffic."}
+{"blind_id": "B101", "instruction": "Route HTTPS from h3 to h1."}
+{"blind_id": "B102", "instruction": "SSH sessions from h1 to h3 need latency under 40 ms."}
+{"blind_id": "B103", "instruction": "Avoid switch 3 for all h2 to h4 flows."}
+{"blind_id": "B104", "instruction": "Latency for h3 to h2 must not exceed 20 ms."}
+{"blind_id": "B105", "instruction": "Block h2 to h3 completely."}
+{"blind_id": "B106", "instruction": "Let h9 reach h2."}
+{"blind_id": "B107", "instruction": "Divert ICMP from h1 to h3 through the packet scrubber on switch 1 port 9."}
+{"blind_id": "B108", "instruction": "Queue 3 for h4 to h1 and forward h4 to h2."}
+{"blind_id": "B109", "instruction": "Block h1 to h4 and h4 to h1."}
+{"blind_id": "B110", "instruction": "Block DNS from h1 to h2 but let everything else through."}
+{"blind_id": "B111", "instruction": "Send TCP port 3389 from h1 to h4 through the firewall for screening."}
+{"blind_id": "B112", "instruction": "Reroute DNS from h3 to h1 via switch 2 instead of the switch 3 path."}
+{"blind_id": "B113", "instruction": "h2 should be able to reach h3."}
+{"blind_id": "B114", "instruction": "Redirect everything entering switch 3 on port 1 out through port 2."}
+{"blind_id": "B115", "instruction": "UDP voice traffic from h1 to h2 needs latency under 30 ms."}
+{"blind_id": "B116", "instruction": "Guarantee 20 Mbps for h2 to h4 and forward ICMP from h2 to h1."}
+{"blind_id": "B117", "instruction": "Block ping from h1 to h2."}
+{"blind_id": "B118", "instruction": "Queue 4 for all traffic from 10.0.0.3 to 10.0.0.4."}
+{"blind_id": "B119", "instruction": "Change the egress port for h1 to h3 traffic on switch 1 to port 2."}
+{"blind_id": "B120", "instruction": "Reroute packets entering port 3 of switch 1 to exit via port 2."}
+{"blind_id": "B121", "instruction": "Failover: route h2 to h4 via switch 3 when the switch 2 link drops."}
+{"blind_id": "B122", "instruction": "Prioritize DNS from h1 to h2 on queue 2 and drop DNS from h3."}
+{"blind_id": "B123", "instruction": "Add a security exception permitting h3 to h1."}
+{"blind_id": "B124", "instruction": "h4 shouldn't be able to ping h1."}
+{"blind_id": "B125", "instruction": "Traffic from h2 to h3 goes in queue 7."}
+{"blind_id": "B126", "instruction": "Redirect ICMP from h1 to h4 through switch 2, not switch 3."}
+{"blind_id": "B127", "instruction": "Forward UDP port 123 from h3 to h1."}
+{"blind_id": "B128", "instruction": "Optimize traffic flow."}
+{"blind_id": "B129", "instruction": "Allow web traffic from h2 to h4 and mail from h4 to h2."}
+{"blind_id": "B130", "instruction": "Forward packets with UDP destination port 161 from h1 to h3."}
+{"blind_id": "B131", "instruction": "On switch 4, move h3 to h1 traffic from port 1 to port 2."}
+{"blind_id": "B132", "instruction": "We need h2 reaching h4."}
+{"blind_id": "B133", "instruction": "Allow TCP port 8080 from h1 to h2."}
+{"blind_id": "B134", "instruction": "All SMTP from h1 to h3 must be checked by the IDS on switch 2."}
+{"blind_id": "B135", "instruction": "Let h3 send traffic to h1."}
+{"blind_id": "B136", "instruction": "Place DNS traffic from h2 to h1 into queue 2."}
+{"blind_id": "B137", "instruction": "Route FTP from h2 to h4 through the DPI engine at switch 2."}
+{"blind_id": "B138", "instruction": "Put TCP port 554 streaming from h1 to h3 in queue 3."}
+{"blind_id": "B139", "instruction": "Keep h1 to h4 latency under 10 ms and block telnet from h1 to h4."}
+{"blind_id": "B140", "instruction": "High priority for h2 to h4: queue 1, delay under 8 ms, at least 5 Mbps."}
+{"blind_id": "B141", "instruction": "Steer SSH from h1 to h4 through the inspection device on switch 1 port 9."}
+{"blind_id": "B142", "instruction": "Tighten up the network policies."}
+{"blind_id": "B143", "instruction": "On switch 1, drop all traffic from 10.0.0.1."}
+{"blind_id": "B144", "instruction": "Put h1 to h3 traffic in queue 1 and block h4 from reaching h3."}
+{"blind_id": "B145", "instruction": "Redirect HTTP from h2 to h4 on switch 1 to leave through port 2."}
+{"blind_id": "B146", "instruction": "Set up forwarding from h3 to h2."}
+{"blind_id": "B147", "instruction": "Web traffic from h2 to h1 should get at least 12 Mbps."}
+{"blind_id": "B148", "instruction": "Force all traffic from h4 to h1 through the scrubbing service on switch 2."}
+{"blind_id": "B149", "instruction": "Make sure h4 can talk to h2."}
+{"blind_id": "B150", "instruction": "h1 to h3 traffic - let it through."}
+{"blind_id": "B151", "instruction": "Send HTTPS from h1 to h4 down the switch 2 path instead of switch 3."}
+{"blind_id": "B152", "instruction": "Make sure h2 to h4 packets arrive within 12 ms."}
+{"blind_id": "B153", "instruction": "Route DNS from 10.0.0.4 to 10.0.0.1 through the middlebox at switch 1 port 9."}
+{"blind_id": "B154", "instruction": "In switch 4, send packets for 10.0.0.3 through port 3."}
+{"blind_id": "B155", "instruction": "Make sure everything works smoothly."}
+{"blind_id": "B156", "instruction": "Make sure h1 never reaches h2."}
+{"blind_id": "B157", "instruction": "Set up a VPN tunnel from h1 to h4."}
+{"blind_id": "B158", "instruction": "Provide at least 2 Mbps for ICMP from h1 to h2."}
+{"blind_id": "B159", "instruction": "All SSH from h1 to h3 must clear the firewall at switch 1 port 9 before delivery."}
+{"blind_id": "B160", "instruction": "Route h1 to h4 through switch 2 and make sure it never touches switch 2."}
+{"blind_id": "B161", "instruction": "Permit FTP transfers from h1 to h2."}
+{"blind_id": "B162", "instruction": "Block TCP port 445 from 10.0.0.1 on switch 1."}
+{"blind_id": "B163", "instruction": "Allow DNS and HTTP from h2 to h1."}
+{"blind_id": "B164", "instruction": "Traffic from 10.0.0.1 to 10.0.0.4 must go through port 9 on switch 1 for filtering."}
+{"blind_id": "B165", "instruction": "Redirect all traffic from h2 to h3 through switch 2 instead of switch 3."}
+{"blind_id": "B166", "instruction": "Drop all traffic from h2 on switch 1 and forward everything else normally."}
+{"blind_id": "B167", "instruction": "Permit only ICMP from h3 to h4 and drop the rest of h3 to h4 traffic."}
+{"blind_id": "B168", "instruction": "On switch 4, drop traffic from 10.0.0.4 to 10.0.0.2."}
+{"blind_id": "B169", "instruction": "Reroute everything on switch 4 port 2 out port 1 while the switch 3 link is repaired."}
+{"blind_id": "B170", "instruction": "Whitelist SSH from h1 to h2 and blacklist SSH from h1 to h2."}
+{"blind_id": "B171", "instruction": "Guarantee 25 Mbps and under 20 ms for h1 to h4."}
+{"blind_id": "B172", "instruction": "Cut off traffic from h3 to h1."}
+{"blind_id": "B173", "instruction": "Latency under 15 ms for h3 to h2, plus forward h3 to h4."}
+{"blind_id": "B174", "instruction": "Prioritize gaming traffic from h4 to h3 with latency below 20 ms."}
+{"blind_id": "B175", "instruction": "On switch 1, traffic to 10.0.0.3 should now leave via port 2 rather than port 1."}
+{"blind_id": "B176", "instruction": "Switch the h3 to h1 path from switch 2 over to switch 3."}
+{"blind_id": "B177", "instruction": "On switch 2, shift traffic for 10.0.0.2 from port 2 to port 1."}
+{"blind_id": "B178", "instruction": "Inspect all web traffic from h2 to h4 at the firewall on switch 1."}
+{"blind_id": "B179", "instruction": "Give h1 to h3 at least 10 Mbps."}
+{"blind_id": "B180", "instruction": "Allow h1 to reach h2."}
+{"blind_id": "B181", "instruction": "On switch 4, reroute DNS from h3 to h1 to exit port 2."}
+{"blind_id": "B182", "instruction": "Route h1 to h3 through switch 2 from now on, skipping switch 3."}
+{"blind_id": "B183", "instruction": "On switch 1, redirect traffic for 10.0.0.4 from port 1 to port 2."}
+{"blind_id": "B184", "instruction": "Add an allow rule for traffic from h1 to h3."}
+{"blind_id": "B185", "instruction": "Drop everything from h1 and guarantee h1 to h3 gets 20 Mbps."}
+{"blind_id": "B186", "instruction": "Drop ICMP from h3 to h2."}
+{"blind_id": "B187", "instruction": "Forward all traffic from h1 to h4 except SSH."}
+{"blind_id": "B188", "instruction": "Route HTTP from 10.0.1.7 to 10.0.0.2."}
+{"blind_id": "B189", "instruction": "Allow camera-2 to stream to h4."}
+{"blind_id": "B190", "instruction": "Block SSH and telnet from h2 to h4."}
+{"blind_id": "B191", "instruction": "Reroute traffic from 10.0.0.1 to 10.0.0.4 through switch 3."}
+{"blind_id": "B192", "instruction": "Prioritize the important traffic."}
+{"blind_id": "B193", "instruction": "Steer web traffic from h4 to h1 through the monitor on switch 3."}
+{"blind_id": "B194", "instruction": "Give better service to the users."}
+{"blind_id": "B195", "instruction": "Ensure delay from h2 to h3 stays under 5 ms."}
+{"blind_id": "B196", "instruction": "Bandwidth floor of 30 Mbps for 10.0.0.1 to 10.0.0.2."}
+{"blind_id": "B197", "instruction": "Set a 40 Mbps minimum for h4 to h3."}
+{"blind_id": "B198", "instruction": "Forward TCP traffic destined for 10.0.0.4 via port 4 on switch 4."}
+{"blind_id": "B199", "instruction": "Forward SSH from h2 to h3 and FTP from h3 to h2."}
+{"blind_id": "B200", "instruction": "Block the suspicious traffic."}
+{"blind_id": "B201", "instruction": "Block h2 and h3 from reaching h4, and forward everything else to h4."}
+{"blind_id": "B202", "instruction": "Deny HTTPS from h4 to h2."}
+{"blind_id": "B203", "instruction": "Classify HTTPS from h3 to h2 into queue 2."}
+{"blind_id": "B204", "instruction": "Prevent FTP from h2 to h3."}
+{"blind_id": "B205", "instruction": "Don't allow h3 to talk to h2."}
+{"blind_id": "B206", "instruction": "Divert h2 to h4 traffic to switch 3 until switch 2 recovers."}
+{"blind_id": "B207", "instruction": "Fix the connectivity problems."}
+{"blind_id": "B208", "instruction": "Send h4 to h1 traffic through queue 6."}
+{"blind_id": "B209", "instruction": "Guarantee 100 Mbps from h1 to h4 for video streaming."}
+{"blind_id": "B210", "instruction": "Reroute HTTP from h2 to h4 via switch 3 while switch 2 is under maintenance."}
+{"blind_id": "B211", "instruction": "Deny all IPv4 from 10.0.0.2 on switch 2."}
+{"blind_id": "B212", "instruction": "Emergency reroute: send h1 to h3 through switch 3, switch 2 is down."}
+{"blind_id": "B213", "instruction": "During maintenance on switch 2, reroute all h2 to h3 traffic via switch 3."}
+{"blind_id": "B214", "instruction": "UDP voice from h2 to h1 needs queue 1 and latency under 10 ms."}
+{"blind_id": "B215", "instruction": "Backup route: h3 to h2 via switch 3 when switch 2 is congested."}
+{"blind_id": "B216", "instruction": "Forward DNS from h3 to the guest subnet."}
+{"blind_id": "B217", "instruction": "Backup transfers from h3 to h1 need at least 60 Mbps."}
+{"blind_id": "B218", "instruction": "Primary path lost: send h1 to h4 over switch 3 immediately."}
+{"blind_id": "B219", "instruction": "Route TCP 8080 from h2 to h3 via the proxy on switch 2."}
+{"blind_id": "B220", "instruction": "Drop UDP from 10.0.0.3 on switch 4."}
+{"blind_id": "B221", "instruction": "Keep h1 to h4 latency below 10 ms."}
+{"blind_id": "B222", "instruction": "Pass DNS from h1 to h4 through the logging node on switch 3."}
+{"blind_id": "B223", "instruction": "Hold latency from h1 to h3 under 18 ms."}
+{"blind_id": "B224", "instruction": "Let h2 ping h4."}
+{"blind_id": "B225", "instruction": "Send all h2 to h4 traffic through switch 2 for deep packet inspection."}
+{"blind_id": "B226", "instruction": "Enable traffic from h1 to h4."}
+{"blind_id": "B227", "instruction": "On switch 2, drop traffic from 10.0.0.4 but forward other flows."}
+{"blind_id": "B228", "instruction": "Assign queue 3 to traffic from h3 to h1."}
+{"blind_id": "B229", "instruction": "Reroute h1 to h4 traffic via switch 5."}
+{"blind_id": "B230", "instruction": "Pass h4 to h2 flows through the firewall on switch 1; drop on failure."}
+{"blind_id": "B231", "instruction": "Filter traffic from h1 to h2 through the firewall port on switch 1."}
+{"blind_id": "B232", "instruction": "Route IPv4 traffic from h2 to h4."}
+{"blind_id": "B233", "instruction": "Forward DNS from h2 to h4 and block all other UDP from h2."}
+{"blind_id": "B234", "instruction": "Allow name resolution queries from h3 to h2."}
+{"blind_id": "B235", "instruction": "Route DNS from h4 to h3 through the IDS at switch 2; quarantine suspicious queries."}
+{"blind_id": "B236", "instruction": "Route database traffic on TCP 5432 from h2 to h4 through the IDS on switch 2."}
+{"blind_id": "B237", "instruction": "Send UDP from h4 to h2 through switch 3 for flow logging."}
+{"blind_id": "B238", "instruction": "Switch 2: deny packets from 10.0.0.2."}
+{"blind_id": "B239", "instruction": "Forward ICMP from h1 to h4 and drop ICMP from h1 to h4."}
+{"blind_id": "B240", "instruction": "Cap the delay from h4 to h1 at 15 ms."}
+{"blind_id": "B241", "instruction": "Give h8 to h1 at least 10 Mbps."}
+{"blind_id": "B242", "instruction": "Forward HTTP and HTTPS from h1 to h3."}
+{"blind_id": "B243", "instruction": "Move h3 to h2 traffic off switch 3 and onto switch 2."}
+{"blind_id": "B244", "instruction": "Give 10.0.0.4 to 10.0.0.1 queue 3 and 20 Mbps guaranteed."}
+{"blind_id": "B245", "instruction": "Direct all UDP from h2 to h1 through the inspection port 9 on switch 1."}
+{"blind_id": "B246", "instruction": "Drop ICMP and UDP from h4 to h2."}
+{"blind_id": "B247", "instruction": "Mirror all of h2's traffic to h4 for analysis."}
+{"blind_id": "B248", "instruction": "Blackhole traffic from 10.0.0.2 to 10.0.0.4."}
+{"blind_id": "B249", "instruction": "If the switch 2 uplink dies, send all TCP from h1 to h4 via switch 3."}
+{"blind_id": "B250", "instruction": "Drop everything from 10.0.0.4 to 10.0.0.1."}
+{"blind_id": "B251", "instruction": "Block ICMP from h1 to h3 and forward the rest of h1's traffic."}
+{"blind_id": "B252", "instruction": "On switch 1, forward UDP destined for 10.0.0.2 through port 4."}
+{"blind_id": "B253", "instruction": "Forward everything from h3 to h4 apart from telnet."}
+{"blind_id": "B254", "instruction": "Deny SSH from h2 to h4 while still forwarding other h2 to h4 traffic."}
+{"blind_id": "B255", "instruction": "Keep 10.0.0.2 to 10.0.0.4 delay below 8 ms."}
+{"blind_id": "B256", "instruction": "Switch 2: reroute traffic for 10.0.0.4 arriving on port 1 to exit port 2."}
+{"blind_id": "B257", "instruction": "On switch 3, forward traffic for h3 out port 7."}
+{"blind_id": "B258", "instruction": "Just let h4 get to h1."}
+{"blind_id": "B259", "instruction": "Send h1 to h3 traffic over the switch 3 path to dodge congestion at switch 2."}
+{"blind_id": "B260", "instruction": "Do something about the latency."}
+{"blind_id": "B261", "instruction": "On switch 3, forward traffic from 10.0.0.1 to 10.0.0.4 out port 2."}
+{"blind_id": "B262", "instruction": "Route UDP from h3 to h4."}
+{"blind_id": "B263", "instruction": "Block ping from h2 to h4 but ensure h2 can ping h4."}
+{"blind_id": "B264", "instruction": "Deny UDP port 69 from h1 to h3."}
+{"blind_id": "B265", "instruction": "Switch 1: HTTPS for 10.0.0.4 exits port 2 from now on."}
+{"blind_id": "B266", "instruction": "Firewall off h1 from h4."}
+{"blind_id": "B267", "instruction": "Forward h1 to h3 and h2 to h3."}
+{"blind_id": "B268", "instruction": "Apply NAT to h2's outbound traffic."}
+{"blind_id": "B269", "instruction": "Forward ICMP from h1 to h4."}
+{"blind_id": "B270", "instruction": "Shut down any traffic from h4 to h2."}
+{"blind_id": "B271", "instruction": "On switch 1, drop packets from 10.0.0.3 and forward all other IPv4 traffic."}
+{"blind_id": "B272", "instruction": "Push FTP from h2 to h1 through the scrubber on port 9 of switch 1."}
+{"blind_id": "B273", "instruction": "Keep h1 away from h2."}
+{"blind_id": "B274", "instruction": "Prioritize DNS from h1 to h3: latency under 15 ms."}
+{"blind_id": "B275", "instruction": "Send NTP (UDP port 123) from h1 to h3 through the monitor on switch 3."}
+{"blind_id": "B276", "instruction": "Forward h1 to h2 and h2 to h1, but block ICMP from h1 to h2."}
+{"blind_id": "B277", "instruction": "Block traffic from 172.16.0.4 to h2."}
+{"blind_id": "B278", "instruction": "Whitelist SSH from h1 to h2 and drop all other SSH to h2."}
+{"blind_id": "B279", "instruction": "Insert an accept rule for ICMP from h2 to h1."}
+{"blind_id": "B280", "instruction": "Forward TCP from h4 to h2."}
+{"blind_id": "B281", "instruction": "Give the h3 to h4 flow no less than 25 Mbps."}
+{"blind_id": "B282", "instruction": "Set things up like last time."}
+{"blind_id": "B283", "instruction": "Pass DNS from h2 to h4 through the security appliance at switch 1 port 9."}
+{"blind_id": "B284", "instruction": "Send h2's traffic through the firewall on switch 6."}
+{"blind_id": "B285", "instruction": "If switch 2 fails, redirect h1 to h4 traffic through switch 3."}
+{"blind_id": "B286", "instruction": "Reroute SSH from h4 to h1 around switch 2."}
+{"blind_id": "B287", "instruction": "Inspect and then forward all UDP from h1 to h4 via the security function on switch 1 port 9."}
+{"blind_id": "B288", "instruction": "Inspect traffic from h1 to h3 at the firewall on switch 1 port 9 and drop anything malicious."}
+{"blind_id": "B289", "instruction": "Stop mail traffic from h3 to h4."}
+{"blind_id": "B290", "instruction": "Chain SSH from h3 to h4 through the firewall at port 9 of switch 1."}
+{"blind_id": "B291", "instruction": "Reduce congestion."}
+{"blind_id": "B292", "instruction": "I want h3 to reach h4."}
+{"blind_id": "B293", "instruction": "Block DNS queries from h4 to h1."}
+{"blind_id": "B294", "instruction": "Bound the h4 to h2 delay at 50 ms."}
+{"blind_id": "B295", "instruction": "Route SMTP from h2 to h4 through the firewall; block it if inspection fails."}
+{"blind_id": "B296", "instruction": "Steer h2 to h4 flows around switch 2 by using switch 3."}
+{"blind_id": "B297", "instruction": "Let h2 send TCP traffic on port 3306 to h3."}
+{"blind_id": "B298", "instruction": "Send the traffic the right way."}
+{"blind_id": "B299", "instruction": "Switch 2 outage: reroute DNS from h1 to h4 through switch 3."}
+{"blind_id": "B300", "instruction": "The link to switch 3 is flapping; move h1 to h3 traffic to switch 2."}
+{"blind_id": "B301", "instruction": "Push everything from h1 over to h4."}
+{"blind_id": "B302", "instruction": "Get traffic flowing from h3 to h2."}
+{"blind_id": "B303", "instruction": "Activate the backup path through switch 2 for h3 to h1 traffic."}
+{"blind_id": "B304", "instruction": "Enable HTTPS from h3 to h1 and HTTP from h3 to h2."}
+{"blind_id": "B305", "instruction": "Route HTTP from h1 to h3 through the firewall on port 9 of switch 1."}
+{"blind_id": "B306", "instruction": "Switch 3 is unreachable - push h4 to h1 flows through switch 2."}
+{"blind_id": "B307", "instruction": "Whitelist DNS from h3 to h2."}
+{"blind_id": "B308", "instruction": "Translate h3's IPv4 traffic to IPv6."}
+{"blind_id": "B309", "instruction": "Map HTTP from h1 to h4 to queue 1."}
+{"blind_id": "B310", "instruction": "Reserve 5 Mbps for h3 to h1."}
+{"blind_id": "B311", "instruction": "Queue 2 plus a 15 Mbps floor for SSH from h4 to h2."}
+{"blind_id": "B312", "instruction": "Deny ICMP destined for 10.0.0.2 on switch 1."}
+{"blind_id": "B313", "instruction": "Traffic from h2 to h4 must pass the firewall at switch 1 port 9 and then the DPI at switch 2."}
+{"blind_id": "B314", "instruction": "Switch 2 should push traffic for 10.0.0.3 out port 2."}
+{"blind_id": "B315", "instruction": "All HTTPS from h1 to h3 has to traverse the firewall on switch 1."}
+{"blind_id": "B316", "instruction": "Route HTTP from h1 to h4 via the IDS on switch 2."}
+{"blind_id": "B317", "instruction": "No SSH into h3 from h1."}
+{"blind_id": "B318", "instruction": "Every packet from h3 to h1 should pass the inspection function on port 9 of switch 1."}
+{"blind_id": "B319", "instruction": "Allow web traffic from h1 to h3."}
+{"blind_id": "B320", "instruction": "Route SSH from h2 to h3 through the DPI engine on switch 2 and then switch 4."}
+{"blind_id": "B321", "instruction": "Allow h1 to reach h2 and h3 to reach h4."}
+{"blind_id": "B322", "instruction": "Block TCP port 23 from h2 to h1."}
+{"blind_id": "B323", "instruction": "Ensure 10 Mbps minimum for HTTPS from h4 to h3 and block HTTP from h4 to h3."}
+{"blind_id": "B324", "instruction": "Forward HTTP from h1 to h3 and DNS from h2 to h4."}
+{"blind_id": "B325", "instruction": "Prioritize h1 to h3 traffic on queue 1."}
+{"blind_id": "B326", "instruction": "Ensure database sync from h3 to h2 gets a 35 Mbps minimum."}
+{"blind_id": "B327", "instruction": "Use queue 5 for UDP from h4 to h3."}
+{"blind_id": "B328", "instruction": "Create an ACL entry allowing TCP port 8443 from h2 to h3."}
+{"blind_id": "B329", "instruction": "Chain h1 to h4 traffic through the IDS on switch 2, then out via switch 4."}
+{"blind_id": "B330", "instruction": "Cache web content for h2 at the edge."}
+{"blind_id": "B331", "instruction": "On switch 4, drop everything from 10.0.0.2 except DNS."}
+{"blind_id": "B332", "instruction": "Prioritize traffic from the backup NAS to h1 on queue 2."}
+{"blind_id": "B333", "instruction": "Reroute h4 to h2 flows on switch 4 from egress port 2 to egress port 1."}
+{"blind_id": "B334", "instruction": "Prioritize h1 to h2 with max 12 ms delay and queue 1."}
+{"blind_id": "B335", "instruction": "Pull h1 to h4 traffic off the switch 2 link and send it via switch 3."}
+{"blind_id": "B336", "instruction": "Allow ping from h2 to h1."}
+{"blind_id": "B337", "instruction": "Please forward everything from h4 to h3."}
+{"blind_id": "B338", "instruction": "Deny HTTP from h4 to h1 and forward its remaining traffic."}
+{"blind_id": "B339", "instruction": "Allow h2 to reach h3 and block h2 from reaching h3."}
+{"blind_id": "B340", "instruction": "Send h3 to h4 traffic through the IDS on switch 2 and forward only clean flows."}
+{"blind_id": "B341", "instruction": "Whitelist h2 to h4 traffic."}
+{"blind_id": "B342", "instruction": "Hook up h4 to h3 so packets get through."}
+{"blind_id": "B343", "instruction": "Re-path 10.0.0.3 to 10.0.0.2 via switch 2."}
+{"blind_id": "B344", "instruction": "Allow TCP source port 443 from h4 to h1."}
+{"blind_id": "B345", "instruction": "Deny FTP and SMTP from h3 to h1."}
+{"blind_id": "B346", "instruction": "Forward DNS lookups from h2 to h4."}
+{"blind_id": "B347", "instruction": "On switch 7, forward traffic to 10.0.0.3 via port 2."}
+{"blind_id": "B348", "instruction": "Send HTTP from h1 to h3 through the firewall on switch 1 and the IDS on switch 2."}
+{"blind_id": "B349", "instruction": "Send all traffic from h2 to h3 via the firewall attached to switch 1."}
+{"blind_id": "B350", "instruction": "Deny all traffic from h4 to h1 and also forward all traffic from h4 to h1."}
