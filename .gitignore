@@ -28,5 +28,8 @@ logs/e1/
 # E2 experiment artifacts
 logs/e2/
 
+# E3 experiment artifacts
+logs/e3/
+
 # PLAN
 PLAN*
