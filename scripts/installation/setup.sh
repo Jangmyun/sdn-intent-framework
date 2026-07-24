@@ -25,8 +25,8 @@ select_docker_command() {
 install_system_packages() {
   log 'Refreshing Ubuntu package metadata.'
   sudo apt-get update
-  log 'Installing Mininet, Open vSwitch, and setup prerequisites.'
-  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates curl mininet openvswitch-switch
+  log 'Installing Mininet, Open vSwitch, traffic tooling, and setup prerequisites.'
+  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates curl iproute2 iperf3 mininet openvswitch-switch
   sudo systemctl enable --now openvswitch-switch
   if ! command -v docker >/dev/null 2>&1; then
     log 'Docker is not installed; installing Ubuntu docker.io.'
