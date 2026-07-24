@@ -34,6 +34,7 @@ port_is_listening() { ss -lntH 2>/dev/null | awk '{print $4}' | grep -Eq "(^|[.:
 assert_ports_available() {
   local port
   for port in 6653 8101 8181; do port_is_listening "$port" && die "TCP port ${port} is already in use."; done
+  return 0
 }
 activate_openflow() {
   "${DOCKER[@]}" exec "$ONOS_CONTAINER" /root/onos/bin/onos-app localhost activate org.onosproject.openflow >/dev/null

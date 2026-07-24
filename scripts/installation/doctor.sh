@@ -32,6 +32,8 @@ doctor_report() {
   check_command ovs-vsctl 'ovs-vsctl --version'
   check_command docker 'docker --version'
   check_command curl 'curl --version'
+  check_command iperf3 'iperf3 --version'
+  check_command ss 'ss --version'
   if [[ -x "${PROJECT_ROOT}/.venv/bin/python" ]]; then
     local project_python
     project_python="$("${PROJECT_ROOT}/.venv/bin/python" --version 2>&1)"

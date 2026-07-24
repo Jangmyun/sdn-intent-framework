@@ -102,6 +102,7 @@ sudo mn -c
 | `start_onos.sh` | 기존 호환용 ONOS 시작 진입점 |
 | `smoke_test.sh` | Mininet 통신과 ONOS 장치 인식 자동 검증 |
 | `start_mn_single3.sh` | 단일 switch 및 host 3개 대화형 Mininet 실행 |
+| `e3_twin_smoke.sh` | E3 Digital Twin 통합 스모크 — 혼잡 QoS 케이스로 세 arm 실행 및 충실도 패턴 확인 (root 필요) |
 
 ## ONOS 관리 명령
 
