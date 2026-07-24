@@ -1,0 +1,9 @@
+[project]
+experiment_id = "e3-twin-fidelity"
+
+[topology]
+topology_id = "diamond"
+role = "production"
+
+[pipeline]
+digital_twin = true
