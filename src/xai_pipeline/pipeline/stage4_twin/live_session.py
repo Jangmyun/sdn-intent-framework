@@ -3,7 +3,7 @@ stage4_twin/live_session.py — 네트워크 프리셋 지속 세션 관리자
 
 TwinVerifier.verify()의 "시작→검증→항상 rollback+net.stop()" 1회성 생명주기와는
 완전히 분리된 별도 생명주기다: 프리셋 적용 → 계속 실행 → 명시적 stop()까지 지속.
-(LIVE_NETWORK_PRESET_PLAN.md 5장)
+(docs/design/LIVE_NETWORK.md §5)
 
 세션은 프로세스당 단일 인스턴스만 지원한다 — 동시 다중 세션은 다루지 않는다.
 start()/stop()은 모두 블로킹 호출이므로 (Mininet 기동/종료에 수십 초 소요),
@@ -30,7 +30,7 @@ from xai_pipeline.pipeline.stage4_twin.traffic_generator import (
     stop_traffic_preset,
 )
 
-# manual_traffic_check.py로 실측 확정한 폴링 주기 (LIVE_NETWORK_PRESET_PLAN.md 8장 열린 질문)
+# manual_traffic_check.py로 실측 확정한 폴링 주기 (docs/design/LIVE_NETWORK.md §6-2)
 MONITOR_POLL_INTERVAL_SEC = 5.0
 
 

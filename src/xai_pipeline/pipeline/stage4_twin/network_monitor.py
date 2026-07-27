@@ -2,7 +2,7 @@
 stage4_twin/network_monitor.py — 링크별 처리량/손실/큐 백로그 모니터링 수집기
 
 세 지표(처리량/드롭/백로그) 모두 tc qdisc 카운터 하나에서 뽑는다
-(LIVE_NETWORK_PRESET_PLAN.md 6장).
+(docs/design/LIVE_NETWORK.md §6).
 
 처음엔 계획대로 처리량을 onos_client.port_statistics()로 재려 했으나, 실측 결과
 ONOS의 포트 통계 갱신 주기가 우리 폴링 주기(수초)보다 느려 값이 몇 초씩 stale하다가

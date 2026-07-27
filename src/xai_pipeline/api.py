@@ -998,7 +998,7 @@ async def apply_topology_to_onos(request: Request):
 
 
 # ── Network Preset (Live Session) 엔드포인트 ─────────────────────────────────
-# LIVE_NETWORK_PRESET_PLAN.md 6-3장. 단일 세션만 지원 — 두 번째 apply는 409.
+# docs/design/LIVE_NETWORK.md §8 API 엔드포인트. 단일 세션만 지원 — 두 번째 apply는 409.
 
 _TRAFFIC_PRESETS_DIR = config.DATA_DIR / "traffic_presets"
 _live_session = None  # 지연 생성 (LiveNetworkSession import에 stage4_twin 체인이 딸려옴)

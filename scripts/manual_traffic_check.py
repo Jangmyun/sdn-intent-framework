@@ -3,7 +3,7 @@ manual_traffic_check.py — 트래픽 생성기 + 모니터링 수집기 수동 
 
 Mininet 토폴로지를 띄우고 트래픽 프리셋을 적용한 뒤, NetworkMonitor로 링크별
 처리량/utilization/드롭/큐 백로그를 주기적으로 출력해 눈으로 확인한다.
-(계획 문서 LIVE_NETWORK_PRESET_PLAN.md 7장 순서 3, 4)
+(docs/design/LIVE_NETWORK.md §4 배경 트래픽 생성기 / §6 모니터링 수집기)
 
 이건 자동화된 검증기가 아니라 개발 중 눈으로 확인하는 용도다.
 

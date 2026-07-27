@@ -486,7 +486,7 @@ const state = {
 };
 
 // ── Network Preset (Live Traffic) 상태 ────────────────────────────────────────
-// LIVE_NETWORK_PRESET_PLAN.md 6-4장. LiveNetworkSession의 apply/stream/stop을
+// docs/design/LIVE_NETWORK.md §9 프론트엔드. LiveNetworkSession의 apply/stream/stop을
 // 사용해 프리셋을 켜고 실시간 링크 통계를 토폴로지 그래프에 색으로 얹는다.
 
 let allTrafficPresets = [];   // GET /api/traffic-presets 캐시
@@ -569,7 +569,7 @@ function netPresetLinkLabel(d) {
 
 // 링크 중점 두 번째 줄에 표시할 손실/큐 백로그 텍스트 ("drop+3 q1.2K") —
 // 엄밀한 RTT는 아니고 드롭 카운트 + 큐 백로그 기반 지연 근사치임에 주의
-// (LIVE_NETWORK_PRESET_PLAN.md 6-1장). 문제 없는 링크는 아무것도 안 보여준다.
+// (docs/design/LIVE_NETWORK.md §6-1). 문제 없는 링크는 아무것도 안 보여준다.
 function netPresetLinkIssue(d) {
   const s = netPresetStatsMap.get(_netPresetPairKey(d));
   if (!s) return null;
