@@ -1,0 +1,110 @@
+{
+  "topology_id": "diamond",
+  "flows": [
+    {
+      "priority": 50000,
+      "timeout": 0,
+      "isPermanent": "true",
+      "deviceId": "of:0000000000000004",
+      "selector": {
+        "criteria": [
+          {
+            "type": "ETH_TYPE",
+            "ethType": "0x800"
+          },
+          {
+            "type": "IPV4_SRC",
+            "ip": "10.0.0.3/32"
+          },
+          {
+            "type": "IPV4_DST",
+            "ip": "10.0.0.4/32"
+          }
+        ]
+      },
+      "treatment": {
+        "instructions": [
+          {
+            "type": "NOACTION"
+          }
+        ]
+      },
+      "_meta": {
+        "intent": "Block all traffic from 10.0.0.3 to 10.0.0.4 on switch 4",
+        "deployed_at": "2026-07-23T02:05:36.915477+00:00"
+      }
+    },
+    {
+      "priority": 50000,
+      "timeout": 0,
+      "isPermanent": "true",
+      "deviceId": "of:0000000000000004",
+      "selector": {
+        "criteria": [
+          {
+            "type": "ETH_TYPE",
+            "ethType": "0x800"
+          },
+          {
+            "type": "IPV4_SRC",
+            "ip": "10.0.0.3/32"
+          },
+          {
+            "type": "IPV4_DST",
+            "ip": "10.0.0.4/32"
+          }
+        ]
+      },
+      "treatment": {
+        "instructions": [
+          {
+            "type": "NOACTION"
+          }
+        ]
+      },
+      "_meta": {
+        "intent": "Block all traffic from 10.0.0.3 to 10.0.0.4 on switch 4",
+        "deployed_at": "2026-07-27T05:22:24.103008+00:00"
+      }
+    },
+    {
+      "priority": 32768,
+      "timeout": 0,
+      "isPermanent": "true",
+      "deviceId": "of:0000000000000001",
+      "selector": {
+        "criteria": [
+          {
+            "type": "ETH_TYPE",
+            "ethType": "0x800"
+          },
+          {
+            "type": "IPV4_DST",
+            "ip": "10.0.0.3/32"
+          },
+          {
+            "type": "IP_PROTO",
+            "protocol": 6
+          },
+          {
+            "type": "TCP_DST",
+            "tcpPort": 80
+          }
+        ]
+      },
+      "treatment": {
+        "instructions": [
+          {
+            "type": "OUTPUT",
+            "port": "2"
+          }
+        ]
+      },
+      "_meta": {
+        "intent": "Forward TCP traffic on port 80 destined for 10.0.0.3 via port 2 on switch 1",
+        "deployed_at": "2026-07-27T05:23:18.208202+00:00"
+      }
+    }
+  ],
+  "updated_at": "2026-07-27T05:23:18.208202+00:00"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "clos-fabric_ramping-load",
+  "label": "점증 부하 — h1→h2 대역폭이 서서히 증가",
+  "topology_id": "clos-fabric",
+  "flows": [
+    {
+      "id": "f1",
+      "src": "h1", "dst": "h2",
+      "proto": "tcp", "pattern": "ramp",
+      "start_mbps": 0, "end_mbps": 15,
+      "ramp_duration_sec": 60, "step_sec": 5,
+      "start_offset_sec": 0, "duration_sec": null
+    }
+  ]
+}

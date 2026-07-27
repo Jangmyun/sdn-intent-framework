@@ -1,11 +1,8 @@
-from safe_intent_sdn import create_run_context, load_settings
+"""레포 루트 진입점 — 실제 구현은 src/xai_pipeline/main.py에 있다.
 
-
-def main() -> None:
-    settings = load_settings()
-    with create_run_context(settings, intent_id="manual") as run:
-        run.log_event("application_ready", stage="startup")
-
+uv run python main.py --intent "..."
+"""
+from xai_pipeline.main import main
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

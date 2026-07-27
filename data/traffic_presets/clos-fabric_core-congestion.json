@@ -1,0 +1,28 @@
+{
+  "id": "clos-fabric_core-congestion",
+  "label": "코어 혼잡 — 다수 호스트가 h2로 동시 스트리밍",
+  "topology_id": "clos-fabric",
+  "flows": [
+    {
+      "id": "f1",
+      "src": "h1", "dst": "h2",
+      "proto": "tcp", "pattern": "constant",
+      "target_mbps": 8,
+      "start_offset_sec": 0, "duration_sec": null
+    },
+    {
+      "id": "f2",
+      "src": "h7", "dst": "h2",
+      "proto": "tcp", "pattern": "constant",
+      "target_mbps": 8,
+      "start_offset_sec": 0, "duration_sec": null
+    },
+    {
+      "id": "f3",
+      "src": "h10", "dst": "h2",
+      "proto": "udp", "pattern": "bursty",
+      "target_mbps": 6, "on_sec": 10, "off_sec": 5,
+      "start_offset_sec": 10, "duration_sec": null
+    }
+  ]
+}

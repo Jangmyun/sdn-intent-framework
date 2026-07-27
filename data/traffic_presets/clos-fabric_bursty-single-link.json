@@ -1,0 +1,14 @@
+{
+  "id": "clos-fabric_bursty-single-link",
+  "label": "단일 링크 버스트 — h1↔h7 경로(s1-s5)에 짧은 버스트 반복",
+  "topology_id": "clos-fabric",
+  "flows": [
+    {
+      "id": "f1",
+      "src": "h1", "dst": "h7",
+      "proto": "udp", "pattern": "bursty",
+      "target_mbps": 9, "on_sec": 5, "off_sec": 10,
+      "start_offset_sec": 0, "duration_sec": null
+    }
+  ]
+}

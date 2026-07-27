@@ -1,0 +1,14 @@
+{
+  "id": "clos-fabric_dual-homed-failover",
+  "label": "이중화 경로 부하 — h3→h4(dual-homed) 업링크 한쪽 포화",
+  "topology_id": "clos-fabric",
+  "flows": [
+    {
+      "id": "f1",
+      "src": "h3", "dst": "h4",
+      "proto": "tcp", "pattern": "constant",
+      "target_mbps": 90,
+      "start_offset_sec": 0, "duration_sec": null
+    }
+  ]
+}
