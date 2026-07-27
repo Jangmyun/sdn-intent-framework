@@ -1,11 +1,14 @@
 """
 stage1_intent/llm_client.py — LLM/임베딩 백엔드 추상화
 
-두 가지 백엔드를 지원한다:
-  - Ollama (기본): OpenAI-compatible REST API + SSE 스트리밍
-  - Gemini: google-genai SDK
+세 가지 백엔드를 지원하며, 모델명으로 자동 선택한다 (experiments/eval/run_exp1.py의
+call_llm()과 동일한 라우팅 규칙):
+  - Gemini: 모델명이 "gemini"로 시작 → google-genai SDK
+  - OpenRouter: 모델명에 "/" 포함 (예: "qwen/qwen3-8b") → OpenAI-compatible REST API
+  - Ollama (기본): 그 외 (예: "qwen3:8b") → OpenAI-compatible REST API + SSE 스트리밍
 
-두 백엔드 모두 JSON 응답 반환 및 텍스트 임베딩을 지원한다.
+임베딩은 항상 Ollama/Gemini만 지원한다 (OpenRouter는 라우터라 임베딩 API가
+일관되지 않아 제외 — 채팅 모델로 OpenRouter를 골라도 임베딩은 EMBED_MODEL로 Ollama 사용).
 재시도: 3회, 지수 백오프.
 """
 from __future__ import annotations
@@ -18,7 +21,7 @@ from xai_pipeline import config
 
 
 class LLMClient:
-    """LLM 추론 및 임베딩 클라이언트 (Ollama / Gemini 추상화)"""
+    """LLM 추론 및 임베딩 클라이언트 (Ollama / OpenRouter / Gemini 추상화)"""
 
     def __init__(self, model: Optional[str] = None) -> None:
         self.model = model or config.LLM_MODEL
@@ -32,6 +35,11 @@ class LLMClient:
                 f"모델 '{self.model}'은 Gemini 모델이지만 GOOGLE_API_KEY가 설정되지 않았습니다. "
                 ".env 파일에 GOOGLE_API_KEY를 추가하세요."
             )
+        if self._is_openrouter() and not config.OPENROUTER_API_KEY:
+            raise RuntimeError(
+                f"모델 '{self.model}'은 OpenRouter 모델이지만 OPENROUTER_API_KEY가 설정되지 않았습니다. "
+                ".env 파일에 OPENROUTER_API_KEY를 추가하세요."
+            )
 
     # ── 공개 인터페이스 ────────────────────────────────────────
 
@@ -42,6 +50,8 @@ class LLMClient:
         """
         if self._is_gemini():
             return self._gemini_call(system, user)
+        if self._is_openrouter():
+            return self._openrouter_call(system, user)
         return self._ollama_call(system, user)
 
     def embed(self, text: str) -> list[float]:
@@ -54,6 +64,10 @@ class LLMClient:
 
     def _is_gemini(self) -> bool:
         return config.is_gemini(self.model)
+
+    def _is_openrouter(self) -> bool:
+        """OpenRouter 모델 ID는 항상 'vendor/model' 형식 (예: qwen/qwen3-8b)."""
+        return "/" in self.model
 
     # ── Ollama 백엔드 ─────────────────────────────────────────
 
@@ -171,6 +185,91 @@ class LLMClient:
                 time.sleep(wait)
 
         raise RuntimeError(f"임베딩 실패 (모델={self.embed_model}, 재시도 3회 초과)")
+
+    # ── OpenRouter 백엔드 ─────────────────────────────────────
+
+    def _openrouter_call(self, system: str, user: str) -> dict | None:
+        """OpenRouter(https://openrouter.ai) OpenAI-compatible API로 LLM 호출 (SSE 스트리밍).
+
+        _ollama_call과 동일한 프로토콜(OpenAI 호환 /chat/completions, SSE)이라
+        엔드포인트·인증만 바꿔 그대로 재사용한다. qwen3처럼 hybrid thinking 모델은
+        OpenRouter의 {"reasoning": {"max_tokens": N}}로 thinking 토큰 예산을 제한할 수
+        있으나(experiments/eval/run_exp1.py 참고), 여기서는 기본 동작(무제한)을 쓴다.
+        """
+        import urllib.request
+        import urllib.error
+
+        payload = {
+            "model": self.model,
+            "messages": [
+                {"role": "system", "content": system},
+                {"role": "user", "content": user},
+            ],
+            "stream": True,
+            "temperature": 0.2,
+        }
+
+        url = f"{config.OPENROUTER_BASE_URL.rstrip('/')}/chat/completions"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {config.OPENROUTER_API_KEY}",
+            "User-Agent": "Mozilla/5.0",
+        }
+
+        for attempt in range(3):
+            try:
+                data = json.dumps(payload).encode("utf-8")
+                req = urllib.request.Request(url, data=data, headers=headers, method="POST")
+
+                with urllib.request.urlopen(req, timeout=120) as resp:
+                    # SSE 스트리밍 파싱
+                    full_content = ""
+                    for raw_line in resp:
+                        line = raw_line.decode("utf-8").strip()
+                        if not line:
+                            continue
+                        if line.startswith("data:"):
+                            chunk = line[5:].strip()
+                            if chunk == "[DONE]":
+                                break
+                            try:
+                                chunk_json = json.loads(chunk)
+                                delta = (
+                                    chunk_json.get("choices", [{}])[0]
+                                    .get("delta", {})
+                                    .get("content", "")
+                                )
+                                if delta:
+                                    full_content += delta
+                            except json.JSONDecodeError:
+                                continue
+
+                # JSON 파싱 시도
+                full_content = full_content.strip()
+                # ```json ... ``` 코드 블록 제거
+                if full_content.startswith("```"):
+                    lines = full_content.split("\n")
+                    inner = lines[1:] if lines[0].startswith("```") else lines
+                    if inner and inner[-1].strip() == "```":
+                        inner = inner[:-1]
+                    full_content = "\n".join(inner)
+                # <think>...</think> 블록 제거 (qwen3 thinking mode)
+                if "<think>" in full_content:
+                    import re
+                    full_content = re.sub(r"<think>.*?</think>", "", full_content, flags=re.DOTALL).strip()
+
+                return json.loads(full_content)
+
+            except (urllib.error.URLError, urllib.error.HTTPError) as exc:
+                wait = 2 ** attempt
+                print(f"  [LLM 재시도 {attempt+1}/3] 네트워크 오류: {str(exc)[:60]} — {wait}s 대기")
+                time.sleep(wait)
+            except json.JSONDecodeError as exc:
+                wait = 2 ** attempt
+                print(f"  [LLM 재시도 {attempt+1}/3] JSON 파싱 실패: {str(exc)[:60]} — {wait}s 대기")
+                time.sleep(wait)
+
+        return None
 
     # ── Gemini 백엔드 ─────────────────────────────────────────
 
