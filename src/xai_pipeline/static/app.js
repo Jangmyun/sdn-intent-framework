@@ -438,6 +438,25 @@ const STAGE_DEFS = [
 // 스테이지 카드가 running 상태로 최소 이 시간(ms)은 보이도록 보장
 const MIN_STAGE_VISIBLE_MS = 700;
 const _stageRunningAt = {}; // stageNum → Date.now() when running was shown
+let _liveTickTimer = null; // ticks the time badge of running stages so a slow
+
+// LLM call (e.g. Gemini taking 20-30s) reads as "still going" instead of frozen
+function startLiveTicker() {
+  stopLiveTicker();
+  _liveTickTimer = setInterval(() => {
+    state.stages.forEach(s => {
+      if (s.status !== 'running') return;
+      const startedAt = _stageRunningAt[s.num];
+      if (!startedAt) return;
+      const timeEl = document.getElementById(`time-${s.num}`);
+      if (timeEl) timeEl.textContent = `${Math.floor((Date.now() - startedAt) / 1000)}s…`;
+    });
+  }, 1000);
+}
+
+function stopLiveTicker() {
+  if (_liveTickTimer) { clearInterval(_liveTickTimer); _liveTickTimer = null; }
+}
 
 const state = {
   intent: '',
@@ -924,6 +943,7 @@ async function runPipeline() {
   buildStageCards();   // 이전 실행 카드 DOM 전체 초기화
   renderDecision();
   setRunBtn(true);
+  startLiveTicker();
 
   try {
     const resp = await fetch('/api/run', {
@@ -966,6 +986,7 @@ async function runPipeline() {
     console.error('Pipeline error:', err);
   } finally {
     state.running = false;
+    stopLiveTicker();
     setRunBtn(false);
     loadHistory();
   }

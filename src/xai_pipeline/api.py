@@ -117,6 +117,32 @@ def _run_pipeline(req: RunRequest, q: std_queue.Queue) -> None:
     def progress(n: int, msg: str) -> None:
         emit({"type": "progress", "stage": n, "msg": msg})
 
+    def with_heartbeat(stage: int, label: str, fn, interval: float = 3.0):
+        """블로킹 호출(주로 LLM API) 동안 주기적으로 progress를 내보낸다.
+
+        parser_obj.parse() 같은 단일 동기 호출은 완료될 때까지 SSE 이벤트가
+        전혀 나가지 않아서, 느려지면(네트워크 지연·API 재시도 등) 프론트에서
+        "멈춘 건지 정상 진행 중인지" 구분할 수 없었다. 별도 스레드에서
+        interval초마다 경과 시간을 progress로 내보내 그 구간을 관측 가능하게
+        만든다. fn 자체의 재시도/타임아웃 로직에는 관여하지 않는다.
+        """
+        done_event = threading.Event()
+        t0 = time.time()
+
+        def _tick() -> None:
+            n_ticks = 0
+            while not done_event.wait(interval):
+                n_ticks += 1
+                progress(stage, f"{label} 대기 중... ({round(time.time() - t0, 1)}s 경과)")
+
+        ticker = threading.Thread(target=_tick, daemon=True)
+        ticker.start()
+        try:
+            return fn()
+        finally:
+            done_event.set()  # Event.wait()이 즉시 리턴하므로 스레드는 곧바로 종료됨
+            ticker.join(timeout=1.0)
+
     def start(n: int, name: str) -> float:
         emit({"type": "stage", "stage": n, "status": "running", "name": name})
         return time.time()
@@ -217,7 +243,10 @@ def _run_pipeline(req: RunRequest, q: std_queue.Queue) -> None:
             progress(1, "인텐트 파싱 중... (LLM 호출)")
 
         try:
-            prediction = parser_obj.parse(req.intent, repair_feedback=repair_feedback)
+            prediction = with_heartbeat(
+                1, "LLM 응답",
+                lambda: parser_obj.parse(req.intent, repair_feedback=repair_feedback),
+            )
         except Exception as exc:
             error(1, str(exc))
             finish("REJECT", reason=f"인텐트 파싱 실패: {exc}")
