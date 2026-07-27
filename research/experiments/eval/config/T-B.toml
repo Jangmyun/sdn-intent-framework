@@ -1,11 +1,11 @@
 [experiment]
-treatment = "T-B-large"
+treatment      = "T-B"
 description    = "IR Zero-Shot — IntentIR 형식, few-shot 없음, grounding 없음"
 output_format  = "intent_ir"
 few_shot       = false
 grounding      = false
-dataset_path   = "experiments/eval/data/intents_eval_large.jsonl"
-topology_path  = "experiments/eval/data/topology_large.json"
+dataset_path   = "research/experiments/eval/data/gold350_eval.jsonl"
+topology_path  = "research/experiments/eval/data/topology_eval.json"
 demos_path     = ""
 
 [llm]

@@ -1,7 +1,7 @@
 # GOLD-350 실험 착수 전 검증 보고서
 
 > 작성: 2026-07-23
-> 대상: `docs/dataset/gold.jsonl` (원본) → `experiments/eval/data/gold350_eval.jsonl` (변환본) + Exp-1 실험 체계(run_exp1.py / score_exp1.py / T-A~D config)
+> 대상: `docs/dataset/gold.jsonl` (원본) → `research/experiments/eval/data/gold350_eval.jsonl` (변환본) + Exp-1 실험 체계(run_exp1.py / score_exp1.py / T-A~D config)
 > 방법: 자동 검증 스크립트(구조·값·정합성 전수 검사) + 채점기 시뮬레이션 + 프롬프트 대조
 
 ---
@@ -145,8 +145,8 @@ n=350이면 rep당 케이스 수가 커서 **reps를 10 → 5로 줄여도 통�
 # 스크립트: (세션 scratchpad) verify_gold350.py — 필요 시 experiments/eval/로 승격 가능
 
 # gold 컴파일 검증
-python experiments/eval/validate_gold.py --dataset experiments/eval/data/gold350_eval.jsonl
+python research/experiments/eval/validate_gold.py --dataset research/experiments/eval/data/gold350_eval.jsonl
 
 # dry-run 로드 확인
-python experiments/eval/run_exp1.py --config experiments/eval/config/T-D.toml --repetitions 1 --dry-run
+python research/experiments/eval/run_exp1.py --config research/experiments/eval/config/T-D.toml --repetitions 1 --dry-run
 ```

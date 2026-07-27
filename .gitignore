@@ -23,8 +23,8 @@ tmp/
 /logs/
 
 # GOLD-350 eval run artifacts (API 비용 산출물 — 별도 관리)
-/experiments/eval/logs/
-/experiments/eval/reports/
+/research/experiments/eval/logs/
+/research/experiments/eval/reports/
 
 # ── Research track (research/) ───────────────────────────────────────
 # 환경 보고서 및 run manifest

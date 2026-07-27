@@ -1,13 +1,13 @@
 """
-experiments/eval/validate_gold.py - Gold Validation
+research/experiments/eval/validate_gold.py - Gold Validation
 
 Gold JSON for accepted cases is passed through Stage 2 (FlowRule compiler)
 to verify the gold itself is correct.
 
 Usage:
-    python experiments/eval/validate_gold.py
-    python experiments/eval/validate_gold.py --dataset experiments/eval/data/intents_eval_large.jsonl
-    python experiments/eval/validate_gold.py --large
+    python research/experiments/eval/validate_gold.py
+    python research/experiments/eval/validate_gold.py --dataset research/experiments/eval/data/intents_eval_large.jsonl
+    python research/experiments/eval/validate_gold.py --large
 """
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 
 # 레포 루트 (dataset 경로 등 상대경로 해석용)
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 
 from xai_pipeline.models.intent_ir import IntentIR, CompoundIntentIR
 from xai_pipeline.pipeline.stage2_flowrule.compiler import compile_flowrule, compile_compound, CompileError
@@ -131,7 +131,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Gold Validation - Stage 2 compile check")
     parser.add_argument(
         "--dataset",
-        default="experiments/eval/data/intents_eval.jsonl",
+        default="research/experiments/eval/data/intents_eval.jsonl",
         help="Dataset JSONL path (default: Small)",
     )
     parser.add_argument(
@@ -142,7 +142,7 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.large:
-        dataset_path = ROOT / "experiments/eval/data/intents_eval_large.jsonl"
+        dataset_path = ROOT / "research/experiments/eval/data/intents_eval_large.jsonl"
     else:
         dataset_path = ROOT / args.dataset
 

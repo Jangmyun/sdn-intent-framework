@@ -81,7 +81,6 @@ sdn_intent-framework/
 │       ├── stage5_xai/          # XAI 보고서 생성
 │       └── stage6_deploy/       # 실제 ONOS 배포
 ├── data/                        # 토폴로지/인텐트/트래픽 프리셋 데이터 (런타임, config.DATA_DIR)
-├── experiments/eval/            # GOLD-350 정량 평가 프레임워크 (Exp-1: T-A~T-D)
 ├── scripts/                     # generate_dataset.py, validate_dataset.py 등 — 아직 src/ 밖
 ├── tests/                       # 파이프라인 전용 pytest 스위트 (xai_pipeline.* 바로 임포트)
 ├── docs/                        # 설계 문서 및 세션 기록
@@ -89,13 +88,17 @@ sdn_intent-framework/
 └── research/                    # 논문 재현 실험 트랙 (별도 시스템)
 ```
 
-`scripts/`, `experiments/eval/`, `tests/`는 라이브러리가 아니라 실행 스크립트라
+`scripts/`, `tests/`, `research/experiments/eval/`는 라이브러리가 아니라 실행 스크립트라
 `src/` 밖에 남겨뒀다 — `xai_pipeline` 패키지를 (editable) 설치된 대상으로
 임포트해서 쓴다.
 
 `research/` 아래에는 `safe_intent_sdn/`, `config/`, `schemas/`, `experiments/e1~e3`,
-`experiments/gold`, `paper/`, `scripts/`(ONOS·Mininet 운영), `tests/`가 들어 있으며
-이 파이프라인과는 완전히 별도로 동작한다. `uv`로 관리한다 (`cd research && uv sync --locked`).
+`experiments/gold`, `experiments/eval`, `paper/`, `scripts/`(ONOS·Mininet 운영),
+`tests/`가 들어 있다. 이 중 `experiments/eval`(GOLD-350 Exp-1, T-A~T-D)만 예외적으로
+`xai_pipeline` 패키지를 임포트하므로 **루트 uv 환경에서 레포 루트를 CWD로 두고**
+실행해야 한다 (`uv run python research/experiments/eval/run_exp1.py ...`).
+나머지 research 트랙은 이 파이프라인과 완전히 별도로 동작하며 자체 `uv` 환경을 쓴다
+(`cd research && uv sync --locked`).
 
 ---
 
@@ -242,20 +245,20 @@ reroute traffic from 10.0.0.1 to 10.0.0.2 via switch 3
 
 ## GOLD-350 정량 평가 (Exp-1)
 
-`experiments/eval/`에 T-A(Direct FlowRule) ~ T-D(IR+Few-Shot+Grounding) 4개
-treatment 비교 프레임워크가 있다. 실행 방법은 `experiments/eval/README.md` 참고.
+`research/experiments/eval/`에 T-A(Direct FlowRule) ~ T-D(IR+Few-Shot+Grounding) 4개
+treatment 비교 프레임워크가 있다. 실행 방법은 `research/experiments/eval/README.md` 참고.
 
 ```bash
-uv run python experiments/eval/run_exp1.py \
-  --config experiments/eval/config/T-D.toml \
+uv run python research/experiments/eval/run_exp1.py \
+  --config research/experiments/eval/config/T-D.toml \
   --repetitions 10 \
-  --output experiments/eval/logs/
+  --output research/experiments/eval/logs/
 
-uv run python experiments/eval/score_exp1.py \
-  --dataset experiments/eval/data/gold350_eval.jsonl \
-  --topology experiments/eval/data/topology_eval.json \
-  --logs experiments/eval/logs/ \
-  --output experiments/eval/reports/summary_exp1.json
+uv run python research/experiments/eval/score_exp1.py \
+  --dataset research/experiments/eval/data/gold350_eval.jsonl \
+  --topology research/experiments/eval/data/topology_eval.json \
+  --logs research/experiments/eval/logs/ \
+  --output research/experiments/eval/reports/summary_exp1.json
 ```
 
 ---

@@ -1,8 +1,8 @@
 """
-experiments/eval/convert_gold350.py — GOLD-350 → Exp-1 gold 스키마 변환기
+research/experiments/eval/convert_gold350.py — GOLD-350 → Exp-1 gold 스키마 변환기
 
 docs/dataset/gold.jsonl (팀원이 작성한 350케이스, 이중 라벨링+조정 완료된 gold)을
-score_exp1.py가 소비하는 experiments/eval/data/intents_eval.jsonl 형식으로 변환한다.
+score_exp1.py가 소비하는 research/experiments/eval/data/intents_eval.jsonl 형식으로 변환한다.
 
 두 데이터셋의 스키마 차이 (분석 근거):
   - action 값 체계가 다르다: GOLD-350은 sdn_intent-framework 계열의 3그룹
@@ -39,9 +39,9 @@ score_exp1.py가 소비하는 experiments/eval/data/intents_eval.jsonl 형식으
     (정보 자체가 gold에 없음). enforcement.device/egress_port 슬롯은 대신 채점된다.
 
 Usage:
-    python experiments/eval/convert_gold350.py \
+    python research/experiments/eval/convert_gold350.py \
         --input docs/dataset/gold.jsonl \
-        --output experiments/eval/data/gold350_eval.jsonl
+        --output research/experiments/eval/data/gold350_eval.jsonl
 """
 from __future__ import annotations
 
@@ -50,7 +50,7 @@ import json
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 
 # ANNOTATION_GUIDELINE.md §1 고정 인벤토리
 HOST_IP: dict[str, str] = {
@@ -198,7 +198,7 @@ def convert_case(case: dict, warnings: list[str]) -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser(description="GOLD-350 -> Exp-1 gold 스키마 변환기")
     parser.add_argument("--input", default="docs/dataset/gold.jsonl")
-    parser.add_argument("--output", default="experiments/eval/data/gold350_eval.jsonl")
+    parser.add_argument("--output", default="research/experiments/eval/data/gold350_eval.jsonl")
     args = parser.parse_args()
 
     in_path = ROOT / args.input

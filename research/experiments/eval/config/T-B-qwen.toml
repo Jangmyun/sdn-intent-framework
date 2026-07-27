@@ -4,13 +4,13 @@ description    = "IR Zero-Shot — IntentIR 형식, few-shot 없음, grounding �
 output_format  = "intent_ir"
 few_shot       = false
 grounding      = false
-dataset_path   = "experiments/eval/data/gold350_eval.jsonl"
-topology_path  = "experiments/eval/data/topology_eval.json"
+dataset_path   = "research/experiments/eval/data/gold350_eval.jsonl"
+topology_path  = "research/experiments/eval/data/topology_eval.json"
 demos_path     = ""
 
 [llm]
-model          = "qwen/qwen3-8b"
+model          = "qwen3:8b"
 temperature    = 0.2
 max_tokens     = 8192
-timeout_s      = 120.0
+timeout_s      = 180.0
 retries        = 2
