@@ -1,5 +1,6 @@
 # Python-generated files
 __pycache__/
+.pytest_cache/
 *.py[oc]
 build/
 dist/
@@ -17,19 +18,24 @@ wheels/
 # Temporary files
 tmp/
 
-# Generated environment reports
-logs/setup/
-logs/runs/
-logs/*.log
+# ── Pipeline app (root) ──────────────────────────────────────────────
+# 실행 결과 JSON (config.py LOGS_DIR) — 루트만, research/logs/는 아래에서 별도 처리
+/logs/
 
-# E1 experiment artifacts
-logs/e1/
+# GOLD-350 eval run artifacts (API 비용 산출물 — 별도 관리)
+/experiments/eval/logs/
+/experiments/eval/reports/
 
-# E2 experiment artifacts
-logs/e2/
+# ── Research track (research/) ───────────────────────────────────────
+# 환경 보고서 및 run manifest
+research/logs/setup/
+research/logs/runs/
+research/logs/*.log
 
-# E3 experiment artifacts
-logs/e3/
+# E1~E3 experiment artifacts
+research/logs/e1/
+research/logs/e2/
+research/logs/e3/
 
 # PLAN
 PLAN*
