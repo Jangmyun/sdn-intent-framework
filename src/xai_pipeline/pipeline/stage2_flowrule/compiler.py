@@ -8,7 +8,7 @@ from __future__ import annotations
 import re
 from typing import Optional
 
-from models.intent_ir import IntentIR, CompoundIntentIR
+from xai_pipeline.models.intent_ir import IntentIR, CompoundIntentIR
 
 # ── 서수 → 숫자 매핑 ──────────────────────────────────────────
 SWITCH_ID_ORDINALS: dict[str, int] = {

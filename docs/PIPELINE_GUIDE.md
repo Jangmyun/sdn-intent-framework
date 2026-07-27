@@ -4,8 +4,9 @@
 LLM/RAG 기반 인텐트 해석부터 정적 검증, Digital Twin 시뮬레이션, XAI 설명, ONOS 배포까지 6단계로 처리한다.
 
 > 이 파이프라인은 `sdn_intent-framework` 레포 루트에 위치한다. 연구/논문용 재현
-> 실험 트랙은 `research/` 아래에 별도로 분리되어 있으며, 서로 독립적인 의존성
-> (파이프라인=`requirements.txt`/pip, 연구=`research/pyproject.toml`/uv)을 쓴다.
+> 실험 트랙은 `research/` 아래에 별도로 분리되어 있다. 두 트랙 모두 uv로 관리하되
+> 프로젝트는 분리되어 있다 — 파이프라인은 루트 `pyproject.toml`, 연구는
+> `research/pyproject.toml`이며 각자 자기 lockfile과 `.venv`를 가진다.
 
 ---
 
@@ -41,41 +42,56 @@ LLM/RAG 기반 인텐트 해석부터 정적 검증, Digital Twin 시뮬레이�
 
 | 기여 | 설명 | 구현 위치 |
 |------|------|-----------|
-| **Intent IR** | LLM과 컨트롤러를 분리하는 중간 표현 — 재현성 보장 | `models/intent_ir.py` |
-| **결정론적 컴파일러** | 동일 IR → 항상 동일 FlowRule, LLM 환각 원천 차단 | `pipeline/stage2_flowrule/compiler.py` |
-| **정적 검증** | Shadowing·Redundancy 등 5종 충돌을 LLM 없이 탐지 | `pipeline/stage3_static/` |
-| **Digital Twin 루프** | 임시 배포 → 검증 → rollback으로 안전성 확인 | `pipeline/stage4_twin/` |
-| **Evidence-grounded XAI** | 설명 근거를 실제 stage 출력 데이터에 연결 | `pipeline/stage5_xai/explainer.py` |
+| **Intent IR** | LLM과 컨트롤러를 분리하는 중간 표현 — 재현성 보장 | `src/xai_pipeline/models/intent_ir.py` |
+| **결정론적 컴파일러** | 동일 IR → 항상 동일 FlowRule, LLM 환각 원천 차단 | `src/xai_pipeline/pipeline/stage2_flowrule/compiler.py` |
+| **정적 검증** | Shadowing·Redundancy 등 5종 충돌을 LLM 없이 탐지 | `src/xai_pipeline/pipeline/stage3_static/` |
+| **Digital Twin 루프** | 임시 배포 → 검증 → rollback으로 안전성 확인 | `src/xai_pipeline/pipeline/stage4_twin/` |
+| **Evidence-grounded XAI** | 설명 근거를 실제 stage 출력 데이터에 연결 | `src/xai_pipeline/pipeline/stage5_xai/explainer.py` |
 
 ---
 
 ## 디렉토리 구조 (레포 루트 기준)
 
+코드는 전부 `src/xai_pipeline/` 아래에 있는 진짜 파이썬 패키지다 (`uv sync`가
+editable install). `sys.path` 조작이 전혀 없고, 내부 어디서나 `from xai_pipeline...`
+형태로 임포트한다.
+
 ```
 sdn_intent-framework/
-├── main.py                   # 파이프라인 CLI 진입점
-├── api.py                    # FastAPI 서버 (REST API + Web UI 서빙)
-├── config.py                 # 파이프라인 전역 설정 (.env 로드)
-├── evaluate.py                # 파이프라인 평가 스크립트
-├── models/
-│   ├── intent_ir.py           # IntentIR 데이터 모델 (Pydantic)
-│   └── topology.py            # 네트워크 토폴로지 + 엔티티 검증
-├── pipeline/
-│   ├── stage1_intent/         # LLM 백엔드, RAG, 자연어 → IntentIR
-│   ├── stage2_flowrule/       # IntentIR → ONOS FlowRule
-│   ├── stage3_static/         # 스키마 검증 + 충돌 탐지
-│   ├── stage4_twin/           # ONOS 클라이언트 + Twin 검증 + rollback
-│   ├── stage5_xai/            # XAI 보고서 생성
-│   └── stage6_deploy/         # 실제 ONOS 배포
-├── data/                       # 토폴로지/인텐트/트래픽 프리셋 데이터
-├── experiments/eval/           # GOLD-350 정량 평가 프레임워크 (Exp-1: T-A~T-D)
-├── scripts/                    # generate_dataset.py, validate_dataset.py 등
-├── static/                     # Web UI (HTML/JS/CSS)
-├── tests/                      # 파이프라인 전용 pytest 스위트
-├── docs/                       # 설계 문서 및 세션 기록
-├── logs/                       # 실행 결과 JSON (run_id 기반, .gitignore)
-└── research/                   # 논문 재현 실험 트랙 (별도 시스템)
+├── main.py                    # 얇은 진입점 — from xai_pipeline.main import main
+├── evaluate.py                 # 얇은 진입점 — from xai_pipeline.evaluate import main
+├── pyproject.toml              # uv 프로젝트 + hatchling 빌드 설정
+├── src/xai_pipeline/           # 실제 코드 (editable install 대상)
+│   ├── __init__.py
+│   ├── api.py                  # FastAPI 서버 — uv run uvicorn xai_pipeline.api:app
+│   ├── config.py                # 전역 설정. BASE_DIR = Path.cwd() (레포 루트에서 실행 전제)
+│   ├── main.py                  # CLI 본체 (main.py는 여기로 위임)
+│   ├── evaluate.py              # 평가 스크립트 본체
+│   ├── static/                  # Web UI (HTML/JS/CSS) — 패키지와 함께 배포
+│   ├── models/
+│   │   ├── intent_ir.py         # IntentIR 데이터 모델 (Pydantic)
+│   │   └── topology.py          # 네트워크 토폴로지 + 엔티티 검증
+│   └── pipeline/
+│       ├── flow_state_manager.py
+│       ├── repair_utils.py
+│       ├── stage1_intent/       # LLM 백엔드, RAG, 자연어 → IntentIR
+│       ├── stage2_flowrule/     # IntentIR → ONOS FlowRule
+│       ├── stage3_static/       # 스키마 검증 + 충돌 탐지
+│       ├── stage4_twin/         # ONOS 클라이언트 + Twin 검증 + rollback
+│       ├── stage5_xai/          # XAI 보고서 생성
+│       └── stage6_deploy/       # 실제 ONOS 배포
+├── data/                        # 토폴로지/인텐트/트래픽 프리셋 데이터 (런타임, config.DATA_DIR)
+├── experiments/eval/            # GOLD-350 정량 평가 프레임워크 (Exp-1: T-A~T-D)
+├── scripts/                     # generate_dataset.py, validate_dataset.py 등 — 아직 src/ 밖
+├── tests/                       # 파이프라인 전용 pytest 스위트 (xai_pipeline.* 바로 임포트)
+├── docs/                        # 설계 문서 및 세션 기록
+├── logs/                        # 실행 결과 JSON (run_id 기반, .gitignore, config.LOGS_DIR)
+└── research/                    # 논문 재현 실험 트랙 (별도 시스템)
 ```
+
+`scripts/`, `experiments/eval/`, `tests/`는 라이브러리가 아니라 실행 스크립트라
+`src/` 밖에 남겨뒀다 — `xai_pipeline` 패키지를 (editable) 설치된 대상으로
+임포트해서 쓴다.
 
 `research/` 아래에는 `safe_intent_sdn/`, `config/`, `schemas/`, `experiments/e1~e3`,
 `experiments/gold`, `paper/`, `scripts/`(ONOS·Mininet 운영), `tests/`가 들어 있으며
@@ -87,8 +103,17 @@ sdn_intent-framework/
 
 ### 1. 의존성 설치
 
+[uv](https://docs.astral.sh/uv/)로 관리한다. uv가 없다면:
+
 ```bash
-pip install -r requirements.txt
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+프로젝트 환경 구성 (Python 3.11을 자동으로 받아온다):
+
+```bash
+uv sync                 # 기본 의존성 + dev(pytest)
+uv sync --group reports  # 발표자료 생성(python-pptx)까지 필요할 때
 ```
 
 Digital Twin(Mininet) 사용 시 추가 설치:
@@ -131,10 +156,11 @@ sudo chmod 440 /etc/sudoers.d/$USER
 
 ```bash
 # 일반 실행 (Digital Twin 스킵)
-uvicorn api:app --reload --port 8000
+uv run uvicorn xai_pipeline.api:app --reload --port 8000
 
 # Digital Twin 사용 시 (root 필요)
-sudo -E $(which uvicorn) api:app --port 8000
+# sudo는 uv의 PATH를 못 보므로 venv의 uvicorn 절대경로를 넘긴다
+sudo -E $(uv run which uvicorn) xai_pipeline.api:app --port 8000
 ```
 
 브라우저에서 `http://localhost:8000` 접속
@@ -142,7 +168,7 @@ sudo -E $(which uvicorn) api:app --port 8000
 #### CLI
 
 ```bash
-python main.py --intent "block all traffic from 10.0.0.1 to 10.0.0.4 on switch 1"
+uv run python main.py --intent "block all traffic from 10.0.0.1 to 10.0.0.4 on switch 1"
 ```
 
 ---
@@ -151,19 +177,19 @@ python main.py --intent "block all traffic from 10.0.0.1 to 10.0.0.4 on switch 1
 
 ```bash
 # 기본 실행
-python main.py --intent "block all traffic from 10.0.0.1 to 10.0.0.4 on switch 1"
+uv run python main.py --intent "block all traffic from 10.0.0.1 to 10.0.0.4 on switch 1"
 
 # Gemini 모델 사용, Digital Twin 스킵
-python main.py --intent "..." --model gemini-2.0-flash --skip-twin
+uv run python main.py --intent "..." --model gemini-2.0-flash --skip-twin
 
 # RAG 예시 수 조정, 상세 출력
-python main.py --intent "..." --rag-k 5 --verbose
+uv run python main.py --intent "..." --rag-k 5 --verbose
 
 # 배포까지 스킵 (검증만 수행)
-python main.py --intent "..." --skip-twin --skip-deploy
+uv run python main.py --intent "..." --skip-twin --skip-deploy
 
 # RAG 없이 LLM 직접 호출
-python main.py --intent "..." --no-rag
+uv run python main.py --intent "..." --no-rag
 ```
 
 **종료 코드**
@@ -220,12 +246,12 @@ reroute traffic from 10.0.0.1 to 10.0.0.2 via switch 3
 treatment 비교 프레임워크가 있다. 실행 방법은 `experiments/eval/README.md` 참고.
 
 ```bash
-python experiments/eval/run_exp1.py \
+uv run python experiments/eval/run_exp1.py \
   --config experiments/eval/config/T-D.toml \
   --repetitions 10 \
   --output experiments/eval/logs/
 
-python experiments/eval/score_exp1.py \
+uv run python experiments/eval/score_exp1.py \
   --dataset experiments/eval/data/gold350_eval.jsonl \
   --topology experiments/eval/data/topology_eval.json \
   --logs experiments/eval/logs/ \

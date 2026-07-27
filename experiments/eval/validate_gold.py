@@ -16,13 +16,11 @@ import json
 import sys
 from pathlib import Path
 
-# Add project root to sys.path
+# 레포 루트 (dataset 경로 등 상대경로 해석용)
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "pipeline"))
 
-from models.intent_ir import IntentIR, CompoundIntentIR
-from stage2_flowrule.compiler import compile_flowrule, compile_compound, CompileError
+from xai_pipeline.models.intent_ir import IntentIR, CompoundIntentIR
+from xai_pipeline.pipeline.stage2_flowrule.compiler import compile_flowrule, compile_compound, CompileError
 
 
 def gold_to_ir(gold: dict) -> IntentIR | CompoundIntentIR:

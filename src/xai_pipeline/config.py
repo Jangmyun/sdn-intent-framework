@@ -1,7 +1,13 @@
 """
 config.py — End-to-End XAI SDN 파이프라인 전역 설정
 
-모든 파이프라인 모듈은 이 파일에서 설정을 임포트한다. BASE_DIR이 곧 레포 루트다.
+모든 파이프라인 모듈은 이 파일에서 설정을 임포트한다.
+
+BASE_DIR은 현재 작업 디렉터리(cwd) 기준이다 — 이 파일 자체는 src/xai_pipeline/
+아래 설치된 패키지 코드이므로 __file__ 기준으로 잡으면 안 된다(설치 위치와
+사용자가 데이터를 두는 위치가 다르다). 모든 문서가 "레포 루트에서 실행"을
+전제하므로, cwd == 레포 루트다.
+
 논문 재현 트랙(research/)은 별도 설정 체계(research/config/, SAFE_SDN_* 환경변수)를
 사용하며 이 파일과 무관하다.
 """
@@ -13,7 +19,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 # ── 경로 설정 ─────────────────────────────────────────────────
-BASE_DIR: Path = Path(__file__).resolve().parent
+BASE_DIR: Path = Path.cwd()
 ROOT_DIR: Path = BASE_DIR
 
 load_dotenv(BASE_DIR / ".env")

@@ -14,7 +14,7 @@ import json
 import time
 from typing import Optional
 
-import config
+from xai_pipeline import config
 
 
 class LLMClient:

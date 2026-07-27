@@ -13,12 +13,12 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Optional, TYPE_CHECKING
 
-from models.intent_ir import IntentIR, CompoundIntentIR
-from stage3_static.static_validator import StaticResult
-from stage4_twin.twin_verifier import TwinResult
+from xai_pipeline.models.intent_ir import IntentIR, CompoundIntentIR
+from xai_pipeline.pipeline.stage3_static.static_validator import StaticResult
+from xai_pipeline.pipeline.stage4_twin.twin_verifier import TwinResult
 
 if TYPE_CHECKING:
-    from stage1_intent.llm_client import LLMClient
+    from xai_pipeline.pipeline.stage1_intent.llm_client import LLMClient
 
 
 @dataclass

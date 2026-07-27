@@ -1,16 +1,9 @@
 """
 tests/test_conflict_detector.py — Stage 3 충돌 탐지기 단위 테스트
 """
-import sys
-from pathlib import Path
-
 import pytest
 
-_BASE = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(_BASE))
-sys.path.insert(0, str(_BASE / "pipeline"))
-
-from stage3_static.conflict_detector import (
+from xai_pipeline.pipeline.stage3_static.conflict_detector import (
     criteria_overlap,
     get_action_key,
     get_criteria_dict,
@@ -18,7 +11,7 @@ from stage3_static.conflict_detector import (
     ip_overlaps,
     normalize_hex,
 )
-from stage3_static.static_validator import validate
+from xai_pipeline.pipeline.stage3_static.static_validator import validate
 
 
 # ── 유틸리티 ────────────────────────────────────────────────────────────────────

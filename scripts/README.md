@@ -1,7 +1,12 @@
 # Pipeline Scripts
 
 파이프라인 앱([Pipeline Guide](../docs/PIPELINE_GUIDE.md)) 전용 보조 스크립트입니다.
-`requirements.txt`(pip) 환경이 필요하며, 모든 명령은 레포 루트에서 실행합니다.
+레포 루트의 uv 환경이 필요하며, 모든 명령은 레포 루트에서 `uv run`으로 실행합니다.
+
+```bash
+uv run python scripts/validate_dataset.py
+uv run --group reports python scripts/make_exp1_pptx.py   # python-pptx 필요
+```
 
 | Script | Role |
 | --- | --- |

@@ -26,12 +26,6 @@ import sys
 import time
 from pathlib import Path
 
-_ROOT = Path(__file__).resolve().parent.parent
-if str(_ROOT) not in sys.path:
-    sys.path.insert(0, str(_ROOT))
-if str(_ROOT / "pipeline") not in sys.path:
-    sys.path.insert(0, str(_ROOT / "pipeline"))
-
 
 def _print_samples(samples: list) -> None:
     for s in samples:
@@ -63,15 +57,15 @@ def main() -> int:
     parser.add_argument("--interval", type=float, default=5.0, help="모니터링 폴링 간격(초)")
     args = parser.parse_args()
 
-    import config
-    from stage4_twin.network_monitor import NetworkMonitor
-    from stage4_twin.onos_client import OnosClient
-    from stage4_twin.topology import (
+    from xai_pipeline import config
+    from xai_pipeline.pipeline.stage4_twin.network_monitor import NetworkMonitor
+    from xai_pipeline.pipeline.stage4_twin.onos_client import OnosClient
+    from xai_pipeline.pipeline.stage4_twin.topology import (
         build_network, build_network_from_custom, diamond_topology_data,
         get_expected_device_ids, suppress_htb_quantum_warning,
     )
-    from stage4_twin.traffic_generator import start_traffic_preset, stop_traffic_preset
-    from stage4_twin.twin_verifier import TwinVerifier
+    from xai_pipeline.pipeline.stage4_twin.traffic_generator import start_traffic_preset, stop_traffic_preset
+    from xai_pipeline.pipeline.stage4_twin.twin_verifier import TwinVerifier
 
     skip_reason = TwinVerifier._check_platform()
     if skip_reason:
@@ -87,7 +81,7 @@ def main() -> int:
     if is_diamond:
         topo_data = diamond_topology_data()
     else:
-        topo_path = Path(topology_arg) if topology_arg.endswith(".json") else _ROOT / "data" / "custom_topology.json"
+        topo_path = Path(topology_arg) if topology_arg.endswith(".json") else config.DATA_DIR / "custom_topology.json"
         topo_data = json.loads(topo_path.read_text(encoding="utf-8"))
     # build_network_from_custom()에는 diamond일 때 None을 넘겨 하드코딩된 build_network()를 타게 한다.
     custom_data = None if is_diamond else topo_data

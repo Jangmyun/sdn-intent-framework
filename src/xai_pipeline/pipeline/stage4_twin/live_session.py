@@ -16,15 +16,15 @@ import threading
 import time
 from typing import Optional
 
-from stage4_twin.network_monitor import NetworkMonitor
-from stage4_twin.onos_client import OnosClient
-from stage4_twin.topology import (
+from xai_pipeline.pipeline.stage4_twin.network_monitor import NetworkMonitor
+from xai_pipeline.pipeline.stage4_twin.onos_client import OnosClient
+from xai_pipeline.pipeline.stage4_twin.topology import (
     build_network,
     build_network_from_custom,
     get_expected_device_ids,
     suppress_htb_quantum_warning,
 )
-from stage4_twin.traffic_generator import (
+from xai_pipeline.pipeline.stage4_twin.traffic_generator import (
     TrafficFlowHandle,
     start_traffic_preset,
     stop_traffic_preset,

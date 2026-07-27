@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from stage1_intent.llm_client import LLMClient
+    from xai_pipeline.pipeline.stage1_intent.llm_client import LLMClient
 
 
 def build_index(

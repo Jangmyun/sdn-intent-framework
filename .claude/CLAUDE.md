@@ -4,20 +4,20 @@
 
 This repo holds two independent subsystems that must not be conflated. Both share the single repo-root `.env`.
 
-**Pipeline app — repository root.** An End-to-End application turning natural-language intent into ONOS FlowRules (LLM/RAG, Digital Twin, XAI, Web UI). Entry points are `main.py` (CLI) and `api.py` (FastAPI + Web UI); its config loader is the root `config.py`. Application code lives in `models/` (IntentIR, topology) and `pipeline/stage1_intent` through `pipeline/stage6_deploy`; Web UI assets in `static/`, datasets in `data/`, helper scripts in `scripts/`. Tests live in `tests/`. GOLD-350 quantitative evaluation (Exp-1, treatments T-A~T-D) lives in `experiments/eval/`. Runtime output goes to the ignored `logs/`. Dependencies are pip-managed via `requirements.txt`. See `docs/PIPELINE_GUIDE.md` for full usage.
+**Pipeline app — repository root.** An End-to-End application turning natural-language intent into ONOS FlowRules (LLM/RAG, Digital Twin, XAI, Web UI). All code is a real installable package under `src/xai_pipeline/` (editable-installed by `uv sync` — no `sys.path` hacks anywhere; every internal import is `from xai_pipeline...`). Its config loader is `src/xai_pipeline/config.py`, whose `BASE_DIR` is `Path.cwd()` — commands must be run from the repository root, since that's where `.env`, `data/`, `logs/`, `results/` live (package-shipped assets like `static/` instead resolve relative to `__file__`, inside the package). The root `main.py` and `evaluate.py` are thin wrappers (`from xai_pipeline.main import main`, etc.) kept for `uv run python main.py` convenience; `api.py` has no root wrapper — run it via `uv run uvicorn xai_pipeline.api:app`. Application code: `src/xai_pipeline/models/` (IntentIR, topology) and `src/xai_pipeline/pipeline/stage1_intent` through `stage6_deploy`; Web UI assets in `src/xai_pipeline/static/`. Datasets in `data/`, helper scripts in `scripts/`, tests in `tests/` (import `xai_pipeline.*` directly — no path setup needed). GOLD-350 quantitative evaluation (Exp-1, treatments T-A~T-D) lives in `experiments/eval/`. Runtime output goes to the ignored `logs/`. Dependencies are uv-managed via the root `pyproject.toml` (hatchling build backend) — a separate uv project from `research/`, with its own lockfile and `.venv`. See `docs/PIPELINE_GUIDE.md` for full usage.
 
 **Research track — `research/`, self-contained.** Paper reproducibility code. Core Python lives in `research/safe_intent_sdn/`; configuration models in `research/safe_intent_sdn/config.py`, durable run logging in `run_context.py`, and `schema.py` generates the JSON Schemas under `research/schemas/`. `research/main.py` is the minimal smoke entry point. Tests live in `research/tests/` and mirror application behavior rather than individual private helpers. Reproducible defaults and experiment overrides are in `research/config/default.toml` and `research/config/experiments/`. Operational scripts for ONOS, Mininet, installation, and smoke checks are under `research/scripts/`. Runtime output belongs in ignored directories such as `research/logs/runs/` and `research/logs/setup/`. Paper-facing experiments live in `research/experiments/{e1,e2,e3,gold}`, with figures/tables under `research/paper/`.
 
-Do not confuse the root `config.py` (pipeline) with `research/safe_intent_sdn/config.py` (research), nor the root `tests/` with `research/tests/`.
+Do not confuse `src/xai_pipeline/config.py` (pipeline) with `research/safe_intent_sdn/config.py` (research), nor the root `tests/` with `research/tests/`.
 
 ## Build, Test, and Development Commands
 
 Pipeline app — run from the repository root:
 
-- `pip install -r requirements.txt`: install pipeline dependencies.
-- `python main.py --intent "..."`: run the pipeline CLI.
-- `uvicorn api:app --reload --port 8000`: serve the REST API and Web UI.
-- `pytest -q tests`: run the pipeline test suite.
+- `uv sync`: install the Python 3.11 environment, editable-install `xai_pipeline`, and install pipeline dependencies (add `--group reports` for `python-pptx`).
+- `uv run python main.py --intent "..."`: run the pipeline CLI (or `uv run xai-pipeline --intent "..."` via the console-script entry point).
+- `uv run uvicorn xai_pipeline.api:app --reload --port 8000`: serve the REST API and Web UI.
+- `uv run pytest -q`: run the pipeline test suite.
 
 Research track — run from `research/`:
 

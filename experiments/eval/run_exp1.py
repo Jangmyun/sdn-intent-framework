@@ -21,10 +21,8 @@ import uuid
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-# ── Project root on sys.path ──────────────────────────────────────────
+# ── Project root (레포 루트, dataset/config 등 상대경로 해석용) ────────
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "pipeline"))
 
 try:
     import tomllib  # Python 3.11+
@@ -34,14 +32,14 @@ except ImportError:
     except ImportError:
         raise RuntimeError("tomllib not available — run: pip install tomli")
 
-import config as pipeline_config  # loads GOOGLE_API_KEY from .env
+from xai_pipeline import config as pipeline_config  # loads GOOGLE_API_KEY from .env
 
 # ════════════════════════════════════════════════════════════════════════
 # System prompts
 # ════════════════════════════════════════════════════════════════════════
 
 # T-B / T-C / T-D  (IntentIR output)
-from stage1_intent.intent_parser import SYSTEM_PROMPT as SYSTEM_INTENT_IR
+from xai_pipeline.pipeline.stage1_intent.intent_parser import SYSTEM_PROMPT as SYSTEM_INTENT_IR
 
 # T-A  (direct ONOS FlowRule output)
 SYSTEM_DIRECT_FLOW = """You are an SDN network operator. Given a natural language network intent, output ONOS FlowRule JSON directly. Output strict JSON only — no explanation.

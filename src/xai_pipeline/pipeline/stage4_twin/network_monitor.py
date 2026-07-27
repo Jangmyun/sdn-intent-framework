@@ -23,7 +23,7 @@ import time
 from dataclasses import dataclass
 from typing import Optional
 
-from stage4_twin.twin_verifier import _find_mininet_port
+from xai_pipeline.pipeline.stage4_twin.twin_verifier import _find_mininet_port
 
 _QDISC_SENT_RE = re.compile(r"Sent (\d+) bytes")
 _QDISC_DROPPED_RE = re.compile(r"dropped\s+(\d+)")

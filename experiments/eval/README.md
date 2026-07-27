@@ -120,7 +120,7 @@ experiments/eval/
 
 ```bash
 # T-A ~ T-D × 10회 반복
-python experiments/eval/run_exp1.py \
+uv run python experiments/eval/run_exp1.py \
   --config experiments/eval/config/T-D.toml \
   --repetitions 10 \
   --output experiments/eval/logs/
@@ -151,7 +151,7 @@ python experiments/eval/run_exp1.py \
 ### 3단계: 채점 (Exp-1)
 
 ```bash
-python experiments/eval/score_exp1.py \
+uv run python experiments/eval/score_exp1.py \
   --dataset experiments/eval/data/intents_eval.jsonl \
   --topology experiments/eval/data/topology_eval.json \
   --logs experiments/eval/logs/ \
@@ -163,7 +163,7 @@ python experiments/eval/score_exp1.py \
 ### 5단계: Exp-1 실행 (Large)
 
 ```bash
-python experiments/eval/run_exp1.py \
+uv run python experiments/eval/run_exp1.py \
   --config experiments/eval/config/T-D-large.toml \
   --repetitions 10 \
   --output experiments/eval/logs/

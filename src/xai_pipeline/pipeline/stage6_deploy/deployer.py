@@ -34,7 +34,7 @@ class Deployer:
         onos_user: Optional[str] = None,
         onos_password: Optional[str] = None,
     ) -> None:
-        import config
+        from xai_pipeline import config
         self.onos_url = onos_url or config.ONOS_URL
         self.onos_user = onos_user or config.ONOS_USER
         self.onos_password = onos_password or config.ONOS_PASSWORD
@@ -49,7 +49,7 @@ class Deployer:
         Returns:
             DeployResult
         """
-        from stage4_twin.onos_client import OnosClient, OnosError
+        from xai_pipeline.pipeline.stage4_twin.onos_client import OnosClient, OnosError
 
         client = OnosClient(
             base_url=self.onos_url,

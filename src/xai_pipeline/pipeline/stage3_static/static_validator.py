@@ -8,8 +8,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Optional
 
-from stage3_static.schema_validator import validate_schema
-from stage3_static.conflict_detector import detect_conflict
+from xai_pipeline.pipeline.stage3_static.schema_validator import validate_schema
+from xai_pipeline.pipeline.stage3_static.conflict_detector import detect_conflict
 
 
 @dataclass

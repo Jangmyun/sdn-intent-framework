@@ -135,7 +135,7 @@ class TwinVerifier:
         controller_ip: Optional[str] = None,
         controller_port: Optional[int] = None,
     ) -> None:
-        import config
+        from xai_pipeline import config
         self.onos_url = onos_url or config.ONOS_URL
         self.onos_user = onos_user or config.ONOS_USER
         self.onos_password = onos_password or config.ONOS_PASSWORD
@@ -193,8 +193,8 @@ class TwinVerifier:
         if skip_reason:
             return TwinResult(status="skipped", reason=skip_reason)
 
-        from stage4_twin.onos_client import OnosClient, OnosError
-        from stage4_twin.topology import (
+        from xai_pipeline.pipeline.stage4_twin.onos_client import OnosClient, OnosError
+        from xai_pipeline.pipeline.stage4_twin.topology import (
             build_network, build_network_from_custom,
             get_expected_device_ids, get_test_host_pairs,
             suppress_htb_quantum_warning,
@@ -1066,8 +1066,8 @@ class TwinVerifier:
         UI 에디터에서 저장한 커스텀 토폴로지를 Digital Twin에 반영한다.
         """
         import json
-        from pathlib import Path
-        path = Path(__file__).resolve().parent.parent.parent / "data" / "custom_topology.json"
+        from xai_pipeline import config
+        path = config.DATA_DIR / "custom_topology.json"
         if path.exists():
             try:
                 return json.loads(path.read_text(encoding="utf-8"))

@@ -1,7 +1,7 @@
 """
 FastAPI backend for XAI-SDN Pipeline
-실행: uvicorn api:app --reload --port 8000
-     (endTOend/ 디렉토리에서 실행)
+실행: uv run uvicorn xai_pipeline.api:app --reload --port 8000
+     (레포 루트에서 실행 — config.py가 cwd 기준으로 data/logs/.env를 찾는다)
 """
 from __future__ import annotations
 
@@ -28,13 +28,11 @@ from fastapi.security import APIKeyHeader
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-_BASE_DIR = Path(__file__).resolve().parent
-if str(_BASE_DIR) not in sys.path:
-    sys.path.insert(0, str(_BASE_DIR))
-if str(_BASE_DIR / 'pipeline') not in sys.path:
-    sys.path.insert(0, str(_BASE_DIR / 'pipeline'))
+from xai_pipeline import config
 
-import config
+# 패키지와 함께 배포되는 정적 자산(웹 UI) 위치 — data/logs 등 런타임 경로는
+# config.DATA_DIR / config.LOGS_DIR(cwd 기준)를 쓰고, 이건 static/ 전용이다.
+_PACKAGE_DIR = Path(__file__).resolve().parent
 
 app = FastAPI(title="XAI-SDN Pipeline API")
 app.add_middleware(
@@ -91,7 +89,7 @@ def _sse(data: dict) -> str:
 
 # ── Repair Loop helper ────────────────────────────────────────────────────────
 
-from repair_utils import MAX_REPAIR_ATTEMPTS, build_repair_feedback as _build_repair_feedback
+from xai_pipeline.pipeline.repair_utils import MAX_REPAIR_ATTEMPTS, build_repair_feedback as _build_repair_feedback
 
 
 # ── Pipeline runner (synchronous, called in thread) ───────────────────────────
@@ -148,9 +146,9 @@ def _run_pipeline(req: RunRequest, q: std_queue.Queue) -> None:
     # ── Stage 1: Intent Parsing ───────────────────────────────────────────────
     t = start(1, "Intent Parsing")
     try:
-        from stage1_intent.llm_client import LLMClient
-        from stage1_intent.intent_parser import IntentParser
-        from stage1_intent.rag import build_index
+        from xai_pipeline.pipeline.stage1_intent.llm_client import LLMClient
+        from xai_pipeline.pipeline.stage1_intent.intent_parser import IntentParser
+        from xai_pipeline.pipeline.stage1_intent.rag import build_index
 
         progress(1, f"LLM 클라이언트 초기화 중... (모델: {req.model})")
         client = LLMClient(model=req.model)
@@ -174,14 +172,14 @@ def _run_pipeline(req: RunRequest, q: std_queue.Queue) -> None:
         else:
             progress(1, "데이터셋 없음 — RAG 스킵")
 
-        from models.topology import NetworkTopology
+        from xai_pipeline.models.topology import NetworkTopology
         custom_topo = _load_custom_topology()
         if custom_topo:
             topology = NetworkTopology.from_custom_file(custom_topo)
             progress(1, "토폴로지: 커스텀 파일 로드")
         else:
             try:
-                from stage4_twin.onos_client import OnosClient
+                from xai_pipeline.pipeline.stage4_twin.onos_client import OnosClient
                 topology = NetworkTopology.from_onos(OnosClient())
                 progress(1, "토폴로지: ONOS 실시간 조회")
             except Exception:
@@ -201,8 +199,8 @@ def _run_pipeline(req: RunRequest, q: std_queue.Queue) -> None:
         return
 
     # ── Repair Loop: Stage 1 → 2 → 3 (최대 MAX_REPAIR_ATTEMPTS 재시도) ─────────
-    from stage2_flowrule.compiler import compile_flowrule, compile_compound
-    from stage3_static.static_validator import validate as static_validate
+    from xai_pipeline.pipeline.stage2_flowrule.compiler import compile_flowrule, compile_compound
+    from xai_pipeline.pipeline.stage3_static.static_validator import validate as static_validate
 
     repair_feedback: str | None = None
     flowrule = ir = compound = static_result = None
@@ -292,7 +290,7 @@ def _run_pipeline(req: RunRequest, q: std_queue.Queue) -> None:
                 progress(3, "ONOS 기존 플로우 조회 중...")
                 existing = None
                 try:
-                    from stage4_twin.onos_client import OnosClient
+                    from xai_pipeline.pipeline.stage4_twin.onos_client import OnosClient
                     existing = OnosClient().flows()
                     progress(3, f"기존 플로우 {len(existing) if existing else 0}개 수신")
                 except Exception:
@@ -354,18 +352,18 @@ def _run_pipeline(req: RunRequest, q: std_queue.Queue) -> None:
             f"네트워크 프리셋 세션이 {live_session.status} 중 — 네트워크가 아직 안정적이지 "
             f"않아 Digital Twin을 생략합니다",
         )
-        from stage4_twin.twin_verifier import TwinResult
+        from xai_pipeline.pipeline.stage4_twin.twin_verifier import TwinResult
         twin_result = TwinResult(
             status="skipped",
             reason=f"라이브 세션 {live_session.status} 중 — Digital Twin 생략",
         )
     elif req.skip_twin:
         progress(4, "Skip Digital Twin 옵션 활성화 — 건너뜀")
-        from stage4_twin.twin_verifier import TwinResult
+        from xai_pipeline.pipeline.stage4_twin.twin_verifier import TwinResult
         twin_result = TwinResult(status="skipped", reason="skip_twin option")
     else:
         try:
-            from stage4_twin.twin_verifier import TwinVerifier, TwinResult
+            from xai_pipeline.pipeline.stage4_twin.twin_verifier import TwinVerifier, TwinResult
             progress(4, "플랫폼 환경 확인 중... (Linux + root + Mininet 필요)")
             verifier = TwinVerifier()
             # 플랫폼 체크 결과 미리 확인
@@ -425,7 +423,7 @@ def _run_pipeline(req: RunRequest, q: std_queue.Queue) -> None:
                 for chk, ok in twin_result.checks.items():
                     progress(4, f"{'✓' if ok else '✗'} {chk}: {'통과' if ok else '실패'}")
         except Exception as exc:
-            from stage4_twin.twin_verifier import TwinResult
+            from xai_pipeline.pipeline.stage4_twin.twin_verifier import TwinResult
             twin_result = TwinResult(status="error", reason=str(exc))
             progress(4, f"오류 발생: {str(exc)[:100]}")
 
@@ -444,7 +442,7 @@ def _run_pipeline(req: RunRequest, q: std_queue.Queue) -> None:
     # ── Stage 5: XAI Explanation ──────────────────────────────────────────────
     t = start(5, "XAI Explanation")
     try:
-        from stage5_xai.explainer import XAIExplainer
+        from xai_pipeline.pipeline.stage5_xai.explainer import XAIExplainer
 
         progress(5, "각 단계 결과 종합 중...")
         progress(5, f"정적 검증: {'PASS' if static_result.passed else 'FAIL'} | "
@@ -474,8 +472,8 @@ def _run_pipeline(req: RunRequest, q: std_queue.Queue) -> None:
     deploy_failed = False
     if decision in ("APPROVE", "APPROVE_WITHOUT_TWIN") and not req.skip_deploy:
         try:
-            from stage6_deploy.deployer import Deployer
-            import flow_state_manager
+            from xai_pipeline.pipeline.stage6_deploy.deployer import Deployer
+            from xai_pipeline.pipeline import flow_state_manager
 
             progress(6, "배포 전 ONOS 플로우 스냅샷 수집 중...")
             progress(6, f"FlowRule POST → {config.ONOS_URL}/flows")
@@ -574,7 +572,7 @@ async def run_pipeline(req: RunRequest):
 @app.get("/api/topology")
 def get_topology():
     try:
-        from stage4_twin.onos_client import OnosClient
+        from xai_pipeline.pipeline.stage4_twin.onos_client import OnosClient
 
         c = OnosClient(timeout=2.0)  # short timeout — UI polls every second
         devices = c.devices() or []
@@ -794,7 +792,7 @@ def get_topology():
 
 # ── Custom topology endpoints ─────────────────────────────────────────────────
 
-_CUSTOM_TOPO_PATH = _BASE_DIR / "data" / "custom_topology.json"
+_CUSTOM_TOPO_PATH = config.DATA_DIR / "custom_topology.json"
 
 
 def _load_custom_topology() -> dict | None:
@@ -957,7 +955,7 @@ async def apply_topology_to_onos(request: Request):
 
     netcfg = _build_netcfg(data)
     try:
-        from stage4_twin.onos_client import OnosClient
+        from xai_pipeline.pipeline.stage4_twin.onos_client import OnosClient
         OnosClient().push_netcfg(netcfg)
         return {
             "ok": True,
@@ -973,14 +971,14 @@ async def apply_topology_to_onos(request: Request):
 # ── Network Preset (Live Session) 엔드포인트 ─────────────────────────────────
 # LIVE_NETWORK_PRESET_PLAN.md 6-3장. 단일 세션만 지원 — 두 번째 apply는 409.
 
-_TRAFFIC_PRESETS_DIR = _BASE_DIR / "data" / "traffic_presets"
+_TRAFFIC_PRESETS_DIR = config.DATA_DIR / "traffic_presets"
 _live_session = None  # 지연 생성 (LiveNetworkSession import에 stage4_twin 체인이 딸려옴)
 
 
 def _get_live_session():
     global _live_session
     if _live_session is None:
-        from stage4_twin.live_session import LiveNetworkSession
+        from xai_pipeline.pipeline.stage4_twin.live_session import LiveNetworkSession
         _live_session = LiveNetworkSession()
     return _live_session
 
@@ -1032,7 +1030,7 @@ async def apply_network_preset(req: NetworkPresetApplyRequest):
     if session.is_active():
         raise HTTPException(status_code=409, detail="이미 실행 중인 네트워크 프리셋 세션이 있습니다.")
 
-    from stage4_twin.topology import diamond_topology_data
+    from xai_pipeline.pipeline.stage4_twin.topology import diamond_topology_data
 
     is_diamond = req.topology_id == "diamond"
     topo_data = diamond_topology_data() if is_diamond else _load_custom_topology()
@@ -1100,7 +1098,7 @@ def get_network_preset_status():
 @app.get("/api/flow-state")
 def get_all_flow_states():
     """모든 토폴로지의 저장된 state 목록 반환."""
-    import flow_state_manager
+    from xai_pipeline.pipeline import flow_state_manager
     return flow_state_manager.list_states()
 
 
@@ -1109,7 +1107,7 @@ def get_flow_state(topology_id: str):
     """
     특정 토폴로지의 저장된 FlowRule 목록 + ONOS Live와의 sync_status 반환.
     """
-    import flow_state_manager
+    from xai_pipeline.pipeline import flow_state_manager
     state = flow_state_manager.get_state_detail(topology_id)
     if state is None:
         raise HTTPException(status_code=404, detail=f"'{topology_id}' 저장된 state 없음")
@@ -1119,7 +1117,7 @@ def get_flow_state(topology_id: str):
     # ONOS Live와의 sync_status 계산 (ONOS 오프라인이면 skip)
     sync_status = {"in_cache_not_onos": 0, "in_onos_not_cache": 0, "matched": 0, "onos_available": False}
     try:
-        from stage4_twin.onos_client import OnosClient
+        from xai_pipeline.pipeline.stage4_twin.onos_client import OnosClient
         onos_flows = OnosClient(timeout=2.0).flows() or []
 
         def _flow_key(f: dict) -> str:
@@ -1147,7 +1145,7 @@ def get_flow_state(topology_id: str):
 @app.delete("/api/flow-state/{topology_id}", dependencies=[Depends(_require_api_key)])
 def clear_flow_state(topology_id: str):
     """특정 토폴로지의 state 전체 초기화."""
-    import flow_state_manager
+    from xai_pipeline.pipeline import flow_state_manager
     deleted = flow_state_manager.clear_state(topology_id)
     if not deleted:
         raise HTTPException(status_code=404, detail=f"'{topology_id}' 저장된 state 없음")
@@ -1160,7 +1158,7 @@ def delete_flow_state_entry(topology_id: str, flow_index: int):
     특정 flow(인덱스)를 state에서 제거.
     ONOS에 해당 flow가 있으면 동시 삭제 시도.
     """
-    import flow_state_manager
+    from xai_pipeline.pipeline import flow_state_manager
     removed = flow_state_manager.remove_flow(topology_id, flow_index)
     if removed is None:
         raise HTTPException(status_code=404, detail=f"flow_index={flow_index} 없음")
@@ -1168,7 +1166,7 @@ def delete_flow_state_entry(topology_id: str, flow_index: int):
     # ONOS에서도 삭제 시도 (실패해도 state 삭제는 유지)
     onos_deleted = False
     try:
-        from stage4_twin.onos_client import OnosClient
+        from xai_pipeline.pipeline.stage4_twin.onos_client import OnosClient
         client = OnosClient(timeout=3.0)
         device_id = removed.get("deviceId", "")
         priority = removed.get("priority")
@@ -1212,6 +1210,6 @@ def clear_logs():
 
 
 # ── Static files (must be last) ───────────────────────────────────────────────
-_static = _BASE_DIR / "static"
+_static = _PACKAGE_DIR / "static"
 _static.mkdir(exist_ok=True)
 app.mount("/", StaticFiles(directory=str(_static), html=True), name="static")

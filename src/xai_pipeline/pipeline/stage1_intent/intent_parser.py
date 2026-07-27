@@ -10,11 +10,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Optional
 
-from models.intent_ir import IntentIR, IntentPrediction, CompoundIntentIR
+from xai_pipeline.models.intent_ir import IntentIR, IntentPrediction, CompoundIntentIR
 
 if TYPE_CHECKING:
-    from stage1_intent.llm_client import LLMClient
-    from models.topology import NetworkTopology
+    from xai_pipeline.pipeline.stage1_intent.llm_client import LLMClient
+    from xai_pipeline.models.topology import NetworkTopology
 
 SYSTEM_PROMPT = """You are an SDN network intent parser. Output strict JSON only — no explanation.
 
@@ -275,7 +275,7 @@ class IntentParser:
 
         # RAG 예시 추가
         if self.rag_index is not None and self.rag_texts and self.rag_outputs:
-            from stage1_intent.rag import search_similar
+            from xai_pipeline.pipeline.stage1_intent.rag import search_similar
 
             similar = search_similar(
                 query=intent,

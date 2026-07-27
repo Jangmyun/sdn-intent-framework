@@ -11,7 +11,7 @@ import json
 import time
 from typing import Any
 
-import config
+from xai_pipeline import config
 
 
 class OnosError(RuntimeError):

@@ -17,10 +17,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
+from xai_pipeline import config
+
 logger = logging.getLogger(__name__)
 
-_BASE_DIR = Path(__file__).resolve().parent.parent
-FLOW_STATE_DIR = _BASE_DIR / "data" / "flow_state"
+FLOW_STATE_DIR = config.DATA_DIR / "flow_state"
 
 # FastAPI는 동기 경로 함수를 threadpool에서 실행하므로, 동시 요청이 같은
 # state 파일을 동시에 read-modify-write할 수 있다. 프로세스 내 동시 접근만

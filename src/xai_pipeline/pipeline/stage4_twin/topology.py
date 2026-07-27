@@ -134,7 +134,7 @@ def build_network_from_custom(
     Returns:
         Mininet 객체 (net.start() 호출 전)
     """
-    import config
+    from xai_pipeline import config
     controller_ip = controller_ip or config.ONOS_CONTROLLER_IP
     controller_port = controller_port or config.ONOS_CONTROLLER_PORT
 
@@ -207,7 +207,7 @@ def build_network(controller_ip: Optional[str] = None, controller_port: Optional
     Raises:
         RuntimeError: Mininet이 설치되지 않은 경우
     """
-    import config
+    from xai_pipeline import config
     controller_ip = controller_ip or config.ONOS_CONTROLLER_IP
     controller_port = controller_port or config.ONOS_CONTROLLER_PORT
 

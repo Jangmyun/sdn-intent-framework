@@ -11,9 +11,9 @@
 | | 파이프라인 앱 (레포 루트) | 논문 재현 트랙 (`research/`) |
 |---|---|---|
 | 역할 | 자연어 인텐트 → ONOS FlowRule End-to-End 변환·배포 (LLM/RAG, Digital Twin, XAI, Web UI) | E1~E3 및 gold 데이터셋 실험, 논문 figure/table 생성 |
-| 진입점 | `main.py` (CLI), `api.py` (FastAPI) | `research/main.py` |
-| 의존성 | `requirements.txt` (pip) | `research/pyproject.toml` (uv) |
-| 테스트 | `pytest` (루트 `tests/`) | `cd research && uv run pytest -q` |
+| 진입점 | `main.py` (CLI), `uv run uvicorn xai_pipeline.api:app` (FastAPI) — 코드는 `src/xai_pipeline/` | `research/main.py` |
+| 의존성 | `pyproject.toml` (uv) | `research/pyproject.toml` (uv) |
+| 테스트 | `uv run pytest -q` | `cd research && uv run pytest -q` |
 | 문서 | [Pipeline Guide](docs/PIPELINE_GUIDE.md) | [`research/AGENTS.md`](research/AGENTS.md) |
 
 두 시스템은 레포 루트의 `.env` 하나를 공유합니다 (파이프라인은 `LLM_*`/`ONOS_*`,
@@ -22,9 +22,15 @@
 ## Quickstart — 파이프라인 앱
 
 ```bash
-pip install -r requirements.txt
+uv sync                     # Python 3.11 환경 + xai_pipeline 패키지(editable) 설치
 cp .env.example .env        # 값 채우기
-uvicorn api:app --reload --port 8000
+uv run uvicorn xai_pipeline.api:app --reload --port 8000
+```
+
+Digital Twin(Mininet)은 root 권한이 필요합니다:
+
+```bash
+sudo -E $(uv run which uvicorn) xai_pipeline.api:app --port 8000
 ```
 
 자세한 사용법은 [Pipeline Guide](docs/PIPELINE_GUIDE.md)를 참고하세요.

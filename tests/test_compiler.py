@@ -1,17 +1,10 @@
 """
 tests/test_compiler.py — Stage 2 FlowRule 컴파일러 단위 테스트
 """
-import sys
-from pathlib import Path
-
 import pytest
 
-_BASE = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(_BASE))
-sys.path.insert(0, str(_BASE / "pipeline"))
-
-from models.intent_ir import IntentEnforcement, IntentIR, IntentRouting, IntentSelector, EndpointRef
-from stage2_flowrule.compiler import CompileError, compile_flowrule, extract_device_id
+from xai_pipeline.models.intent_ir import IntentEnforcement, IntentIR, IntentRouting, IntentSelector, EndpointRef
+from xai_pipeline.pipeline.stage2_flowrule.compiler import CompileError, compile_flowrule, extract_device_id
 
 
 # ── 헬퍼 ───────────────────────────────────────────────────────────────────────
