@@ -7,11 +7,73 @@ stage4_twin/topology.py — Mininet 토폴로지 빌더
 
 Mininet 임포트는 이 파일을 임포트하는 순간이 아닌
 각 build_* 함수 내부에서만 수행한다 (Linux 환경 체크 후 호출).
+
+Mininet은 apt로 설치된 순수 파이썬 패키지로, 시스템 Python의 site-packages
+(``/usr/lib/python3/dist-packages``)에 들어간다 — 이 프로젝트의 uv 관리 venv는
+완전히 격리된 인터프리터 빌드라 시스템 site-packages를 보지 못한다. 그래서
+``mn --version``은 되는데 ``import mininet``은 여기서 실패한다. Mininet에는
+컴파일된 확장이 없으므로, 경로만 찾아서 sys.path에 추가하면 다른(호환되는)
+Python 3.x 런타임에서도 문제없이 임포트할 수 있다 — ``_import_mininet()`` 참고.
 """
 from __future__ import annotations
 
 import contextlib
+import subprocess
+import sys
 from typing import Optional
+
+_SYSTEM_PYTHON3 = "/usr/bin/python3"  # research/safe_intent_sdn/twin/topology.py와 동일
+
+
+def _system_mininet_site_dir() -> Optional[str]:
+    """시스템 python3에게 Mininet 패키지 위치를 물어본다.
+
+    반드시 절대경로를 써야 한다 — ``uv run`` 아래에서는 PATH 맨 앞에
+    ``.venv/bin``이 붙어서, qualify 안 된 ``python3``는 우리가 우회하려는
+    그 (mininet 없는) venv 인터프리터로 다시 돌아가 버린다.
+
+    sys.path에 추가할 디렉터리(Mininet의 부모 디렉터리)를 반환하거나,
+    시스템 인터프리터에도 Mininet이 없으면 None을 반환한다.
+    """
+    try:
+        result = subprocess.run(
+            [_SYSTEM_PYTHON3, "-c",
+             "import mininet, os; print(os.path.dirname(os.path.dirname(mininet.__file__)))"],
+            capture_output=True, text=True, timeout=5, check=True,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    path = result.stdout.strip()
+    return path or None
+
+
+def _import_mininet():
+    try:
+        from mininet.link import TCLink
+        from mininet.net import Mininet
+        from mininet.node import OVSSwitch, RemoteController
+        from mininet.topo import Topo
+        return TCLink, Mininet, OVSSwitch, RemoteController, Topo
+    except ImportError:
+        pass
+
+    # 이 인터프리터에서는 Mininet이 안 보인다 — uv venv일 가능성이 높다.
+    # 시스템 python3에게 위치를 물어서 한 번 더 시도한다.
+    system_dir = _system_mininet_site_dir()
+    if system_dir and system_dir not in sys.path:
+        sys.path.append(system_dir)
+
+    try:
+        from mininet.link import TCLink
+        from mininet.net import Mininet
+        from mininet.node import OVSSwitch, RemoteController
+        from mininet.topo import Topo
+    except ImportError as exc:
+        raise RuntimeError(
+            "Mininet이 설치되지 않았습니다. "
+            "설치: sudo apt-get install mininet openvswitch-switch"
+        ) from exc
+    return TCLink, Mininet, OVSSwitch, RemoteController, Topo
 
 
 @contextlib.contextmanager
@@ -28,6 +90,7 @@ def suppress_htb_quantum_warning():
     억제 방법: mininet.log.error를 일시적으로 패치하여 해당 메시지만 필터링.
     """
     try:
+        _import_mininet()  # sys.path에 mininet 위치를 보장한 뒤 아래에서 로그 모듈을 가져온다
         import mininet.log as _mn_log
         _orig_error = _mn_log.error
 
@@ -39,7 +102,7 @@ def suppress_htb_quantum_warning():
 
         _mn_log.error = _filtered_error
         yield
-    except ImportError:
+    except (ImportError, RuntimeError):
         yield  # Mininet 미설치 환경에서는 아무것도 하지 않음
     finally:
         try:
@@ -138,16 +201,7 @@ def build_network_from_custom(
     controller_ip = controller_ip or config.ONOS_CONTROLLER_IP
     controller_port = controller_port or config.ONOS_CONTROLLER_PORT
 
-    try:
-        from mininet.link import TCLink
-        from mininet.net import Mininet
-        from mininet.node import OVSSwitch, RemoteController
-        from mininet.topo import Topo
-    except ImportError as exc:
-        raise RuntimeError(
-            "Mininet이 설치되지 않았습니다. "
-            "설치: sudo apt-get install mininet openvswitch-switch"
-        ) from exc
+    TCLink, Mininet, OVSSwitch, RemoteController, Topo = _import_mininet()
 
     sw_ids  = {sw["id"] for sw in custom_data.get("switches", [])}
     host_ids = {h["id"] for h in custom_data.get("hosts", [])}
@@ -211,16 +265,7 @@ def build_network(controller_ip: Optional[str] = None, controller_port: Optional
     controller_ip = controller_ip or config.ONOS_CONTROLLER_IP
     controller_port = controller_port or config.ONOS_CONTROLLER_PORT
 
-    try:
-        from mininet.link import TCLink
-        from mininet.net import Mininet
-        from mininet.node import OVSSwitch, RemoteController
-        from mininet.topo import Topo
-    except ImportError as exc:
-        raise RuntimeError(
-            "Mininet이 설치되지 않았습니다. "
-            "설치: sudo apt-get install mininet openvswitch-switch"
-        ) from exc
+    TCLink, Mininet, OVSSwitch, RemoteController, Topo = _import_mininet()
 
     class DiamondTopo(Topo):
         def build(self):
