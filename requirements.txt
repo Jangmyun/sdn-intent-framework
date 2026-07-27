@@ -1,0 +1,16 @@
+# Core
+fastapi
+uvicorn[standard]
+pydantic
+python-dotenv
+
+# RAG
+faiss-cpu
+numpy
+pandas
+
+# Gemini (optional)
+google-genai
+
+# Eval reporting (scripts/make_exp1_pptx.py)
+python-pptx

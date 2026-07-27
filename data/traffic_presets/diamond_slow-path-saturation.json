@@ -1,0 +1,14 @@
+{
+  "id": "diamond_slow-path-saturation",
+  "label": "저속 경로 포화 — h2↔h3 트래픽으로 1Mbps 경로(s1-s2-s4) 채우기",
+  "topology_id": "diamond",
+  "flows": [
+    {
+      "id": "f1",
+      "src": "h2", "dst": "h3",
+      "proto": "tcp", "pattern": "constant",
+      "target_mbps": 1,
+      "start_offset_sec": 0, "duration_sec": null
+    }
+  ]
+}

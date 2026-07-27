@@ -1,0 +1,74 @@
+{
+  "topology_id": "custom",
+  "flows": [
+    {
+      "priority": 40000,
+      "timeout": 0,
+      "isPermanent": "true",
+      "deviceId": "of:0000000000000001",
+      "selector": {
+        "criteria": [
+          {
+            "type": "ETH_TYPE",
+            "ethType": "0x800"
+          },
+          {
+            "type": "IPV4_SRC",
+            "ip": "10.0.0.1/32"
+          },
+          {
+            "type": "IPV4_DST",
+            "ip": "10.0.0.4/32"
+          }
+        ]
+      },
+      "treatment": {
+        "instructions": [
+          {
+            "type": "OUTPUT",
+            "port": "NORMAL"
+          }
+        ]
+      },
+      "_meta": {
+        "intent": "Apply QoS for video streaming from 10.0.0.1 to 10.0.0.4 on switch 1",
+        "deployed_at": "2026-07-23T02:49:56.262966+00:00"
+      }
+    },
+    {
+      "priority": 50000,
+      "timeout": 0,
+      "isPermanent": "true",
+      "deviceId": "of:0000000000000004",
+      "selector": {
+        "criteria": [
+          {
+            "type": "ETH_TYPE",
+            "ethType": "0x800"
+          },
+          {
+            "type": "IPV4_SRC",
+            "ip": "10.0.0.3/32"
+          },
+          {
+            "type": "IPV4_DST",
+            "ip": "10.0.0.4/32"
+          }
+        ]
+      },
+      "treatment": {
+        "instructions": [
+          {
+            "type": "NOACTION"
+          }
+        ]
+      },
+      "_meta": {
+        "intent": "Block all traffic from 10.0.0.3 to 10.0.0.4 on switch 4",
+        "deployed_at": "2026-07-23T02:56:32.428141+00:00"
+      }
+    }
+  ],
+  "updated_at": "2026-07-23T02:56:32.428141+00:00",
+  "topo_hash": "93125462"
+}

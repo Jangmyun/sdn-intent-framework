@@ -1,0 +1,6 @@
+{
+  "id": "clos-fabric_idle",
+  "label": "Idle — 배경 트래픽 없음",
+  "topology_id": "clos-fabric",
+  "flows": []
+}

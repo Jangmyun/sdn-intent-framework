@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>XAI-SDN Pipeline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2'><circle cx='6' cy='6' r='2.4'/><circle cx='18' cy='6' r='2.4'/><circle cx='12' cy='18' r='2.4'/><path d='M8 7l7 9M16 7l-7 9'/></svg>">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+<div id="app">
+
+  <!-- ── LEFT SIDEBAR ──────────────────────────────────────── -->
+  <aside id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f9fafb" stroke-width="2">
+          <circle cx="6" cy="6" r="2.4"/>
+          <circle cx="18" cy="6" r="2.4"/>
+          <circle cx="12" cy="18" r="2.4"/>
+          <path d="M8 7l7 9M16 7l-7 9"/>
+        </svg>
+      </div>
+      <span class="logo-text">XAI-SDN</span>
+      <button id="sidebar-toggle-btn" title="사이드바 접기">◀</button>
+    </div>
+
+    <div class="sidebar-body">
+
+    <div class="sidebar-section-label">LLM SETTINGS</div>
+    <div class="sidebar-field">
+      <div class="sidebar-field-label">Model</div>
+      <select id="model-select" class="select">
+        <optgroup label="Gemini (API)">
+          <option value="gemini-3.1-flash-lite" selected>gemini-3.1-flash-lite</option>
+        </optgroup>
+        <optgroup label="Ollama (Local)">
+          <option value="qwen3:8b">qwen3:8b</option>
+          <option value="gemma3:8b">gemma3:8b</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="toggle-row">
+      <span class="toggle-label">Enable RAG</span>
+      <label class="toggle">
+        <input type="checkbox" id="toggle-rag">
+        <span class="toggle-track"></span>
+      </label>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-section-label">PIPELINE OPTIONS</div>
+    <div class="toggle-row">
+      <span class="toggle-label">Skip Digital Twin</span>
+      <label class="toggle">
+        <input type="checkbox" id="toggle-twin">
+        <span class="toggle-track"></span>
+      </label>
+    </div>
+    <div class="toggle-row">
+      <span class="toggle-label">Skip ONOS Deploy</span>
+      <label class="toggle">
+        <input type="checkbox" id="toggle-deploy">
+        <span class="toggle-track"></span>
+      </label>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div class="sidebar-section-label" style="margin-bottom:0">RUN HISTORY</div>
+      <button id="clear-history-btn" title="Clear all history" style="background:none;border:none;cursor:pointer;color:#6b7280;font-size:11px;padding:2px 4px;line-height:1;border-radius:4px" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#6b7280'">✕ clear</button>
+    </div>
+    <div id="history-list"></div>
+
+    </div><!-- /.sidebar-body -->
+  </aside>
+
+  <!-- ── CENTER MAIN ──────────────────────────────────────── -->
+  <main id="main">
+
+    <!-- 스크롤 가능한 파이프라인 결과 영역 -->
+    <div id="pipeline-area">
+      <div id="pipeline-progress" style="display:none">
+        <div id="pp-header">
+          <span id="pp-stage-name">Initializing...</span>
+          <span id="pp-right"><span id="pp-counter">0 / 6</span><span id="pp-pct"> · 0%</span></span>
+        </div>
+        <div id="pp-track"></div>
+        <div id="pp-steps"></div>
+      </div>
+
+      <div id="stages-section">
+        <!-- Dynamically rendered by app.js -->
+      </div>
+
+      <div id="decision-banner" style="display:none"></div>
+    </div>
+
+    <!-- 항상 보이는 입력 영역 -->
+    <div id="intent-section">
+      <textarea
+        id="intent-input"
+        placeholder="Describe your network intent in natural language..."
+      ></textarea>
+
+      <div id="preset-toggle-row">
+        <button id="intent-preset-btn" class="topo-mode-btn">⊞ Presets</button>
+        <div id="intent-preset-menu" class="preset-menu">
+          <div class="preset-group-label">Block</div>
+          <div class="preset-item" data-intent="Block all traffic from 10.0.0.1 to 10.0.0.4 on switch 4">Block 10.0.0.1 → 10.0.0.4</div>
+          <div class="preset-item" data-intent="Block TCP traffic on port 22 destined for 10.0.0.2 on switch 1">Block SSH → 10.0.0.2</div>
+          <div class="preset-item" data-intent="Block all traffic from 10.0.0.3 to 10.0.0.4 on switch 4">Block 10.0.0.3 → 10.0.0.4</div>
+          <div class="preset-group-label">Forward</div>
+          <div class="preset-item" data-intent="Forward ICMP traffic destined for 10.0.0.1 through port 3 on switch 1">Forward ICMP → 10.0.0.1</div>
+          <div class="preset-item" data-intent="Forward TCP traffic on port 80 destined for 10.0.0.3 via port 2 on switch 1">Forward HTTP → 10.0.0.3</div>
+          <div class="preset-group-label">QoS / SFC / Reroute</div>
+          <div class="preset-item" data-intent="Apply QoS for video streaming from 10.0.0.1 to 10.0.0.4 on switch 1">QoS video 10.0.0.1 → 10.0.0.4</div>
+          <div class="preset-item" data-intent="Steer HTTP traffic from 10.0.0.1 to 10.0.0.4 through IDS at port 9, then forward out port 2 on switch 2">SFC: IDS 10.0.0.1 → 10.0.0.4</div>
+          <div class="preset-item" data-intent="Reroute traffic from 10.0.0.2 to 10.0.0.3 via switch 3 avoiding switch 2 on switch 1">Reroute via s3 (avoid s2)</div>
+          <div class="preset-group-label">Compound</div>
+          <div class="preset-item" data-intent="Allow HTTP from 10.0.0.1 to 10.0.0.2 via port 2 on switch 1, but block SSH from 10.0.0.1 to 10.0.0.2 on switch 1">Allow HTTP + Block SSH</div>
+          <div class="preset-item" data-intent="Block ICMP from 10.0.0.1 to 10.0.0.3 on switch 1 and apply QoS for video streaming from 10.0.0.2 to 10.0.0.4 on switch 1">Block ICMP + QoS</div>
+          <div class="preset-item" data-intent="Forward HTTP from 10.0.0.1 to 10.0.0.3 via port 2 on switch 1, and block all traffic from 10.0.0.2 to 10.0.0.4 on switch 2">Forward HTTP + Block (multi-sw)</div>
+        </div>
+      </div>
+
+      <div id="load-state-bar">
+        <button id="load-state-btn" onclick="loadFlowState()" title="저장된 FlowRule 상태를 불러와 Digital Twin 배경 환경으로 사용">⬇ Load State</button>
+        <button id="clear-state-btn" onclick="clearLoadedState()" title="불러온 state 초기화" style="display:none">✕ Clear</button>
+      </div>
+      <button id="run-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        Run Pipeline
+      </button>
+    </div>
+
+  </main>
+
+  <!-- ── PANEL RESIZE HANDLE ──────────────────────────────── -->
+  <div id="panel-resizer"></div>
+
+  <!-- ── RIGHT TOPOLOGY PANEL ─────────────────────────────── -->
+  <aside id="topology-panel">
+    <div class="topology-header">
+      <button id="topo-panel-toggle-btn" class="topo-panel-toggle" onclick="toggleTopoPanel()" title="토폴로지 패널 접기/펼치기">
+        <span class="topology-title" id="topo-title">Live Network Topology</span>
+        <span id="topo-panel-arrow" class="topo-panel-arrow">▾</span>
+      </button>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div id="live-mode-controls" style="display:flex;align-items:center;gap:6px">
+          <div style="position:relative">
+            <button id="topo-preset-btn" class="topo-mode-btn">⊞ Presets</button>
+            <div id="topo-preset-menu" class="preset-menu">
+              <div class="preset-group-label">Simple</div>
+              <div class="preset-item" data-preset="linear">— Linear (2SW · 2H)</div>
+              <div class="preset-item" data-preset="ring">○ Ring (3SW · 3H)</div>
+              <div class="preset-item" data-preset="diamond">◇ Diamond (4SW · 4H)</div>
+              <div class="preset-group-label">Data Center</div>
+              <div class="preset-item" data-preset="spine-leaf">⊟ Spine-Leaf (6SW · 8H)</div>
+              <div class="preset-item" data-preset="fat-tree">⊞ Fat-Tree (10SW · 8H)</div>
+              <div class="preset-group-label">Enterprise</div>
+              <div class="preset-item" data-preset="tree">△ Tree (7SW · 8H)</div>
+              <div class="preset-item" data-preset="campus">⬡ Campus (6SW · 6H)</div>
+              <div class="preset-item" data-preset="full-mesh">⬡ Full Mesh (4SW · 8H)</div>
+              <div class="preset-group-label">WAN</div>
+              <div class="preset-item" data-preset="wan">≋ WAN Backbone (8SW · 8H)</div>
+              <div class="preset-group-label">Research</div>
+              <div class="preset-item" data-preset="clos-fabric">⬡ Clos Fabric (14SW · 10H)</div>
+            </div>
+          </div>
+          <button id="topo-edit-btn" class="topo-mode-btn">Edit</button>
+          <button id="topo-bw-toggle-btn" class="topo-mode-btn" title="대역폭 레이블 표시/숨기기">BW</button>
+        </div>
+        <button id="layout-swap-btn" class="topo-mode-btn" title="좌우 배치 전환">⇄</button>
+      </div>
+    </div>
+
+    <!-- Collapsible panel body -->
+    <div id="topo-panel-body">
+
+      <!-- Editor toolbar (hidden in live mode) -->
+      <div id="topo-editor-bar" style="display:none">
+        <div class="tool-group">
+          <button class="tool-btn active" data-tool="select" title="Select &amp; Move">↖</button>
+          <button class="tool-btn" data-tool="switch" title="Add Switch">⬡</button>
+          <button class="tool-btn" data-tool="host" title="Add Host">◎</button>
+          <button class="tool-btn" data-tool="link" title="Draw Link">╌</button>
+          <button class="tool-btn" data-tool="delete" title="Delete">✕</button>
+        </div>
+        <div class="tool-hint" id="tool-hint">Select or drag nodes</div>
+        <div class="tool-actions">
+          <button id="topo-apply-btn" class="topo-apply-btn">Apply</button>
+          <button id="topo-cancel-btn" class="topo-cancel-btn">Cancel</button>
+        </div>
+      </div>
+
+      <div id="topology-graph">
+        <div id="topology-placeholder" class="topo-placeholder">
+          Connecting to ONOS...
+        </div>
+      </div>
+
+      <!-- Properties panel (edit mode only) -->
+      <div id="topo-props-panel" style="display:none">
+        <div class="flow-table-label" style="padding:0 18px 8px">NODE PROPERTIES</div>
+        <div id="props-content" style="padding:0 18px 16px"></div>
+      </div>
+
+      <div id="topo-info-scroll">
+        <div class="topo-info-section" id="section-netpreset">
+          <div class="topo-info-toggle" onclick="toggleInfoSection('section-netpreset')">
+            <span>LIVE TRAFFIC</span><span class="toggle-arrow">▾</span>
+          </div>
+          <div class="topo-info-body">
+            <div style="padding:0 18px 16px">
+              <select id="netpreset-select" class="select" style="margin-bottom:8px"></select>
+              <div style="display:flex;gap:6px;margin-bottom:8px">
+                <button id="netpreset-apply-btn" class="topo-apply-btn" style="flex:1">적용</button>
+                <button id="netpreset-stop-btn" class="topo-cancel-btn" style="flex:1;display:none">중지</button>
+              </div>
+              <div id="netpreset-status" class="netpreset-status netpreset-status-idle">대기</div>
+              <div class="netpreset-legend">
+                <span class="netpreset-legend-item"><i style="background:#10b981"></i>0–60%</span>
+                <span class="netpreset-legend-item"><i style="background:#f59e0b"></i>60–90%</span>
+                <span class="netpreset-legend-item"><i style="background:#ef4444"></i>90%+</span>
+              </div>
+              <div id="netpreset-flows"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topo-info-section" id="section-metrics">
+          <div class="topo-info-toggle" onclick="toggleInfoSection('section-metrics')">
+            <span>METRICS</span><span class="toggle-arrow">▾</span>
+          </div>
+          <div class="topo-info-body">
+            <div id="metrics-grid">
+              <div class="metric-card">
+                <div class="metric-value" id="metric-switches">—</div>
+                <div class="metric-label">Switches</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-value" id="metric-hosts">—</div>
+                <div class="metric-label">Hosts</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-value" id="metric-links">—</div>
+                <div class="metric-label">Links</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-value" id="metric-rules">—</div>
+                <div class="metric-label">Rules</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topo-info-section" id="section-hostmap">
+          <div class="topo-info-toggle" onclick="toggleInfoSection('section-hostmap')">
+            <span>HOST IP MAP</span><span class="toggle-arrow">▾</span>
+          </div>
+          <div class="topo-info-body">
+            <div id="host-legend-section">
+              <div id="host-legend-body"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topo-info-section" id="section-flowrules">
+          <div class="topo-info-toggle" onclick="toggleInfoSection('section-flowrules')">
+            <span>FLOW RULES</span><span class="toggle-arrow">▾</span>
+          </div>
+          <div class="topo-info-body">
+            <!-- 탭 헤더 -->
+            <div id="flow-tabs">
+              <button class="flow-tab-btn active" data-tab="onos" onclick="activateFlowTab('onos')">ONOS Live</button>
+              <button class="flow-tab-btn" data-tab="saved" onclick="activateFlowTab('saved')">Saved State</button>
+              <button id="clear-saved-btn" onclick="clearAllFlowState()" title="저장된 state 전체 삭제" style="margin-left:auto;background:none;border:none;color:#6b7280;cursor:pointer;font-size:11px;padding:2px 6px">⊘ 초기화</button>
+            </div>
+            <!-- ONOS Live 탭 -->
+            <div id="flow-table-section">
+              <div class="flow-table-wrap">
+                <div class="flow-table-header">
+                  <div>Device</div>
+                  <div>Pri</div>
+                  <div>Match</div>
+                  <div>Action</div>
+                </div>
+                <div id="flow-table-body"></div>
+              </div>
+            </div>
+            <!-- Saved State 탭 -->
+            <div id="saved-state-section" style="display:none">
+              <div class="flow-table-wrap">
+                <div class="flow-table-header saved-state-header">
+                  <div>Device</div>
+                  <div>Pri</div>
+                  <div>Match</div>
+                  <div>Action</div>
+                  <div>Intent</div>
+                  <div></div>
+                </div>
+                <div id="saved-state-body">
+                  <div style="padding:12px 10px;font-size:11px;color:#4b5563;font-family:'JetBrains Mono',monospace">Load State 버튼으로 불러오세요</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /#topo-info-scroll -->
+
+    </div><!-- /#topo-panel-body -->
+  </aside>
+
+</div>
+<script src="app.js?v=37"></script>
+</body>
+</html>

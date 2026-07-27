@@ -1,0 +1,181 @@
+{
+  "topology_id": "clos-fabric",
+  "flows": [
+    {
+      "priority": 50000,
+      "timeout": 0,
+      "isPermanent": "true",
+      "deviceId": "of:0000000000000001",
+      "selector": {
+        "criteria": [
+          {
+            "type": "ETH_TYPE",
+            "ethType": "0x800"
+          },
+          {
+            "type": "IPV4_SRC",
+            "ip": "10.0.0.1/32"
+          },
+          {
+            "type": "IPV4_DST",
+            "ip": "10.0.0.3/32"
+          },
+          {
+            "type": "IP_PROTO",
+            "protocol": 1
+          }
+        ]
+      },
+      "treatment": {
+        "instructions": [
+          {
+            "type": "NOACTION"
+          }
+        ]
+      },
+      "_meta": {
+        "intent": "Block ICMP from 10.0.0.1 to 10.0.0.3 on switch 1 and apply QoS for video streami",
+        "deployed_at": "2026-07-23T01:11:34.215965+00:00"
+      }
+    },
+    {
+      "priority": 40000,
+      "timeout": 0,
+      "isPermanent": "true",
+      "deviceId": "of:0000000000000001",
+      "selector": {
+        "criteria": [
+          {
+            "type": "ETH_TYPE",
+            "ethType": "0x800"
+          },
+          {
+            "type": "IPV4_SRC",
+            "ip": "10.0.0.2/32"
+          },
+          {
+            "type": "IPV4_DST",
+            "ip": "10.0.0.4/32"
+          }
+        ]
+      },
+      "treatment": {
+        "instructions": [
+          {
+            "type": "OUTPUT",
+            "port": "NORMAL"
+          }
+        ]
+      },
+      "_meta": {
+        "intent": "Block ICMP from 10.0.0.1 to 10.0.0.3 on switch 1 and apply QoS for video streami",
+        "deployed_at": "2026-07-23T01:11:34.215965+00:00"
+      }
+    },
+    {
+      "priority": 32768,
+      "timeout": 0,
+      "isPermanent": "true",
+      "deviceId": "of:0000000000000001",
+      "selector": {
+        "criteria": [
+          {
+            "type": "ETH_TYPE",
+            "ethType": "0x800"
+          },
+          {
+            "type": "IPV4_DST",
+            "ip": "10.0.0.1/32"
+          },
+          {
+            "type": "IP_PROTO",
+            "protocol": 1
+          }
+        ]
+      },
+      "treatment": {
+        "instructions": [
+          {
+            "type": "OUTPUT",
+            "port": "3"
+          }
+        ]
+      },
+      "_meta": {
+        "intent": "Forward ICMP traffic destined for 10.0.0.1 through port 3 on switch 1",
+        "deployed_at": "2026-07-24T02:34:28.113935+00:00"
+      }
+    },
+    {
+      "priority": 50000,
+      "timeout": 0,
+      "isPermanent": "true",
+      "deviceId": "of:0000000000000001",
+      "selector": {
+        "criteria": [
+          {
+            "type": "ETH_TYPE",
+            "ethType": "0x800"
+          },
+          {
+            "type": "IPV4_DST",
+            "ip": "10.0.0.2/32"
+          },
+          {
+            "type": "IP_PROTO",
+            "protocol": 6
+          },
+          {
+            "type": "TCP_DST",
+            "tcpPort": 22
+          }
+        ]
+      },
+      "treatment": {
+        "instructions": [
+          {
+            "type": "NOACTION"
+          }
+        ]
+      },
+      "_meta": {
+        "intent": "Block TCP traffic on port 22 destined for 10.0.0.2 on switch 1",
+        "deployed_at": "2026-07-24T02:58:37.593974+00:00"
+      }
+    },
+    {
+      "priority": 50000,
+      "timeout": 0,
+      "isPermanent": "true",
+      "deviceId": "of:0000000000000001",
+      "selector": {
+        "criteria": [
+          {
+            "type": "ETH_TYPE",
+            "ethType": "0x800"
+          },
+          {
+            "type": "IPV4_SRC",
+            "ip": "10.0.0.1/32"
+          },
+          {
+            "type": "IPV4_DST",
+            "ip": "10.0.0.10/32"
+          }
+        ]
+      },
+      "treatment": {
+        "instructions": [
+          {
+            "type": "NOACTION"
+          }
+        ]
+      },
+      "_meta": {
+        "intent": "Block all traffic from 10.0.0.1 to 10.0.0.10 on switch 1",
+        "deployed_at": "2026-07-24T03:14:02.470748+00:00"
+      }
+    }
+  ],
+  "updated_at": "2026-07-24T03:14:02.470748+00:00"
+}
