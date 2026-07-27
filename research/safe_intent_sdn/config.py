@@ -143,6 +143,18 @@ def _deep_merge(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any
     return merged
 
 
+def _resolve_env_file() -> Path:
+    """Locate the `.env` holding SAFE_SDN_* secrets.
+
+    Prefers a research-local `.env`, else falls back to the repository root so a
+    single shared `.env` alongside the pipeline app keeps working.
+    """
+    local = PROJECT_ROOT / ".env"
+    if local.exists():
+        return local
+    return PROJECT_ROOT.parent / ".env"
+
+
 def load_settings(config_path: str | Path | None = None) -> AppSettings:
     """Load defaults, an optional experiment override, then environment secrets."""
     data = _read_toml(DEFAULT_CONFIG_PATH)
@@ -153,5 +165,5 @@ def load_settings(config_path: str | Path | None = None) -> AppSettings:
             override_path = PROJECT_ROOT / override_path
         data = _deep_merge(data, _read_toml(override_path))
 
-    secrets = SecretSettings(_env_file=PROJECT_ROOT / ".env")
+    secrets = SecretSettings(_env_file=_resolve_env_file())
     return AppSettings.model_validate({**data, "secrets": secrets})

@@ -4,7 +4,7 @@
 
 ## 권장 실행 순서
 
-모든 명령은 프로젝트 루트에서 실행합니다.
+모든 명령은 `research/` 디렉토리에서 실행합니다.
 
 ### 1. 환경 상태 확인
 
@@ -103,6 +103,9 @@ sudo mn -c
 | `smoke_test.sh` | Mininet 통신과 ONOS 장치 인식 자동 검증 |
 | `start_mn_single3.sh` | 단일 switch 및 host 3개 대화형 Mininet 실행 |
 | `e3_twin_smoke.sh` | E3 Digital Twin 통합 스모크 — 혼잡 QoS 케이스로 세 arm 실행 및 충실도 패턴 확인 (root 필요) |
+
+> 파이프라인 앱 전용 스크립트는 레포 루트의 `scripts/`에 따로 있습니다.
+> ([Pipeline Guide](../../docs/PIPELINE_GUIDE.md) 참고)
 
 ## ONOS 관리 명령
 
