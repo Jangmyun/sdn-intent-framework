@@ -1,14 +1,14 @@
 """
-experiments/eval/run_exp1.py - Exp-1 Batch Runner
+research/experiments/eval/run_exp1.py - Exp-1 Batch Runner
 
 Calls Gemini API for each intent in the dataset according to the
 specified treatment config (T-A through T-D), for N repetitions.
 Writes one JSONL file per repetition under the output directory.
 
 Usage:
-    python experiments/eval/run_exp1.py --config experiments/eval/config/T-D.toml
-    python experiments/eval/run_exp1.py --config experiments/eval/config/T-A.toml --repetitions 3
-    python experiments/eval/run_exp1.py --config experiments/eval/config/T-D.toml --dry-run
+    python research/experiments/eval/run_exp1.py --config research/experiments/eval/config/T-D.toml
+    python research/experiments/eval/run_exp1.py --config research/experiments/eval/config/T-A.toml --repetitions 3
+    python research/experiments/eval/run_exp1.py --config research/experiments/eval/config/T-D.toml --dry-run
 """
 from __future__ import annotations
 
@@ -22,7 +22,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 # ── Project root (레포 루트, dataset/config 등 상대경로 해석용) ────────
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 
 try:
     import tomllib  # Python 3.11+
@@ -615,9 +615,9 @@ def run(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Exp-1 batch runner (Gemini API)")
-    parser.add_argument("--config",      required=True, help="TOML config path (e.g. experiments/eval/config/T-D.toml)")
+    parser.add_argument("--config",      required=True, help="TOML config path (e.g. research/experiments/eval/config/T-D.toml)")
     parser.add_argument("--repetitions", type=int, default=10, help="Number of repetitions (default: 10)")
-    parser.add_argument("--output",      default="experiments/eval/logs/", help="Output directory for JSONL files")
+    parser.add_argument("--output",      default="research/experiments/eval/logs/", help="Output directory for JSONL files")
     parser.add_argument("--dry-run",     action="store_true", help="Skip API calls; write placeholder records")
     parser.add_argument("--concurrency", type=int, default=1, help="Parallel in-flight requests per rep (default: 1 = sequential). Only meaningful for cloud APIs (Gemini/OpenRouter) — raise gradually and back off on 429s.")
     args = parser.parse_args()

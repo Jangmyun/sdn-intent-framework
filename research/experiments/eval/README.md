@@ -9,7 +9,7 @@
 ## 디렉토리 구조
 
 ```
-experiments/eval/
+research/experiments/eval/
 ├── data/
 │   ├── intents_eval.jsonl          ✅ Small 데이터셋 (60케이스, 9:1, h1–h4, s1–s4)
 │   ├── intents_eval_large.jsonl    ✅ Large 데이터셋 (60케이스, 9:1, h1–h16, s1–s8)
@@ -120,10 +120,10 @@ experiments/eval/
 
 ```bash
 # T-A ~ T-D × 10회 반복
-uv run python experiments/eval/run_exp1.py \
-  --config experiments/eval/config/T-D.toml \
+uv run python research/experiments/eval/run_exp1.py \
+  --config research/experiments/eval/config/T-D.toml \
   --repetitions 10 \
-  --output experiments/eval/logs/
+  --output research/experiments/eval/logs/
 ```
 
 **출력 파일:** `logs/T-D-gemini-flash-lite-<uuid>-r1.jsonl` ... `r10.jsonl`
@@ -151,11 +151,11 @@ uv run python experiments/eval/run_exp1.py \
 ### 3단계: 채점 (Exp-1)
 
 ```bash
-uv run python experiments/eval/score_exp1.py \
-  --dataset experiments/eval/data/intents_eval.jsonl \
-  --topology experiments/eval/data/topology_eval.json \
-  --logs experiments/eval/logs/ \
-  --output experiments/eval/reports/summary_exp1.json
+uv run python research/experiments/eval/score_exp1.py \
+  --dataset research/experiments/eval/data/intents_eval.jsonl \
+  --topology research/experiments/eval/data/topology_eval.json \
+  --logs research/experiments/eval/logs/ \
+  --output research/experiments/eval/reports/summary_exp1.json
 ```
 
 ### 4단계: Small 결과 분석 → 보완 방향 확인
@@ -163,10 +163,10 @@ uv run python experiments/eval/score_exp1.py \
 ### 5단계: Exp-1 실행 (Large)
 
 ```bash
-uv run python experiments/eval/run_exp1.py \
-  --config experiments/eval/config/T-D-large.toml \
+uv run python research/experiments/eval/run_exp1.py \
+  --config research/experiments/eval/config/T-D-large.toml \
   --repetitions 10 \
-  --output experiments/eval/logs/
+  --output research/experiments/eval/logs/
 ```
 
 ---
@@ -224,8 +224,8 @@ Bootstrap CI 계산(10,000 재샘플링)에만 seed 사용.
 ## .gitignore 권장
 
 ```
-experiments/eval/logs/
-experiments/eval/reports/
+research/experiments/eval/logs/
+research/experiments/eval/reports/
 ```
 
 결과 파일은 API 비용이 들어간 산출물이므로 별도 관리 권장.

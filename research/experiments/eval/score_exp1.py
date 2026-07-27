@@ -1,22 +1,22 @@
 """
-experiments/eval/score_exp1.py - Exp-1 Scoring Engine
+research/experiments/eval/score_exp1.py - Exp-1 Scoring Engine
 
 Scores run_exp1.py output JSONL files against gold dataset.
 Produces a structured JSON report with per-treatment, per-category,
 and per-repetition metrics.
 
 Usage:
-    python experiments/eval/score_exp1.py \\
-        --dataset experiments/eval/data/intents_eval.jsonl \\
-        --topology experiments/eval/data/topology_eval.json \\
-        --logs experiments/eval/logs/ \\
-        --output experiments/eval/reports/summary_exp1.json
+    python research/experiments/eval/score_exp1.py \\
+        --dataset research/experiments/eval/data/intents_eval.jsonl \\
+        --topology research/experiments/eval/data/topology_eval.json \\
+        --logs research/experiments/eval/logs/ \\
+        --output research/experiments/eval/reports/summary_exp1.json
 
     # Score only T-D logs
-    python experiments/eval/score_exp1.py ... --treatment T-D
+    python research/experiments/eval/score_exp1.py ... --treatment T-D
 
     # Include 95% bootstrap CI (slower)
-    python experiments/eval/score_exp1.py ... --bootstrap
+    python research/experiments/eval/score_exp1.py ... --bootstrap
 """
 from __future__ import annotations
 
@@ -849,7 +849,7 @@ def main() -> None:
     parser.add_argument("--bootstrap", action="store_true", help="Compute 95% bootstrap CI per rep (slow)")
     args = parser.parse_args()
 
-    ROOT = Path(__file__).resolve().parents[2]
+    ROOT = Path(__file__).resolve().parents[3]
 
     dataset_path  = ROOT / args.dataset
     topology_path = ROOT / args.topology
