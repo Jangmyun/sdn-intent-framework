@@ -1630,6 +1630,7 @@ let topoSvg = null;
 let topoZoom = null;
 let topoZoomLayer = null;
 let simulation = null;
+let topoFittedKey = null; // node-set signature the camera was last fitted to
 const nodePositions = new Map(); // persist positions across refreshes
 let currentTopoNodes = []; // snapshot for twin viz (id, type, label, ip)
 let currentTopoLinks = []; // snapshot for twin viz (source, target as string IDs)
@@ -1749,6 +1750,7 @@ function _renderEditorSnapshot() {
 function clearTopologyGraph() {
   if (!topoSvg || !topoZoomLayer) return;
   if (simulation) { simulation.stop(); simulation = null; }
+  topoFittedKey = null; // next render re-frames the graph
   topoZoomLayer.select('.links').selectAll('*').remove();
   topoZoomLayer.select('.bw-labels').selectAll('*').remove();
   topoZoomLayer.select('.nodes').selectAll('*').remove();
@@ -2353,9 +2355,11 @@ function initTopology() {
 
   topoSvg.call(topoZoom);
 
-  // Double-click to reset zoom
+  // Double-click to frame the whole graph (identity would leave a spread-out
+  // layout partly off-screen)
   topoSvg.on('dblclick.zoom', () => {
-    topoSvg.transition().duration(300).call(topoZoom.transform, d3.zoomIdentity);
+    if (simulation) fitTopoToView(simulation.nodes());
+    else topoSvg.transition().duration(300).call(topoZoom.transform, d3.zoomIdentity);
   });
 }
 
@@ -2494,10 +2498,6 @@ function updateTopology(data) {
   });
 
   simulation.on('tick', () => {
-    // Read live container size each tick so clamp follows panel resizes
-    const topoEl = document.getElementById('topology-graph');
-    const cw = topoEl ? topoEl.clientWidth  : w;
-    const ch = topoEl ? topoEl.clientHeight : h;
     link
       .attr('x1', d => d.source.x)
       .attr('y1', d => d.source.y)
@@ -2510,19 +2510,62 @@ function updateTopology(data) {
       .attr('x', d => (d.source.x + d.target.x) / 2)
       .attr('y', d => (d.source.y + d.target.y) / 2 + 7);
     nodeG.attr('transform', d => {
-      // clamp to svg bounds
-      const x = Math.max(20, Math.min(cw - 20, d.x));
-      const y = Math.max(20, Math.min(ch - 20, d.y));
+      // Draw from the simulation's own coordinates. Clamping the node to the
+      // container here (as before) desynced it from its links, which are drawn
+      // above from unclamped coordinates — edges visibly detached from nodes at
+      // the borders. The clamped value was also written back to nodePositions,
+      // corrupting the seed cache for the next render. Nodes that drift outside
+      // the container are reachable via zoom/pan and the fit-to-view below.
       // Update continuously (not just on 'end') so twin packet paths
       // stay accurate while the user drags nodes
-      nodePositions.set(d.id, { x, y });
-      return `translate(${x},${y})`;
+      nodePositions.set(d.id, { x: d.x, y: d.y });
+      return `translate(${d.x},${d.y})`;
     });
   });
 
   simulation.on('end', () => {
     nodes.forEach(n => nodePositions.set(n.id, { x: n.x, y: n.y }));
+    // Frame the graph once per topology. Dragging a node also ends the
+    // simulation, and re-fitting then would yank the camera on every drop.
+    const key = nodes.map(n => n.id).sort().join('|');
+    if (key !== topoFittedKey) {
+      topoFittedKey = key;
+      fitTopoToView(nodes);
+    }
   });
+}
+
+/**
+ * Zoom/pan the graph so every node is visible.
+ *
+ * The layout is free to settle wherever the forces take it — larger topologies
+ * routinely spread beyond the panel — so instead of pinning nodes inside the
+ * container we move the camera to them once the simulation comes to rest.
+ * Applied through topoZoom, so the user's own zoom/pan keeps working afterwards.
+ */
+function fitTopoToView(nodes, animate = true) {
+  if (!topoSvg || !topoZoom || !nodes || !nodes.length) return;
+  const el = document.getElementById('topology-graph');
+  if (!el) return;
+  const w = el.clientWidth || 342;
+  const h = el.clientHeight || 280;
+  const pad = 34; // room for node radius + labels
+
+  const xs = nodes.map(n => n.x).filter(Number.isFinite);
+  const ys = nodes.map(n => n.y).filter(Number.isFinite);
+  if (!xs.length || !ys.length) return;
+
+  const minX = Math.min(...xs), maxX = Math.max(...xs);
+  const minY = Math.min(...ys), maxY = Math.max(...ys);
+  const k = Math.min((w - pad * 2) / Math.max(maxX - minX, 1),
+                     (h - pad * 2) / Math.max(maxY - minY, 1),
+                     1.5); // don't blow up tiny topologies
+  const transform = d3.zoomIdentity
+    .translate(w / 2 - k * (minX + maxX) / 2, h / 2 - k * (minY + maxY) / 2)
+    .scale(k);
+
+  (animate ? topoSvg.transition().duration(400) : topoSvg)
+    .call(topoZoom.transform, transform);
 }
 
 function nodeColor(d) {
